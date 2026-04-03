@@ -1,0 +1,25 @@
+{
+  "name": "flashcards-web",
+  "version": "1.0.0",
+  "description": "Project for shool. The app that allows users to learn words and their meanings in other languages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wiktorKycia/Flashcards-web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wiktorKycia/Flashcards-web/issues"
+  },
+  "homepage": "https://github.com/wiktorKycia/Flashcards-web#readme",
+  "dependencies": {
+    "dotenv": "^17.4.0",
+    "dotenv-expand": "^12.0.3",
+    "express": "^4.22.1"
+  }
+}
