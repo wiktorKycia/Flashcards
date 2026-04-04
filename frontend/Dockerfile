@@ -4,14 +4,9 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 
-RUN npm install
+RUN npm ci
 
 COPY . .
-
-# ensure the node user owns the app files
-# RUN chown -R node:node /app
-
-# USER node
 
 EXPOSE 5173
 
