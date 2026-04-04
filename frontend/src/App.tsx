@@ -1,6 +1,11 @@
+import Home from './pages/Home'
+import { Routes, Route } from 'react-router'
+
 function App() {
     return (
-        <div>Hello world!</div>
+        <Routes>
+            <Route path='/' element={<Home/>}/>
+        </Routes>
     )
 }
 
