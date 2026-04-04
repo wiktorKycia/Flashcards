@@ -21,7 +21,7 @@ services:
     volumes:
       - ./backend/src:/app/src
       - ./backend/index.js:/app/index.js
-    command: nodemon /app/index.js
+#    command: nodemon /app/index.js
     restart: no
     ports:
       - "127.0.0.1:3000:3000"
