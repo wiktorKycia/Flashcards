@@ -4,17 +4,22 @@ import SearchBar from '../SearchBar/SearchBar.tsx'
 import ButtonAdd from '../ButtonAdd/ButtonAdd.tsx'
 import ProfilePicture from "../ProfilePicture/ProfilePicture.tsx";
 
+import styles from './Header.module.scss'
 
 export default function Header() {
 
 
     return (
-        <header>
-            <HamburgerButton/>
-            <Logo/>
+        <header className={styles.Header}>
+            <div>
+                <HamburgerButton/>
+                <Logo/>
+            </div>
             <SearchBar/>
-            <ButtonAdd/>
-            <ProfilePicture/>
+            <div>
+                <ButtonAdd/>
+                <ProfilePicture/>
+            </div>
         </header>
     )
 }

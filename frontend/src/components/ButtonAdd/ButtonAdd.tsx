@@ -1,7 +1,8 @@
+import styles from './ButtonAdd.module.scss'
 
 export default function ButtonAdd() {
     return (
-        <button>
+        <button className={styles.ButtonAdd}>
             +
         </button>
     )

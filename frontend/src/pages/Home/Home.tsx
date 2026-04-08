@@ -1,4 +1,5 @@
 import {useGetAPI} from "../../hooks/useGetAPI.ts";
+import Header from '../../components/Header'
 
 export default function Home()
 {
@@ -8,6 +9,7 @@ export default function Home()
 
     return (
         <>
+            <Header/>
             {isLoading && (
                 <div>Loading</div>
             )}
