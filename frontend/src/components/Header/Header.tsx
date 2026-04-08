@@ -1,8 +1,8 @@
-import HamburgerButton from "../HamburgerButton/HamburgerButton.tsx";
+import HamburgerButton from "../HamburgerButton/HamburgerButton.tsx"
 import Logo from '../Logo/Logo.tsx'
 import SearchBar from '../SearchBar/SearchBar.tsx'
 import ButtonAdd from '../ButtonAdd/ButtonAdd.tsx'
-import ProfilePicture from "../ProfilePicture/ProfilePicture.tsx";
+import ProfilePicture from "../ProfilePicture/ProfilePicture.tsx"
 
 import styles from './Header.module.scss'
 
