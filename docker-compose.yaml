@@ -12,7 +12,21 @@ services:
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       timeout: 5s
+      start_period: 2s
       retries: 10
+
+  migrate:
+    image: node:lts-alpine3.17
+    working_dir: /usr/src/app
+    volumes:
+      - ./backend:/usr/src/app
+    env_file:
+      - ./backend/.env.app
+    depends_on:
+      database:
+        condition: service_healthy
+    command: sh -c "npm ci && npm run db:deploy"
+    restart: no
 
   app:
     build:
@@ -21,21 +35,22 @@ services:
     volumes:
       - ./backend/src:/app/src
       - ./backend/index.js:/app/index.js
-#    command: nodemon /app/index.js
     restart: no
     ports:
       - "127.0.0.1:3000:3000"
     stdin_open: true
     tty: true
+    env_file:
+      - ./backend/.env.app
     depends_on:
       database:
         condition: service_healthy
       mongo:
         condition: service_started
-    env_file:
-      - ./backend/.env.app
+      migrate:
+        condition: service_completed_successfully
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:3000/"]
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/" ]
       timeout: 10s
       start_period: 2s
       retries: 3
@@ -59,17 +74,24 @@ services:
 ##          ignore:
 ##            - index.js
 ##            - ./static
-  mongo:
-    image: mongo:noble
-    restart: no
-    ports:
-      - "127.0.0.1:27017:27017"
-    env_file:
-      - "./backend/.env.mongo"
+
+  prisma-studio:
+    image: node:lts-alpine3.17
+    working_dir: /usr/src/app
     volumes:
-      - mongo-volume:/data/db
-    # disable printing logs in attached docker compose
-    command: mongod --quiet --logpath /dev/null
+      - ./backend:/usr/src/app
+    command: sh -c "npx prisma db push && npx prisma studio --port 5555 --browser none"
+    ports:
+      - "127.0.0.1:5555:5555"
+    env_file:
+      - ./backend/.env.app
+    depends_on:
+      database:
+        condition: service_healthy
+      app:
+        condition: service_started
+      migrate:
+        condition: service_completed_successfully
   
   front:
     build:
@@ -97,6 +119,18 @@ services:
 #          ignore:
 #            - ./src
 #
+
+  mongo:
+    image: mongo:noble
+    restart: no
+    ports:
+      - "127.0.0.1:27017:27017"
+    env_file:
+      - ./backend/.env.mongo
+    volumes:
+      - mongo-volume:/data/db
+    # disable printing logs in attached docker compose
+    command: mongod --quiet --logpath /dev/null
 
 volumes:
   mysql-volume:
