@@ -14,4 +14,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "npm run db:deploy && npm start"]
+CMD ["sh", "-c", "npm start"]
