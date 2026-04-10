@@ -3,13 +3,15 @@ import Person from "../../components/Person";
 import Container from '../../components/Container'
 import AttachedFlashcardsMode from "../../components/AttachedFlashcardsMode";
 import EditableFlashcard from "../../components/EditableFlashcard";
+import ButtonTop from "../../components/ButtonTop";
+import ToolBar from "../../components/ToolBar";
 
 export default function Quiz() {
     return (
         <>
             <Header/>
             <main>
-                <aside>To jest tylko dla zalogowanych</aside>
+                <ToolBar/>
                 <div>
                     <Container>
                         <h1>Nazwa quizu</h1>
@@ -41,7 +43,7 @@ export default function Quiz() {
                     </Container>
                 </div>
             </main>
-            <button>go to top</button>
+            <ButtonTop/>
         </>
     )
 }
