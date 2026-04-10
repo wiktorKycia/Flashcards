@@ -2,6 +2,7 @@ import Header from '../../components/Header'
 import Person from "../../components/Person";
 import Container from '../../components/Container'
 import AttachedFlashcardsMode from "../../components/AttachedFlashcardsMode";
+import EditableFlashcard from "../../components/EditableFlashcard";
 
 export default function Quiz() {
     return (
@@ -36,12 +37,7 @@ export default function Quiz() {
                         <div>filters</div>
                     </Container>
                     <Container>
-                        <div>
-                            <div>lang1</div>
-                            <div>lang2</div>
-                            <div>star</div> {/*zalogowany*/}
-                            <div>edit</div> {/*twórca*/}
-                        </div>
+                        <EditableFlashcard/>
                     </Container>
                 </div>
             </main>
