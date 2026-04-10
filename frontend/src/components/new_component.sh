@@ -10,16 +10,14 @@ touch index.ts
 echo "export {default} from './$name.tsx'" >> index.ts
 
 touch "$name.module.scss"
-echo "
-.$name
+echo ".$name
 {
 
 }
 " >> "$name.module.scss"
 
 touch "$name.tsx"
-echo "
-import styles from './$name.module.scss'
+echo "import styles from './$name.module.scss'
 
 export default function $name() {
     return (
