@@ -21,7 +21,7 @@ model User {
   password    String
   path_to_img String?
 
-  createdQuizzez   Quiz[]
+  createdQuizzes   Quiz[]
   UserQuizProgress UserQuizProgress[]
   SavedQuiz        SavedQuiz[]
   Folder           Folder[]

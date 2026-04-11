@@ -27,18 +27,76 @@ router.get("/:id(\\d+)", async (req: Request<UserParams>, res: Response, next: N
                 id: true,
                 name: true,
                 email: true,
-                path_to_img: true,
-                createdQuizzez: {
-                    include: {
-                        flashcards: true,
-                    }
-                },
-                UserQuizProgress: true,
+                path_to_img: true
+            },
+        })
+
+        if (user) {
+            return res.json(user)
+        }
+        else {
+            return res.sendStatus(404)
+        }
+    }
+    catch(error) {
+        next(error)
+    }
+})
+
+router.get("/:id(\\d+)/created-quizzes", async (req: Request<UserParams>, res: Response, next: NextFunction) => {
+    try {
+        const userId: number = parseInt(req.params.id)
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                createdQuizzes: true
+            },
+        })
+
+        if (user) {
+            return res.json(user.createdQuizzes)
+        }
+        else {
+            return res.sendStatus(404)
+        }
+    }
+    catch(error) {
+        next(error)
+    }
+})
+
+router.get("/:id(\\d+)/saved-quizzes", async (req: Request<UserParams>, res: Response, next: NextFunction) => {
+    try {
+        const userId: number = parseInt(req.params.id)
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
                 SavedQuiz: {
                     include: {
                         quiz: true,
                     }
-                },
+                }
+            },
+        })
+
+        if (user) {
+            return res.json(user.createdQuizzes)
+        }
+        else {
+            return res.sendStatus(404)
+        }
+    }
+    catch(error) {
+        next(error)
+    }
+})
+
+router.get("/:id(\\d+)/folders", async (req: Request<UserParams>, res: Response, next: NextFunction) => {
+    try {
+        const userId: number = parseInt(req.params.id)
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
                 Folder: {
                     include: {
                         SavedQuiz: true,
@@ -48,7 +106,7 @@ router.get("/:id(\\d+)", async (req: Request<UserParams>, res: Response, next: N
         })
 
         if (user) {
-            return res.json(user)
+            return res.json(user.folder)
         }
         else {
             return res.sendStatus(404)
