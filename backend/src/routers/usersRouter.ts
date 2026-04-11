@@ -80,7 +80,7 @@ router.get("/:id(\\d+)/saved-quizzes", async (req: Request<UserParams>, res: Res
         })
 
         if (user) {
-            return res.json(user.createdQuizzes)
+            return res.json(user.savedQuiz)
         }
         else {
             return res.sendStatus(404)
@@ -106,7 +106,7 @@ router.get("/:id(\\d+)/folders", async (req: Request<UserParams>, res: Response,
         })
 
         if (user) {
-            return res.json(user.folder)
+            return res.json(user.Folder)
         }
         else {
             return res.sendStatus(404)
@@ -163,7 +163,7 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
                 })
             }
             else {
-                return res.sendStatus(409)
+                return next(error)
             }
         }
         else {
@@ -174,6 +174,10 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
 
 router.post("/auth/login", async (req: Request, res: Response, next: NextFunction) => {
     try {
+        if (!req.body.email || !req.body.password) {
+            return res.sendStatus(400)
+        }
+
         const user = await prisma.user.findUnique({
             where: {
                 email: req.body.email

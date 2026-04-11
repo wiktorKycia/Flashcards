@@ -8,6 +8,7 @@ import flashcardsRouter from "./routers/flashcardsRouter"
 import quizzesRouter from "./routers/quizzesRouter"
 import quizzesProgressRouter from "./routers/quizzesProgressRouter"
 import savedQuizzesRouter from "./routers/savedQuizzesRouter"
+import { PrismaClientKnownRequestError, PrismaClientValidationError } from '@prisma/client/runtime/library'
 
 const myenv = dotenv.config({ path: '.env.app' })
 dotenvExpand.expand(myenv)
@@ -32,6 +33,27 @@ app.get('/', (_req: Request, res: Response) => {
 
 app.all("*", (_req: Request, res: Response) => {
     res.sendStatus(404)
+})
+
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+    if (err instanceof PrismaClientKnownRequestError) {
+        if (err.code === "P2025"){
+            return res.sendStatus(404)
+        }
+        else if (err.code === "P2002"){
+            const field = (err.meta?.target as string[] | undefined)?.[0]
+            const message: string = field ? `${field} jest już zajęte` : "Wartość musi być unikalna"
+            return res.status(409).json({
+                error: message
+            })
+        }
+    }
+
+    if (err instanceof PrismaClientValidationError) {
+        return res.sendStatus(400)
+    }
+
+    return res.sendStatus(500)
 })
 
 app.listen(3000, () => {
