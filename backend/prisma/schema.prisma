@@ -48,7 +48,7 @@ model Flashcard {
   side2     String
 
   quizId Int
-  quiz   Quiz @relation(fields: [quizId], references: [id])
+  quiz   Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
 
   UserQuizProgress UserQuizProgress[]
 }

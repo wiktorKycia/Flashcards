@@ -34,7 +34,6 @@ services:
       dockerfile: ./Dockerfile
     volumes:
       - ./backend/src:/app/src
-      - ./backend/index.js:/app/index.js
     restart: no
     ports:
       - "127.0.0.1:3000:3000"
@@ -49,6 +48,7 @@ services:
         condition: service_started
       migrate:
         condition: service_completed_successfully
+    command: npm run dev
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:3000/" ]
       timeout: 10s
@@ -63,8 +63,8 @@ services:
 ##            - Dockerfile
 ##            - package*.json
 #        - action: sync+restart
-#          path: ./backend/index.js
-#          target: /app/index.js
+#          path: ./backend/index.ts
+#          target: /app/index.ts
 #          ignore:
 #            - Dockerfile
 #            - package*.json
@@ -72,7 +72,7 @@ services:
 #          path: ./backend/prisma
 #          target: /app/prisma
 ##          ignore:
-##            - index.js
+##            - index.ts
 ##            - ./static
 
   prisma-studio:
