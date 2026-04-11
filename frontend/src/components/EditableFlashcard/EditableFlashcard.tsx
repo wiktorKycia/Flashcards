@@ -36,7 +36,7 @@ export default function EditableFlashcard(props: PropsType) {
                 </button>
             )}
 
-            { props.isUserAuthor && ( /*twórca*/
+            { props.isUserLoggedIn && props.isUserAuthor && ( /*twórca*/
                 <button onClick={() => setIsEditing((prevState) => !prevState)}>
                     {isEditing ? "Save" : "Edit"}
                 </button>
