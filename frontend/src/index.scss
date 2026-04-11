@@ -20,12 +20,24 @@ html {
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-start;
         width: 100%;
         height: 100%;
     }
 }
 
 #root > div:last-of-type {
-    display: none;
+    //display: none;
+    font-size: 2rem;
+}
+
+.container-vertical-borderless {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 2rem;
+    margin: 1rem;
+    border: none;
+    background-color: lightgreen;
 }
