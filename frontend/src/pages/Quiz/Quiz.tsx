@@ -39,7 +39,7 @@ export default function Quiz() {
                         <div>filters</div>
                     </Container>
                     <Container>
-                        <EditableFlashcard/>
+                        <EditableFlashcard side1={"hello"} side2={"world"} isStarred={false} isUserAuthor={true} isUserLoggedIn={true}/>
                     </Container>
                 </div>
             </main>
