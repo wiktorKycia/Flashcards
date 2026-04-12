@@ -41,6 +41,45 @@ let connectedMongo: boolean = false
     }
 })()
 
+app.use(async (req: Request, _res: Response, next: NextFunction) => {
+    try {
+        if (connectedMongo) {
+            const log = {
+                timestamp: new Date(),
+                method: req.method,
+                url: req.url,
+                query: req.query,
+                body: req.body
+            }
+
+            await requestsCollection.insertOne(log)
+        }
+
+        next()
+    }
+    catch (error) {
+        next(error)
+    }
+})
+
+app.use((req: Request, _res: Response, next: NextFunction) => {
+    const now = new Date()
+    let logMessage: string = `Request at ${now.toLocaleDateString()} ${now.toLocaleTimeString()} - ${req.method} ${req.url}`
+
+    if (Object.keys(req.query).length > 0 && Object.keys(req.body).length > 0) {
+        logMessage += ` with a query: ${JSON.stringify(req.query)} and a body ${JSON.stringify(req.body)}`
+    }
+    else if (Object.keys(req.query).length > 0) {
+        logMessage += ` with a query: ${JSON.stringify(req.query)}`
+    }
+    else if (Object.keys(req.body).length > 0) {
+        logMessage += ` with a body: ${JSON.stringify(req.body)}`
+    }
+
+    console.log(logMessage)
+    next()
+})
+
 app.use("/users", usersRouter)
 app.use("/folders", foldersRouter)
 app.use("/saved-quizzes", savedQuizzesRouter)
