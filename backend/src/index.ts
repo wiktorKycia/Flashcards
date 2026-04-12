@@ -1,7 +1,7 @@
-const express = require('express')
-const cors = require('cors')
-const dotenv = require('dotenv')
-const dotenvExpand = require('dotenv-expand')
+import express, {Request, Response} from 'express'
+import cors from 'cors'
+import dotenv from 'dotenv'
+import dotenvExpand from 'dotenv-expand'
 
 const myenv = dotenv.config({ path: '.env.app' })
 dotenvExpand.expand(myenv)
@@ -11,8 +11,9 @@ const app = express()
 // const frontend_origin = (process.env.FRONTEND_ORIGIN || 'http://localhost:5173').trim()
 
 app.use(cors())
+app.use(express.json())
 
-app.get('/', (req, res) => {
+app.get('/', (_req: Request, res: Response) => {
     res.status(200).json({content: "Hello world!"})
 })
 
