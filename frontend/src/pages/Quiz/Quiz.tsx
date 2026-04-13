@@ -7,14 +7,18 @@ import ButtonTop from "../../components/ButtonTop";
 import ToolBar from "../../components/ToolBar";
 import styles from './Quiz.module.scss'
 
-export default function Quiz() {
+interface PropsType {
+    quizName: string
+}
+
+export default function Quiz(props: PropsType) {
     return (
         <>
             <Header/>
             <main className={styles.Main}>
                 <ToolBar/>
                 <div className={styles.MainRight}>
-                    <h1>Nazwa quizu</h1>
+                    <h1>{props.quizName || "Nazwa quizu"}</h1>
                     <Container cssClassName={"container-vertical-borderless"}>
                         <button>zapisz</button>
                         <button>udostępnij</button>
@@ -26,7 +30,7 @@ export default function Quiz() {
                     </Container>
                     <Container cssClassName={"container-vertical-borderless"}>
                         <button>fiszki</button>
-                        <button>ucz się  </button>
+                        <button>ucz się</button>
                         <button>test</button>
                         <button>dopasowania</button>
                     </Container>
