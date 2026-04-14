@@ -21,14 +21,20 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-const mongoClient = new MongoClient(process.env.MONGODB_URL!)
+const mongoURL: string | undefined = process.env.MONGODB_URL
 let errorsCollection: Collection
 let requestsCollection: Collection
 let connectedMongo: boolean = false
 
 // Creating connection with MongoDB
 ;(async () => {
+    if (!mongoURL) {
+        console.warn(`MongoDB URL is missing`)
+        return
+    }
+
     try {
+        const mongoClient = new MongoClient(mongoURL)
         await mongoClient.connect();
         const mongoDb = mongoClient.db("flashcards-app")
         errorsCollection = mongoDb.collection("errorLogs")
