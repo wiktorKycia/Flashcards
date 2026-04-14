@@ -25,6 +25,7 @@ model User {
   UserQuizProgress UserQuizProgress[]
   SavedQuiz        SavedQuiz[]
   Folder           Folder[]
+  UserQuizLike UserQuizLike[]
 }
 
 model Quiz {
@@ -38,6 +39,7 @@ model Quiz {
   flashcards       Flashcard[]
   UserQuizProgress UserQuizProgress[]
   SavedQuiz        SavedQuiz[]
+  UserQuizLike UserQuizLike[]
 }
 
 model Flashcard {
@@ -64,6 +66,15 @@ model UserQuizProgress {
   quiz        Quiz      @relation(fields: [quizId], references: [id])
   flashcardId Int
   flashcard   Flashcard @relation(fields: [flashcardId], references: [id])
+}
+
+model UserQuizLike {
+  id Int @id @default(autoincrement())
+  isLiked Boolean
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  quizId Int
+  quiz Quiz @relation(fields: [quizId], references: [id])
 }
 
 model Folder {
