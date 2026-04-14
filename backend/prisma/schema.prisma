@@ -25,7 +25,7 @@ model User {
   UserQuizProgress UserQuizProgress[]
   SavedQuiz        SavedQuiz[]
   Folder           Folder[]
-  UserQuizLike UserQuizLike[]
+  UserQuizLike     UserQuizLike[]
 }
 
 model Quiz {
@@ -39,7 +39,7 @@ model Quiz {
   flashcards       Flashcard[]
   UserQuizProgress UserQuizProgress[]
   SavedQuiz        SavedQuiz[]
-  UserQuizLike UserQuizLike[]
+  UserQuizLike     UserQuizLike[]
 }
 
 model Flashcard {
@@ -69,12 +69,12 @@ model UserQuizProgress {
 }
 
 model UserQuizLike {
-  id Int @id @default(autoincrement())
-  isLiked Boolean
-  userId Int
-  user User @relation(fields: [userId], references: [id])
-  quizId Int
-  quiz Quiz @relation(fields: [quizId], references: [id])
+  id      Int     @id @default(autoincrement())
+  isLiked Boolean // like: true, dislike: false, neutral: no record
+  userId  Int
+  user    User    @relation(fields: [userId], references: [id])
+  quizId  Int
+  quiz    Quiz    @relation(fields: [quizId], references: [id])
 }
 
 model Folder {
