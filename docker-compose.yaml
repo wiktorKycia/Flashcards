@@ -25,7 +25,7 @@ services:
     depends_on:
       database:
         condition: service_healthy
-    command: sh -c "npm ci && npx prisma migrate deploy"
+    command: sh -c "npm ci && npx run db:deploy"
     restart: no
 
   app:
