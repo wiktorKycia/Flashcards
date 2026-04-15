@@ -1,7 +1,7 @@
 import styles from './EditableFlashcard.module.scss'
 import {useState} from "react";
 
-interface PropsType {
+interface EditableFlashcardProps {
     side1: string,
     side2: string,
     isStarred: boolean,
@@ -9,7 +9,7 @@ interface PropsType {
     isUserAuthor: boolean
 }
 
-export default function EditableFlashcard(props: PropsType) {
+export default function EditableFlashcard(props: EditableFlashcardProps) {
     const [isEditing, setIsEditing] = useState<boolean>(false)
     const [isStarred, setIsStarred] = useState<boolean>(props.isStarred)
 

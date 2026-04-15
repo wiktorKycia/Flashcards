@@ -7,11 +7,11 @@ import ButtonTop from "../../components/ButtonTop";
 import ToolBar from "../../components/ToolBar";
 import styles from './Quiz.module.scss'
 
-interface PropsType {
+interface QuizProps {
     quizName: string
 }
 
-export default function Quiz(props: PropsType) {
+export default function Quiz(props: QuizProps) {
     return (
         <>
             <Header/>
