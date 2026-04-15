@@ -40,7 +40,7 @@ export default function Quiz(props: QuizProps) {
                         <button>dopasowania</button>
                     </Container>
                     <Container>
-                        <AttachedFlashcardsMode/>
+                        <AttachedFlashcardsMode flashcards={data.flashcards}/>
                     </Container>
                     <Container cssClassName={"container-vertical-borderless"}>
                         <Person name={"John doe"} title={"author"}/>
