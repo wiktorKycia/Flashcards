@@ -12,7 +12,7 @@ services:
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       timeout: 5s
-      start_period: 2s
+      start_period: 10s
       retries: 10
 
   migrate:
