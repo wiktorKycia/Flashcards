@@ -6,12 +6,17 @@ import EditableFlashcard from "../../components/EditableFlashcard";
 import ButtonTop from "../../components/ButtonTop";
 import ToolBar from "../../components/ToolBar";
 import styles from './Quiz.module.scss'
+import {useParams} from "react-router";
+import {useGetAPI} from "../../hooks/useGetAPI.ts";
 
 interface QuizProps {
     quizName: string
 }
 
 export default function Quiz(props: QuizProps) {
+    const id: number = parseInt(useParams().id as string)
+    const {data, isLoading, isError} = useGetAPI(`/api/quiz/${id}`)
+    console.log(data, isLoading, isError)
     return (
         <>
             <Header/>
