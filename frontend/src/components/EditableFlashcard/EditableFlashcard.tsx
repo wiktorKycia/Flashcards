@@ -2,8 +2,8 @@ import styles from './EditableFlashcard.module.scss'
 import {useState} from "react";
 
 interface EditableFlashcardProps {
-    side1: string,
-    side2: string,
+    front: string,
+    back: string,
     isStarred: boolean,
     isUserLoggedIn: boolean,
     isUserAuthor: boolean
@@ -13,8 +13,8 @@ export default function EditableFlashcard(props: EditableFlashcardProps) {
     const [isEditing, setIsEditing] = useState<boolean>(false)
     const [isStarred, setIsStarred] = useState<boolean>(props.isStarred)
 
-    const [text1, setText1] = useState<string>(props.side1)
-    const [text2, setText2] = useState<string>(props.side2)
+    const [text1, setText1] = useState<string>(props.front)
+    const [text2, setText2] = useState<string>(props.back)
 
     return (
         <div className={styles.EditableFlashcard}>

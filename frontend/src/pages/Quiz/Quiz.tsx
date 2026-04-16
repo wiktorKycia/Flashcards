@@ -2,12 +2,12 @@ import Header from '../../components/Header'
 import Person from "../../components/Person";
 import Container from '../../components/Container'
 import AttachedFlashcardsMode from "../../components/AttachedFlashcardsMode";
-import EditableFlashcard from "../../components/EditableFlashcard";
 import ButtonTop from "../../components/ButtonTop";
 import ToolBar from "../../components/ToolBar";
 import styles from './Quiz.module.scss'
 import {useParams} from "react-router";
 import {useGetAPI} from "../../hooks/useGetAPI.ts";
+import ListedFlashcards from '../../components/ListedFlashcards'
 
 interface QuizProps {
     quizName: string
@@ -34,9 +34,7 @@ export default function Quiz(props: QuizProps) {
                         {/* tutaj opcje: edytuj (twórca), kopiuj (zalogowany), eksport (wszyscy), usuń (twórca) */}
                     </Container>
                     <Container cssClassName={"container-vertical-borderless"}>
-                        <button>fiszki</button>
                         <button>ucz się</button>
-                        <button>test</button>
                         <button>dopasowania</button>
                     </Container>
                     <Container>
@@ -47,13 +45,7 @@ export default function Quiz(props: QuizProps) {
                         <button>like</button>
                         <button>dislike</button>
                     </Container>
-                    <Container>
-                        <h2>Flashcards</h2>
-                        <div>filters</div>
-                    </Container>
-                    <Container>
-                        <EditableFlashcard side1={"hello"} side2={"world"} isStarred={false} isUserAuthor={true} isUserLoggedIn={true}/>
-                    </Container>
+                    <ListedFlashcards/>
                 </div>
             </main>
             <ButtonTop/>
