@@ -42,11 +42,12 @@ model Quiz {
 }
 
 model Flashcard {
-  id        Int    @id @default(autoincrement())
-  language1 String
-  language2 String
-  side1     String
-  side2     String
+  id            Int     @id @default(autoincrement())
+  starred       Boolean @default(false)
+  frontLanguage String
+  backLanguage  String
+  front         String
+  back          String
 
   quizId Int
   quiz   Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)

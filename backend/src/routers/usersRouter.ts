@@ -8,7 +8,6 @@ const prisma = new PrismaClient()
 
 interface UserParams {
     id: string
-    password: string
 }
 
 interface UserQuizLikeParams {
