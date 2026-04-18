@@ -69,3 +69,48 @@ router.post('/register', async (req: Request, res: Response, next: NextFunction)
         }
     }
 })
+
+router.post('/login', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { login, password } = req.body // login can be the email or the name
+
+        const user = await prisma.user.findFirst({
+            where: {
+                OR: [
+                    {
+                        name: login
+                    },
+                    {
+                        email: login
+                    }
+                ]
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                password: true
+            }
+        })
+
+        if (!user)
+        {
+            return res.status(400).json({message: 'Podany użytkownik nie istnieje'})
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password)
+        if (!isMatch)
+        {
+            return res.status(400).json({message: 'Niepoprawne dane logowania'})
+        }
+        else
+        {
+            const token = jwt.sign({id: user.id, name: user.name, email: user.email}, process.env.JWT_SECRET, {expiresIn: '1h'})
+            res.json({token})
+        }
+    }
+    catch (error)
+    {
+        next(error) // tu nie wiem jakich błędów się spodziewać
+    }
+})
