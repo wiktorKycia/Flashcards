@@ -1,13 +1,13 @@
-import Header from '../../components/Header'
-import Person from "../../components/Person";
-import Container from '../../components/Container'
-import AttachedFlashcardsMode from "../../components/AttachedFlashcardsMode";
-import ButtonTop from "../../components/ButtonTop";
-import ToolBar from "../../components/ToolBar";
+import Header from '@/components/Header'
+import Person from "@/components/Person";
+import Container from '@/components/Container'
+import AttachedFlashcardsMode from "@/components/AttachedFlashcardsMode";
+import ButtonTop from "@/components/ButtonTop";
+import ToolBar from "@/components/ToolBar";
 import styles from './Quiz.module.scss'
 import {useParams} from "react-router";
-import {useGetAPI} from "../../hooks/useGetAPI.ts";
-// import ListedFlashcards from '../../components/ListedFlashcards'
+import {useGetAPI} from '@/hooks/useGetAPI.ts';
+import ListedFlashcards from '@/components/ListedFlashcards'
 
 interface QuizProps {
     quizName: string
