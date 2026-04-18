@@ -19,12 +19,12 @@ export default function Quiz(props: QuizProps) {
     console.log(data, isLoading, isError)
     return (
         <>
-            <Header/>
+            <Header />
             <main className={styles.Main}>
-                <ToolBar/>
+                <ToolBar />
                 <div className={styles.MainRight}>
-                    <h1>{props.quizName || "Nazwa quizu"}</h1>
-                    <Container cssClassName={"container-vertical-borderless"}>
+                    <h1>{props.quizName || 'Nazwa quizu'}</h1>
+                    <Container cssClassName={'container-vertical-borderless'}>
                         <button>zapisz</button>
                         <button>udostępnij</button>
                         <button>edytuj</button>
@@ -33,15 +33,15 @@ export default function Quiz(props: QuizProps) {
                         <button>usuń</button>
                         {/* tutaj opcje: edytuj (twórca), kopiuj (zalogowany), eksport (wszyscy), usuń (twórca) */}
                     </Container>
-                    <Container cssClassName={"container-vertical-borderless"}>
+                    <Container cssClassName={'container-vertical-borderless'}>
                         <button>ucz się</button>
                         <button>dopasowania</button>
                     </Container>
                     <Container>
                         <AttachedFlashcardsMode />
                     </Container>
-                    <Container cssClassName={"container-vertical-borderless"}>
-                        <Person name={"John doe"} title={"author"}/>
+                    <Container cssClassName={'container-vertical-borderless'}>
+                        <Person name={'John doe'} title={'author'} />
                         <button>like</button>
                         <button>dislike</button>
                     </Container>
@@ -61,7 +61,7 @@ export default function Quiz(props: QuizProps) {
                     />
                 </div>
             </main>
-            <ButtonTop/>
+            <ButtonTop />
         </>
     )
 }
