@@ -45,7 +45,20 @@ export default function Quiz(props: QuizProps) {
                         <button>like</button>
                         <button>dislike</button>
                     </Container>
-                    {/*<ListedFlashcards/>*/}
+                    <ListedFlashcards
+                        flashcards={[
+                            {
+                                database_id: 1,
+                                front: 'front',
+                                back: 'back',
+                                langFront: 'english',
+                                langBack: 'english',
+                                isStarred: true
+                            }
+                        ]}
+                        isUserLoggedIn={false}
+                        isUserAuthor={false}
+                    />
                 </div>
             </main>
             <ButtonTop/>
