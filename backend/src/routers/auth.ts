@@ -3,6 +3,11 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import express, { Router, Request, Response, NextFunction } from "express"
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+import dotenvExpand from 'dotenv-expand'
+
+const myenv = dotenv.config({ path: '.env.app' })
+dotenvExpand.expand(myenv)
 
 const router: Router = express.Router()
 const prisma = new PrismaClient()
