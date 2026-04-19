@@ -111,4 +111,34 @@ router.post("/fill-gap-task", async (req: Request, res: Response, next: NextFunc
     }
 })
 
+router.post("/first-letter-gap-task", async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const systemMessage =
+            'Your job is to create tasks for setbooks in particular language.' +
+            'You will be given some words in json format. For each provided word, create one natural sentence in the same language. ' +
+            'The sentence must match the word\'s difficulty level (e.g., A1, B2, C1) and provide enough context to understand the word\'s meaning. ' +
+            'Replace the word with a gap, but leave the first letter, so the student will have to guess the rest of it. ' +
+            'For example: The given word is "downhill". ' +
+            'The sentence should then look something like: "The punctuality of the train service has been going d____ since the beginning of this year." .' +
+            'Second example: The given word is "unjustified". ' +
+            'The ouput sentence: "Her anger at his comment was completely u_______, given the explanation he had offered." .' +
+            'You can think of any sentence, that was only the example. Remember that your answer should contain only the sentence and the first letter of the word with the gap marked as underscores.' +
+            'Return the data as a JSON array of objects with the following structure:\n' +
+            '[\n' +
+            '  {\n' +
+            '    "word": "text",\n' +
+            '    "sentence": "text"\n' +
+            '  }\n' +
+            ']'
+
+        const flashcards: string = await chooseFlashcards(req.body.amount, req.body.quizId, req.body.languageSide)
+        const questions = await sendAIRequest(systemMessage, flashcards)
+
+        res.json(questions)
+    }
+    catch (error) {
+        next(error)
+    }
+})
+
 export default router
