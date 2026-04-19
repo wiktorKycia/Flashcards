@@ -11,6 +11,16 @@ export default defineConfig({
         },
         host: true,
         port: 5173,
+        proxy: {
+            '/api': 'http://app:3000',
+            // '/auth': 'http://app:3000',
+            // '/users': 'http://app:3000',
+            // '/folders': 'http://app:3000',
+            // '/flashcards': 'http://app:3000',
+            // '/quizzes': 'http://app:3000',
+            // '/quizzes-progress': 'http://app:3000',
+            // '/saved-quizzes': 'http://app:3000',
+        }
     },
     resolve: {
         alias: {
