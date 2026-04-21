@@ -8,29 +8,45 @@ import styles from './Quiz.module.scss'
 import {useParams} from "react-router";
 import {useGetAPI} from '@/hooks/useGetAPI.ts';
 import ListedFlashcards from '@/components/ListedFlashcards'
+import { useAuth } from '@/context/AuthContext.tsx'
 
-interface QuizProps {
-    quizName: string
-}
-
-export default function Quiz(props: QuizProps) {
+export default function Quiz() {
     const id: number = parseInt(useParams().id as string)
     const {data, isLoading, isError} = useGetAPI(`/api/quiz/${id}`)
     console.log(data, isLoading, isError)
+
+    let isUserAuthor = false
+
+    const isLoggedIn = !!useAuth().token
+    if (isLoggedIn)
+    {
+        isUserAuthor = true; // tutaj w przyszłości dorobić zapytanie do backendu
+    }
+
     return (
         <>
             <Header />
             <main className={styles.Main}>
                 <ToolBar />
                 <div className={styles.MainRight}>
-                    <h1>{props.quizName || 'Nazwa quizu'}</h1>
+                    <h1>{data.quizName || 'Nazwa quizu'}</h1>
                     <Container cssClassName={'container-vertical-borderless'}>
-                        <button>zapisz</button>
-                        <button>udostępnij</button>
-                        <button>edytuj</button>
-                        <button>kopiuj</button>
                         <button>eksport do pliku</button>
-                        <button>usuń</button>
+                        <button>udostępnij</button>
+
+                        {isLoggedIn && (
+                            <>
+                                <button>zapisz</button>
+                                <button>kopiuj</button>
+                            </>)
+                        }
+                        {isUserAuthor && (
+                            <>
+                                <button>edytuj</button>
+                                <button>usuń</button>
+                            </>
+                        )}
+
                         {/* tutaj opcje: edytuj (twórca), kopiuj (zalogowany), eksport (wszyscy), usuń (twórca) */}
                     </Container>
                     <Container cssClassName={'container-vertical-borderless'}>
