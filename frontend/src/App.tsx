@@ -2,7 +2,7 @@ import Home from './pages/Home'
 import UserProfile from './pages/UserProfile'
 import { Routes, Route } from 'react-router'
 import Quiz from "./pages/Quiz";
-import { AuthProvider } from '@/context/AuthContext.tsx'
+import AuthProvider from '@/context/AuthContext.tsx'
 import Register from '@/pages/Register/Register.tsx'
 import Login from '@/pages/Login/Login.tsx'
 
