@@ -5,13 +5,16 @@ import Quiz from "./pages/Quiz";
 import AuthProvider from '@/context/AuthContext.tsx'
 import Register from '@/pages/Register/Register.tsx'
 import Login from '@/pages/Login/Login.tsx'
+import UserSettings from '@/pages/UserSettings'
 
 function App() {
     return (
         <AuthProvider>
             <Routes>
                 <Route path='/' element={<Home/>}/>
-                <Route path='/profile/' element={<UserProfile/>}/>
+                <Route path='/profile/' element={<UserSettings/>}>
+                    <Route path=":id" element={<UserProfile/>}/>
+                </Route>
                 <Route path='/quiz/' >
                     <Route path=":id" element={<Quiz/>}/>
                 </Route>
