@@ -58,7 +58,7 @@ async function sendAIRequest(systemMessage: string, userMessage: string) {
     return JSON.parse(content)
 }
 
-async function chooseFlashcards(questionsAmount: number, quizId: number, languageSide: "FRONT" | "BACK", isMultipleChoice: boolean = false){
+async function chooseFlashcards(questionsAmount: number, quizId: number, languageSide: "FRONT" | "BACK", isSingleChoice: boolean = false){
     let quiz: any
     let flashcards: any
 
@@ -102,7 +102,7 @@ async function chooseFlashcards(questionsAmount: number, quizId: number, languag
     const shuffled = flashcards.sort(() => 0.5 - Math.random())
 
     if (languageSide === "FRONT") {
-        if (isMultipleChoice) {
+        if (isSingleChoice) {
             let result: {
                 data: {
                     [key: string]: any
@@ -130,7 +130,7 @@ async function chooseFlashcards(questionsAmount: number, quizId: number, languag
         }
     }
     else {
-        if (isMultipleChoice) {
+        if (isSingleChoice) {
             let result: {
                 data: {
                     [key: string]: any
