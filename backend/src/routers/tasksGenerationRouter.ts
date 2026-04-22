@@ -66,6 +66,7 @@ async function sendAIRequest(systemMessage: string, userMessage: string) {
 async function chooseFlashcards(questionsAmount: number, quizId: number, languageSide: "FRONT" | "BACK", isSingleChoice: boolean = false){
     let quiz: any
     let flashcards: any
+    let warning: string | null = null
 
     if (languageSide === "FRONT") {
         quiz = await prisma.quiz.findOne({
@@ -103,9 +104,13 @@ async function chooseFlashcards(questionsAmount: number, quizId: number, languag
         ;(error as any).statusCode = 404
         throw error
     }
+    else if ((isSingleChoice && flashcards.length < questionsAmount * 3) || flashcards.length < questionsAmount) {
+        warning = "W quizie nie ma wystarczającej liczby fiszek do utworzenia wymaganej liczby pytań"
+    }
 
     const shuffled = flashcards.sort(() => 0.5 - Math.random())
 
+    let phrases: string
     if (languageSide === "FRONT") {
         if (isSingleChoice) {
             let result: {
@@ -116,7 +121,7 @@ async function chooseFlashcards(questionsAmount: number, quizId: number, languag
                 "data": {}
             }
 
-            for (let i = 0; i < questionsAmount; i += 3){
+            for (let i = 0; i < questionsAmount * 3; i += 3){
                 const taskIndex = i / 3 + 1
                 result.data[`task${taskIndex}`] = {
                     "phrase1": shuffled[i].front,
@@ -125,10 +130,10 @@ async function chooseFlashcards(questionsAmount: number, quizId: number, languag
                 }
             }
 
-            return JSON.stringify(result)
+            phrases = JSON.stringify(result)
         }
         else {
-            return shuffled
+            phrases = shuffled
                 .slice(0, questionsAmount)
                 .map((f: { front: string }) => f.front)
                 .join('; ')
@@ -153,23 +158,37 @@ async function chooseFlashcards(questionsAmount: number, quizId: number, languag
                 }
             }
 
-            return JSON.stringify(result)
+            phrases = JSON.stringify(result)
         }
         else {
-            return shuffled
+            phrases = shuffled
                 .slice(0, questionsAmount)
                 .map((f: { back: string }) => f.back)
                 .join('; ')
         }
     }
+
+    return {
+        phrases,
+        warning
+    }
 }
 
 router.post("/fill-gap-task", async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const flashcards: string = await chooseFlashcards(req.body.questionsAmount, req.body.quizId, req.body.languageSide)
-        const questions = await sendAIRequest(mainSystemMessage, flashcards)
+        const { phrases, warning } = await chooseFlashcards(
+            req.body.questionsAmount,
+            req.body.quizId,
+            req.body.languageSide
+        )
+        const subtasks = await sendAIRequest(mainSystemMessage, phrases)
 
-        res.json(questions)
+        if (warning) {
+            return res.json({ subtasks, warning })
+        }
+        else {
+            return res.json({ subtasks })
+        }
     }
     catch (error) {
         next(error)
@@ -178,14 +197,20 @@ router.post("/fill-gap-task", async (req: Request, res: Response, next: NextFunc
 
 router.post("/first-letter-gap-task", async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const flashcards: string = await chooseFlashcards(req.body.questionsAmount, req.body.quizId, req.body.languageSide)
-        const questions = await sendAIRequest(mainSystemMessage, flashcards)
+        const { phrases, warning } = await chooseFlashcards(req.body.questionsAmount, req.body.quizId, req.body.languageSide)
+        const subtasks = await sendAIRequest(mainSystemMessage, phrases)
 
         // This part is for changing the first underscore in the gap to the first letter of the phrase, because weaker models cannot handle it for multi-word phrases according to my tests
-        for (let resultIndex in questions.data) {
-            questions.data[resultIndex].sentence = questions.data[resultIndex].sentence.replace("_", questions.data[resultIndex].phrase[0])
+        for (let resultIndex in subtasks.data) {
+            subtasks.data[resultIndex].sentence = subtasks.data[resultIndex].sentence.replace("_", subtasks.data[resultIndex].phrase[0])
         }
-        res.json(questions)
+
+        if (warning) {
+            return res.json({ subtasks, warning })
+        }
+        else {
+            return res.json({ subtasks })
+        }
     }
     catch (error) {
         next(error)
@@ -227,10 +252,15 @@ router.post("/single-choice-task", async (req: Request, res: Response, next: Nex
             '   ]\n' +
             '}'
 
-        const flashcards: string = await chooseFlashcards(req.body.questionsAmount, req.body.quizId, req.body.languageSide, true)
-        const questions = await sendAIRequest(systemMessage, flashcards)
+        const { phrases, warning } = await chooseFlashcards(req.body.questionsAmount, req.body.quizId, req.body.languageSide, true)
+        const subtasks = await sendAIRequest(systemMessage, phrases)
 
-        res.json(questions)
+        if (warning) {
+            return res.json({ subtasks, warning })
+        }
+        else {
+            return res.json({ subtasks })
+        }
     }
     catch (error) {
         next(error)
