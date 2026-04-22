@@ -2,20 +2,15 @@ import BigFlashcard from "../BigFlashcard"
 import {useState} from "react";
 import type Flashcard from "../../types/Flashcard/Flashcard.ts";
 
-// interface AttachedFlashcardsModeProps {
-//     flashcards: Flashcard[]
-// }
+interface AttachedFlashcardsModeProps {
+    flashcards: Flashcard[]
+}
 
-export default function AttachedFlashcardsMode() {
+export default function AttachedFlashcardsMode(props: AttachedFlashcardsModeProps) {
     const [isTrackingProgress, setIsCheckingProgress] = useState<boolean>(false);
     const [flashcardsIterator, setFlashcardsIterator] = useState<number>(0);
 
-    const [flashcards, setFlashcards] = useState<Array<Flashcard>>([{
-        front: "front",
-        back: "back",
-        langFront: "english",
-        langBack: "english"
-    }])
+    const [flashcards, setFlashcards] = useState<Array<Flashcard>>(props.flashcards)
 
     function handleShuffle() {
         const array = [...flashcards];
@@ -28,6 +23,19 @@ export default function AttachedFlashcardsMode() {
         setFlashcardsIterator(0)
     }
 
+    function handleIncrement() {
+        if(flashcardsIterator < flashcards.length-1)
+        {
+            setFlashcardsIterator((prevState) => prevState+1)
+        }
+    }
+    function handleDecrement() {
+        if(flashcardsIterator > 0)
+        {
+            setFlashcardsIterator((prevState) => prevState-1)
+        }
+    }
+
     return (
         <>
             <div>
@@ -37,9 +45,9 @@ export default function AttachedFlashcardsMode() {
                 <label htmlFor="track_progress">Śledź postępy</label> {/*tylko dla użytkowników zalogowanych*/}
                 <input type="checkbox" name="track_progress" id="track_progress" checked={isTrackingProgress} onClick={() => setIsCheckingProgress((prevState) => !prevState)}/>
 
-                <button onClick={() => setFlashcardsIterator((prevState) => prevState+1)}>←</button>
+                <button onClick={handleDecrement}>←</button>
                 <div>{flashcardsIterator+1} / {flashcards.length}</div>
-                <button onClick={() => setFlashcardsIterator((prevState) => prevState-1)}>→</button>
+                <button onClick={handleIncrement}>→</button>
 
                 {isTrackingProgress && (
                     <button>previous</button> //*tylko jak checkbox ze śledzeniem postępów jest zaznaczony*/}

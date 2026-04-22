@@ -65,7 +65,14 @@ export default function Quiz() {
                             <button>dopasowania</button>
                         </Container>
                         <Container>
-                            <AttachedFlashcardsMode />
+                            <AttachedFlashcardsMode flashcards={data.flashcards.map((flashcard) => {
+                                return {
+                                    front: flashcard.side1,
+                                    back: flashcard.side2,
+                                    langFront: flashcard.language1,
+                                    langBack: flashcard.language2
+                                }
+                            })}/>
                         </Container>
                         <Container cssClassName={'container-vertical-borderless'}>
                             <Person name={'John doe'} title={'author'} />
