@@ -58,7 +58,7 @@ async function sendAIRequest(systemMessage: string, userMessage: string) {
     return JSON.parse(content)
 }
 
-async function chooseFlashcards(amount: number, quizId: number, languageSide: "FRONT" | "BACK"){
+async function chooseFlashcards(questionsAmount: number, quizId: number, languageSide: "FRONT" | "BACK", isMultipleChoice: boolean = false){
     let quiz: any
     let flashcards: any
 
@@ -98,19 +98,70 @@ async function chooseFlashcards(amount: number, quizId: number, languageSide: "F
         ;(error as any).statusCode = 404
         throw error
     }
+
     const shuffled = flashcards.sort(() => 0.5 - Math.random())
 
     if (languageSide === "FRONT") {
-        return shuffled.slice(0, amount).map((f: { front: string }) => f.front).join(", ")
+        if (isMultipleChoice) {
+            let result: {
+                data: {
+                    [key: string]: any
+                }
+            } = {
+                "data": {}
+            }
+
+            for (let i = 0; i < questionsAmount; i += 3){
+                const taskIndex = i / 3 + 1
+                result.data[`task${taskIndex}`] = {
+                    "phrase1": shuffled[i].front,
+                    "phrase2": shuffled[i + 1].front,
+                    "phrase3": shuffled[i + 2].front
+                }
+            }
+
+            return JSON.stringify(result)
+        }
+        else {
+            return shuffled
+                .slice(0, questionsAmount)
+                .map((f: { front: string }) => f.front)
+                .join('; ')
+        }
     }
     else {
-        return shuffled.slice(0, amount).map((f: { back: string }) => f.back).join(", ")
+        if (isMultipleChoice) {
+            let result: {
+                data: {
+                    [key: string]: any
+                }
+            } = {
+                "data": {}
+            }
+
+            for (let i = 0; i < questionsAmount; i += 3){
+                const taskIndex = i / 3 + 1
+                result.data[`task${taskIndex}`] = {
+                    "phrase1": shuffled[i].back,
+                    "phrase2": shuffled[i + 1].back,
+                    "phrase3": shuffled[i + 2].back
+                }
+            }
+
+            return JSON.stringify(result)
+        }
+        else {
+            return shuffled
+                .slice(0, questionsAmount)
+                .map((f: { back: string }) => f.back)
+                .join('; ')
+        }
     }
 }
 
 router.post("/fill-gap-task", async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const flashcards: string = await chooseFlashcards(req.body.amount, req.body.quizId, req.body.languageSide)
+        const flashcards: string = await chooseFlashcards(req.body.questionsAmount, req.body.quizId, req.body.languageSide)
         const questions = await sendAIRequest(mainSystemMessage, flashcards)
 
         res.json(questions)
@@ -122,11 +173,11 @@ router.post("/fill-gap-task", async (req: Request, res: Response, next: NextFunc
 
 router.post("/first-letter-gap-task", async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const flashcards: string = await chooseFlashcards(req.body.amount, req.body.quizId, req.body.languageSide)
+        const flashcards: string = await chooseFlashcards(req.body.questionsAmount, req.body.quizId, req.body.languageSide)
         const questions = await sendAIRequest(mainSystemMessage, flashcards)
 
         // This part is for changing the first underscore in the gap to the first letter of the phrase, because weaker models cannot handle it for multi-word phrases according to my tests
-        for (let resultIndex in questions.data){
+        for (let resultIndex in questions.data) {
             questions.data[resultIndex].sentence = questions.data[resultIndex].sentence.replace("_", questions.data[resultIndex].phrase[0])
         }
         res.json(questions)
@@ -170,7 +221,7 @@ router.post("/multiple-choice-task", async (req: Request, res: Response, next: N
             '   ]\n' +
             '}'
 
-        const flashcards: string = await chooseFlashcards(req.body.amount * 3, req.body.quizId, req.body.languageSide)
+        const flashcards: string = await chooseFlashcards(req.body.questionsAmount, req.body.quizId, req.body.languageSide, true)
         const questions = await sendAIRequest(systemMessage, flashcards)
 
         res.json(questions)
