@@ -13,8 +13,8 @@ import { useQuizData } from '@/hooks/useQuizData.ts'
 
 export default function Quiz() {
     const id: number = parseInt(useParams().id as string)
-    const { data, isLoading, isError } = useQuizData(id)
-    console.log(data, isLoading, isError)
+    const { data, isLoading, isError, error } = useQuizData(id)
+    console.log(data, isLoading, isError, error)
 
     let isUserAuthor = false
 
@@ -73,16 +73,26 @@ export default function Quiz() {
                             <button>dislike</button>
                         </Container>
                         <ListedFlashcards
-                            flashcards={[
-                                {
-                                    database_id: 1,
-                                    front: 'front',
-                                    back: 'back',
-                                    langFront: 'english',
-                                    langBack: 'english',
-                                    isStarred: true
+                            flashcards={data.flashcards.map((flashcard) => {
+                                return {
+                                    database_id: flashcard.id,
+                                    langFront: flashcard.language1,
+                                    langBack: flashcard.language2,
+                                    front: flashcard.side1,
+                                    back: flashcard.side2,
+                                    isStarred: false
                                 }
-                            ]}
+                            })}
+                            // flashcards={[
+                            //     {
+                            //         database_id: 1,
+                            //         front: 'front',
+                            //         back: 'back',
+                            //         langFront: 'english',
+                            //         langBack: 'english',
+                            //         isStarred: true
+                            //     }
+                            // ]}
                             isUserLoggedIn={isLoggedIn}
                             isUserAuthor={isUserAuthor}
                         />
