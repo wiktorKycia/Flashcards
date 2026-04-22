@@ -7,7 +7,8 @@ dotenv.config({path: '.env.app'})
 
 const token = process.env["GITHUB_TOKEN"];
 const endpoint = "https://models.github.ai/inference";
-const model = "openai/gpt-4.1-nano";
+const modelsList: string[] = ["openai/gpt-4.1", "openai/gpt-4o", "openai/gpt-4.1-nano", "openai/gpt-4.1-mini", "openai/gpt-4o-mini"];
+let modelIndex: number = 0;
 const router: Router = express.Router()
 const prisma = new PrismaClient()
 
@@ -38,6 +39,10 @@ const mainSystemMessage = 'Your job is to create tasks for setbooks in particula
 
 
 async function sendAIRequest(systemMessage: string, userMessage: string) {
+    if (!token) {
+        throw new Error("Missing GITHUB_TOKEN in .env.app file")
+    }
+
     const client = new OpenAI({ baseURL: endpoint, apiKey: token });
 
     const response = await client.chat.completions.create({
@@ -45,7 +50,7 @@ async function sendAIRequest(systemMessage: string, userMessage: string) {
             { role: 'system', content: systemMessage },
             { role: 'user', content: userMessage}
         ],
-        model: model,
+        model: modelsList[modelIndex] ?? "openai/gpt-4.1-mini",
         response_format: { type: "json_object" }
     })
 
@@ -187,7 +192,7 @@ router.post("/first-letter-gap-task", async (req: Request, res: Response, next: 
     }
 })
 
-router.post("/multiple-choice-task", async (req: Request, res: Response, next: NextFunction) => {
+router.post("/single-choice-task", async (req: Request, res: Response, next: NextFunction) => {
     try {
         const systemMessage =
             'Your job is to create tasks for setbooks in particular language.\n' +
