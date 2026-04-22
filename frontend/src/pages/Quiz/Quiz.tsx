@@ -6,14 +6,14 @@ import ButtonTop from "@/components/ButtonTop";
 import ToolBar from "@/components/ToolBar";
 import styles from './Quiz.module.scss'
 import {useParams} from "react-router";
-import {useGetAPI} from '@/hooks/useGetAPI.ts';
 import ListedFlashcards from '@/components/ListedFlashcards'
 import { useAuth } from '@/context/AuthContext.tsx'
 import LoadingSpinner from '@/components/LoadingSpinner'
+import { useQuizData } from '@/hooks/useQuizData.ts'
 
 export default function Quiz() {
     const id: number = parseInt(useParams().id as string)
-    const {data, isLoading, isError} = useGetAPI(`/api/quizzes/${id}`)
+    const { data, isLoading, isError } = useQuizData(id)
     console.log(data, isLoading, isError)
 
     let isUserAuthor = false
@@ -37,7 +37,10 @@ export default function Quiz() {
                 )}
                 {!isLoading && !isError && data && (
                     <div className={styles.MainRight}>
-                        <h1>{data.quizName || 'Nazwa quizu'}</h1>
+                        <h1>{data.quiz.name || 'Nazwa quizu'}</h1>
+                        {data.quiz.description && (
+                            <p>{data.quiz.description}</p>
+                        )}
                         <Container cssClassName={'container-vertical-borderless'}>
                             <button>eksport do pliku</button>
                             <button>udostępnij</button>
