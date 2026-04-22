@@ -26,7 +26,7 @@ export default function Login() {
         }, {
             onSuccess: (data) => {
                 console.log(data)
-                login(data.token)
+                login(data.token, data.user)
                 navigate('/')
             }
         })

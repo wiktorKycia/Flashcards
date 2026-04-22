@@ -1,9 +1,11 @@
 import { createContext, useState, useContext, type ReactNode } from 'react'
+import type LoggedInUser from '@/types/LoggedInUser.ts'
 
 interface AuthContextType {
     token: string | null;
-    login: (token: string) => void;
+    login: (token: string, user: LoggedInUser) => void;
     logout: () => void;
+    user: LoggedInUser | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -11,9 +13,18 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export default function AuthProvider({ children } : {children: ReactNode}) {
     const [token, setToken] = useState(localStorage.getItem('token'))
 
-    function login(newToken: string)
+    let u: LoggedInUser | null = null;
+    if (localStorage.getItem('userId') != null && localStorage.getItem('userName') != null)
+    {
+        u = {id: parseInt(localStorage.getItem('userId') as string), name: localStorage.getItem('userName') as string}
+    }
+    const [user, setUser] = useState<LoggedInUser | null>(u)
+
+    function login(newToken: string, user: LoggedInUser)
     {
         localStorage.setItem('token', newToken)
+        localStorage.setItem('userId', user.id as unknown as string)
+        localStorage.setItem('userName', user.name)
         setToken(newToken)
     }
 
@@ -21,10 +32,11 @@ export default function AuthProvider({ children } : {children: ReactNode}) {
     {
         localStorage.removeItem('token')
         setToken(null)
+        setUser(null)
     }
 
     return (
-        <AuthContext.Provider value={{token, login, logout}}>
+        <AuthContext.Provider value={{token, login, logout, user}}>
             {children}
         </AuthContext.Provider>
     )

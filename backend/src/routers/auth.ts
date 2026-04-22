@@ -106,7 +106,7 @@ router.post('/login', async (req: Request, res: Response, next: NextFunction) =>
         else
         {
             const token = jwt.sign({id: user.id, name: user.name, email: user.email}, process.env.JWT_SECRET as string, {expiresIn: '1h'})
-            res.json({token})
+            res.json({token, user: {id: user.id, name: user.name}})
         }
     }
     catch (error)
