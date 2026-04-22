@@ -81,8 +81,8 @@ export default function Quiz() {
                                     isStarred: true
                                 }
                             ]}
-                            isUserLoggedIn={false}
-                            isUserAuthor={false}
+                            isUserLoggedIn={isLoggedIn}
+                            isUserAuthor={isUserAuthor}
                         />
                     </div>
                 )}
