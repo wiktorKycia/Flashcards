@@ -7,8 +7,8 @@ dotenv.config({path: '.env.app'})
 
 const token = process.env["GITHUB_TOKEN"];
 const endpoint = "https://models.github.ai/inference";
+const client = new OpenAI({ baseURL: endpoint, apiKey: token, maxRetries: 0 });
 const modelsList: string[] = ["openai/gpt-4.1", "openai/gpt-4o", "openai/gpt-4.1-nano", "openai/gpt-4.1-mini", "openai/gpt-4o-mini"];
-let modelIndex: number = 0;
 const router: Router = express.Router()
 const prisma = new PrismaClient()
 
@@ -37,30 +37,59 @@ const mainSystemMessage = 'Your job is to create tasks for setbooks in particula
     '   ]\n' +
     '}'
 
-
 async function sendAIRequest(systemMessage: string, userMessage: string) {
+    let modelIndex: number = 0;
+
     if (!token) {
         throw new Error("Missing GITHUB_TOKEN in .env.app file")
     }
 
-    const client = new OpenAI({ baseURL: endpoint, apiKey: token });
+    while (modelIndex < modelsList.length) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(async () => controller.abort(), 12000)
 
-    const response = await client.chat.completions.create({
-        messages: [
-            { role: 'system', content: systemMessage },
-            { role: 'user', content: userMessage}
-        ],
-        model: modelsList[modelIndex] ?? "openai/gpt-4.1-mini",
-        response_format: { type: "json_object" }
-    })
+        try {
+            const response = await client.chat.completions.create({
+                messages: [
+                    {role: 'system', content: systemMessage},
+                    {role: 'user', content: userMessage}
+                ],
+                model: modelsList[modelIndex]  ?? "openai/gpt-4.1-mini",
+                response_format: {type: "json_object"}
+            }, {signal: controller.signal})
 
-    const content = response.choices?.[0]?.message?.content
+            clearTimeout(timeoutId)
 
-    if (!content) {
-        throw new Error("AI returned empty response")
+            const content = response.choices?.[0]?.message?.content
+
+            if (!content) {
+                modelIndex++
+                continue
+            }
+
+            return JSON.parse(content)
+        } catch(error) {
+            clearTimeout(timeoutId)
+
+            if (error instanceof  OpenAI.APIError) {
+                const isRateLimit: boolean = error.status === 429
+                const isForbidden: boolean = error.status === 403
+
+                if (isRateLimit || isForbidden) {
+                    modelIndex++
+                    continue
+                }
+            }
+            if (error instanceof Error && error.name === "AbortError") {
+                modelIndex++
+                continue
+            }
+
+            throw error
+        }
     }
 
-    return JSON.parse(content)
+    throw new Error("All models failed or returned empty responses")
 }
 
 async function chooseFlashcards(questionsAmount: number, quizId: number, languageSide: "FRONT" | "BACK", isSingleChoice: boolean = false){
