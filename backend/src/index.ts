@@ -8,6 +8,7 @@ import flashcardsRouter from "./routers/flashcardsRouter"
 import quizzesRouter from "./routers/quizzesRouter"
 import quizzesProgressRouter from "./routers/quizzesProgressRouter"
 import savedQuizzesRouter from "./routers/savedQuizzesRouter"
+import tasksGenerationRouter from './routers/tasksGenerationRouter'
 import { PrismaClientKnownRequestError, PrismaClientValidationError } from '@prisma/client/runtime/library'
 
 const myenv = dotenv.config({ path: '.env.app' })
@@ -26,6 +27,7 @@ app.use("/saved-quizzes", savedQuizzesRouter)
 app.use("/flashcards", flashcardsRouter)
 app.use("/quizzes", quizzesRouter)
 app.use("/quizzes-progress", quizzesProgressRouter)
+app.use("/tasks/generation", tasksGenerationRouter)
 
 app.get('/', (_req: Request, res: Response) => {
     res.status(200).json({content: "Hello world!"})

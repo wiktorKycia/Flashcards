@@ -201,7 +201,7 @@ async function chooseFlashcards(questionsAmount: number, quizId: number, languag
     }
 }
 
-router.post("/fill-gap-task", async (req: Request, res: Response, next: NextFunction) => {
+router.post("/fill-gap", async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { phrases, warning } = await chooseFlashcards(
             req.body.questionsAmount,
@@ -226,7 +226,7 @@ router.post("/fill-gap-task", async (req: Request, res: Response, next: NextFunc
     }
 })
 
-router.post("/first-letter-gap-task", async (req: Request, res: Response, next: NextFunction) => {
+router.post("/first-letter-gap", async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { phrases, warning } = await chooseFlashcards(req.body.questionsAmount, req.body.quizId, req.body.languageSide)
         const subtasks = await sendAIRequest(mainSystemMessage, phrases)
@@ -252,7 +252,7 @@ router.post("/first-letter-gap-task", async (req: Request, res: Response, next: 
     }
 })
 
-router.post("/single-choice-task", async (req: Request, res: Response, next: NextFunction) => {
+router.post("/single-choice", async (req: Request, res: Response, next: NextFunction) => {
     try {
         const systemMessage =
             'Your job is to create tasks for setbooks in particular language.\n' +
