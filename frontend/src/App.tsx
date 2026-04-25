@@ -12,9 +12,8 @@ function App() {
         <AuthProvider>
             <Routes>
                 <Route path='/' element={<Home/>}/>
-                <Route path='/user/' element={<UserSettings/>}>
-                    <Route path=":id" element={<UserProfile/>}/>
-                </Route>
+                <Route path='/user/' element={<UserSettings/>}/>
+                <Route path='/user/:id' element={<UserProfile/>}/>
                 <Route path='/quiz/' >
                     <Route path=":id" element={<Quiz/>}/>
                 </Route>
