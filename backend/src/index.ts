@@ -60,11 +60,17 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
             error: "Nie skonfigurowano tokena GitHub wymaganego do korzystania z modeli AI"
         })
     }
-
-    if (err.message === "All models failed or returned empty responses") {
+    else if (err.message === "All models failed or returned empty responses") {
         return res.status(503).json({
             error: "Wszystkie modele AI są chwilowo niedostępne lub osiągnęły limity. Spróbuj ponownie za około minutę"
         })
+    }
+    else if (err.message === "Flashcards not found") {
+        return res.sendStatus(404)
+    }
+
+    else if (err.message === "Not enough flashcards found") {
+        return res.sendStatus(422)
     }
 
     return res.sendStatus(500)

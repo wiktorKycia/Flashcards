@@ -103,8 +103,18 @@ async function chooseFlashcards(questionsAmount: number, quizId: number, languag
     if (flashcards.length === 0) {
         throw new Error("Flashcards not found")
     }
+    else if (isSingleChoice && flashcards.length < 3) {
+        throw new Error("Not enough flashcards found")
+    }
     else if ((isSingleChoice && flashcards.length < questionsAmount * 3) || flashcards.length < questionsAmount) {
         warning = "W quizie nie ma wystarczającej liczby fiszek do utworzenia wymaganej liczby pytań"
+
+        if (isSingleChoice) {
+            questionsAmount = Math.floor(flashcards.length / 3)
+        }
+        else {
+            questionsAmount = flashcards.length
+        }
     }
 
     const shuffled = flashcards.sort(() => 0.5 - Math.random())
@@ -190,10 +200,6 @@ router.post("/fill-gap", async (req: Request, res: Response, next: NextFunction)
         }
     }
     catch (error) {
-        if (error instanceof Error && (error.message === "Flashcards not found" || error.message === "Quiz not found")) {
-            res.sendStatus(404)
-        }
-
         next(error)
     }
 })
@@ -216,10 +222,6 @@ router.post("/first-letter-gap", async (req: Request, res: Response, next: NextF
         }
     }
     catch (error) {
-        if (error instanceof Error && error.message === "Flashcards not found") {
-            res.sendStatus(404)
-        }
-
         next(error)
     }
 })
@@ -270,10 +272,6 @@ router.post("/single-choice", async (req: Request, res: Response, next: NextFunc
         }
     }
     catch (error) {
-        if (error instanceof Error && error.message === "Flashcards not found") {
-            res.sendStatus(404)
-        }
-
         next(error)
     }
 })
