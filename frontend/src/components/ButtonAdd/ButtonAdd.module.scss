@@ -1,5 +1,4 @@
-.ButtonAdd
-{
+.ButtonAdd {
     background-color: forestgreen;
     color: whitesmoke;
     border-radius: 100%;
@@ -18,10 +17,8 @@
     &:hover .TooltipText {
         visibility: visible;
     }
-
 }
-.TooltipText
-{
+.TooltipText {
     visibility: hidden; /* Hidden by default */
     width: 130px;
     background-color: black;

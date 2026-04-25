@@ -1,1 +1,1 @@
-export {default} from './AttachedFlashcardsMode.tsx'
+export { default } from './AttachedFlashcardsMode.tsx'

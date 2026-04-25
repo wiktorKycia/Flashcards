@@ -1,4 +1,4 @@
 export default interface LoggedInUser {
-    id: number,
+    id: number
     name: string
 }

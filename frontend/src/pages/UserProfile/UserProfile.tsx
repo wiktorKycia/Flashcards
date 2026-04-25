@@ -11,17 +11,15 @@ export default function UserProfile() {
     return (
         // <div className={styles.UserProfile}>information about the user {userId}</div>
         <>
-            {data && (
-                <h1>{data.name}</h1>
-
-            )}
-            {data && data.createdQuizzes.map((quiz) => (
-                <Container>
-                    <h2>{quiz.name}</h2>
-                    <p>{quiz.description}</p>
-                    <p>{quiz.id}</p>
-                </Container>
-            ))}
+            {data && <h1>{data.name}</h1>}
+            {data &&
+                data.createdQuizzes.map((quiz) => (
+                    <Container>
+                        <h2>{quiz.name}</h2>
+                        <p>{quiz.description}</p>
+                        <p>{quiz.id}</p>
+                    </Container>
+                ))}
         </>
     )
 }

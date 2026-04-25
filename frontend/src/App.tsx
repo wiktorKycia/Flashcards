@@ -1,7 +1,7 @@
 import Home from './pages/Home'
 import UserProfile from './pages/UserProfile'
 import { Routes, Route } from 'react-router'
-import Quiz from "./pages/Quiz";
+import Quiz from './pages/Quiz'
 import AuthProvider from '@/context/AuthContext.tsx'
 import Register from '@/pages/Register/Register.tsx'
 import Login from '@/pages/Login/Login.tsx'
@@ -11,17 +11,16 @@ function App() {
     return (
         <AuthProvider>
             <Routes>
-                <Route path='/' element={<Home/>}/>
-                <Route path='/user/' element={<UserSettings/>}/>
-                <Route path='/user/:id' element={<UserProfile/>}/>
-                <Route path='/quiz/' >
-                    <Route path=":id" element={<Quiz/>}/>
+                <Route path="/" element={<Home />} />
+                <Route path="/user/" element={<UserSettings />} />
+                <Route path="/user/:id" element={<UserProfile />} />
+                <Route path="/quiz/">
+                    <Route path=":id" element={<Quiz />} />
                 </Route>
-                <Route path='/register/' element={<Register/>}/>
-                <Route path='/login/' element={<Login/>}/>
+                <Route path="/register/" element={<Register />} />
+                <Route path="/login/" element={<Login />} />
             </Routes>
         </AuthProvider>
-
     )
 }
 

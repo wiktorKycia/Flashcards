@@ -1,8 +1,7 @@
 .Main {
     display: flex;
 
-    &Right
-    {
+    &Right {
         width: 90%;
         float: right;
         display: flex;
@@ -21,7 +20,7 @@
     gap: 1rem;
     width: 100%;
     max-width: 400px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
     h2 {
         text-align: center;

@@ -7,12 +7,12 @@ export default defineConfig({
     plugins: [react()],
     server: {
         watch: {
-            usePolling: true,
+            usePolling: true
         },
         host: true,
         port: 5173,
         proxy: {
-            '/api': 'http://app:3000',
+            '/api': 'http://app:3000'
             // '/auth': 'http://app:3000',
             // '/users': 'http://app:3000',
             // '/folders': 'http://app:3000',
@@ -24,7 +24,7 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            "@": path.resolve(__dirname, './src'),
+            '@': path.resolve(__dirname, './src')
         }
     }
 })

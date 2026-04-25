@@ -1,1 +1,1 @@
-export {default} from './Quiz.tsx'
+export { default } from './Quiz.tsx'

@@ -9,9 +9,9 @@ interface RegisterVariables {
 const register = async ({ password, name, email }: RegisterVariables) => {
     const response = await fetch('/api/auth/register', {
         method: 'POST',
-        body: JSON.stringify({name: name, email: email, password: password}),
+        body: JSON.stringify({ name: name, email: email, password: password }),
         headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
         }
     })
 

@@ -3,12 +3,9 @@ import { useQuery } from '@tanstack/react-query'
 const getData = async (userId: number): Promise<Quiz[]> => {
     const quizResponse = await fetch(`/api/saved-quizzes?userId=${userId}`)
 
-    if (!quizResponse.ok)
-    {
+    if (!quizResponse.ok) {
         throw new Error(`HTTP ${quizResponse.status}`)
-    }
-    else
-    {
+    } else {
         return await quizResponse.json()
     }
 }
@@ -21,9 +18,8 @@ export const useSavedQuizzes = (id: number) => {
 }
 
 interface Quiz {
-    id: number,
-    name: string,
-    description: string,
+    id: number
+    name: string
+    description: string
     authorId: number
 }
-

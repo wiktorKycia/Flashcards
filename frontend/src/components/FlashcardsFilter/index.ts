@@ -1,1 +1,1 @@
-export {default} from './FlashcardsFilter.tsx'
+export { default } from './FlashcardsFilter.tsx'

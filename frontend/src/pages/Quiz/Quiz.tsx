@@ -1,11 +1,11 @@
 import Header from '@/components/Header'
-import Person from "@/components/Person";
+import Person from '@/components/Person'
 import Container from '@/components/Container'
-import AttachedFlashcardsMode from "@/components/AttachedFlashcardsMode";
-import ButtonTop from "@/components/ButtonTop";
-import ToolBar from "@/components/ToolBar";
+import AttachedFlashcardsMode from '@/components/AttachedFlashcardsMode'
+import ButtonTop from '@/components/ButtonTop'
+import ToolBar from '@/components/ToolBar'
 import styles from './Quiz.module.scss'
-import {useParams} from "react-router";
+import { useParams } from 'react-router'
 import ListedFlashcards from '@/components/ListedFlashcards'
 import { useAuth } from '@/context/AuthContext.tsx'
 import LoadingSpinner from '@/components/LoadingSpinner'
@@ -21,8 +21,7 @@ export default function Quiz() {
     const authInfo = useAuth()
 
     const isLoggedIn = !!authInfo.token
-    if (isLoggedIn && authInfo.user != null && data != undefined)
-    {
+    if (isLoggedIn && authInfo.user != null && data != undefined) {
         isUserAuthor = authInfo.user.id == data.quiz.authorId
     }
 
@@ -31,19 +30,17 @@ export default function Quiz() {
             <Header />
             <main className={styles.Main}>
                 <ToolBar />
-                {isError && (
-                    <div>wystąpił błąd</div>
-                )}
-                {isLoading && (
-                    <LoadingSpinner/>
-                )}
+                {isError && <div>wystąpił błąd</div>}
+                {isLoading && <LoadingSpinner />}
                 {!isLoading && !isError && data && (
                     <div className={styles.MainRight}>
                         <h1>{data.quiz.name || 'Nazwa quizu'}</h1>
                         {data.quiz.description && (
                             <p>{data.quiz.description}</p>
                         )}
-                        <Container cssClassName={'container-vertical-borderless'}>
+                        <Container
+                            cssClassName={'container-vertical-borderless'}
+                        >
                             <button>eksport do pliku</button>
                             <button>udostępnij</button>
 
@@ -51,8 +48,8 @@ export default function Quiz() {
                                 <>
                                     <button>zapisz</button>
                                     <button>kopiuj</button>
-                                </>)
-                            }
+                                </>
+                            )}
                             {isUserAuthor && (
                                 <>
                                     <button>edytuj</button>
@@ -60,21 +57,27 @@ export default function Quiz() {
                                 </>
                             )}
                         </Container>
-                        <Container cssClassName={'container-vertical-borderless'}>
+                        <Container
+                            cssClassName={'container-vertical-borderless'}
+                        >
                             <button>ucz się</button>
                             <button>dopasowania</button>
                         </Container>
                         <Container>
-                            <AttachedFlashcardsMode flashcards={data.flashcards.map((flashcard) => {
-                                return {
-                                    front: flashcard.side1,
-                                    back: flashcard.side2,
-                                    langFront: flashcard.language1,
-                                    langBack: flashcard.language2
-                                }
-                            })}/>
+                            <AttachedFlashcardsMode
+                                flashcards={data.flashcards.map((flashcard) => {
+                                    return {
+                                        front: flashcard.side1,
+                                        back: flashcard.side2,
+                                        langFront: flashcard.language1,
+                                        langBack: flashcard.language2
+                                    }
+                                })}
+                            />
                         </Container>
-                        <Container cssClassName={'container-vertical-borderless'}>
+                        <Container
+                            cssClassName={'container-vertical-borderless'}
+                        >
                             <Person name={'John doe'} title={'author'} />
                             <button>like</button>
                             <button>dislike</button>

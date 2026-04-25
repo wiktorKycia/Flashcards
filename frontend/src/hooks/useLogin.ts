@@ -5,12 +5,15 @@ interface LoginVariables {
     login: string
 }
 
-const login = async ({ login, password }: LoginVariables): Promise<LoginReturn> => {
+const login = async ({
+    login,
+    password
+}: LoginVariables): Promise<LoginReturn> => {
     const response = await fetch('/api/auth/login', {
         method: 'POST',
-        body: JSON.stringify({login: login, password: password}),
+        body: JSON.stringify({ login: login, password: password }),
         headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
         }
     })
 
@@ -28,9 +31,9 @@ export const useLogin = () => {
 }
 
 interface LoginReturn {
-    token: string,
+    token: string
     user: {
-        id: number,
+        id: number
         name: string
     }
 }
