@@ -8,6 +8,7 @@ import flashcardsRouter from "./routers/flashcardsRouter"
 import quizzesRouter from "./routers/quizzesRouter"
 import quizzesProgressRouter from "./routers/quizzesProgressRouter"
 import savedQuizzesRouter from "./routers/savedQuizzesRouter"
+import tasksGenerationRouter from "./routers/tasksGenerationRouter"
 import quizzesLikesRouter from "./routers/quizzesLikesRouter"
 import { PrismaClientKnownRequestError, PrismaClientValidationError } from '@prisma/client/runtime/library'
 import { MongoClient, Collection } from "mongodb"
@@ -94,6 +95,7 @@ app.use("/flashcards", flashcardsRouter)
 app.use("/quizzes", quizzesRouter)
 app.use("/quizzes-progress", quizzesProgressRouter)
 app.use("/quizzes-likes", quizzesLikesRouter)
+app.use("/api/tasks/generation", tasksGenerationRouter)
 
 app.get('/', (_req: Request, res: Response) => {
     res.status(200).json({content: "Hello world!"})
@@ -139,6 +141,24 @@ app.use(async (err: unknown, _req: Request, res: Response, _next: NextFunction) 
 
     if (err instanceof PrismaClientValidationError) {
         return res.sendStatus(400)
+    }
+
+    if (err.message === "Missing GITHUB_TOKEN in .env.app file") {
+        return res.status(500).json({
+            error: "Nie skonfigurowano tokena GitHub wymaganego do korzystania z modeli AI"
+        })
+    }
+    else if (err.message === "All models failed or returned empty responses") {
+        return res.status(503).json({
+            error: "Wszystkie modele AI są chwilowo niedostępne lub osiągnęły limity. Spróbuj ponownie za około minutę"
+        })
+    }
+    else if (err.message === "Flashcards not found") {
+        return res.sendStatus(404)
+    }
+
+    else if (err.message === "Not enough flashcards found") {
+        return res.sendStatus(422)
     }
 
     return res.sendStatus(500)
