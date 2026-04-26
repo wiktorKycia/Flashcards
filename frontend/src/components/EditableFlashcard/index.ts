@@ -1,1 +1,1 @@
-export {default} from './EditableFlashcard.tsx'
+export { default } from './EditableFlashcard.tsx'

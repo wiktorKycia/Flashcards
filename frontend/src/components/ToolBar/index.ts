@@ -1,1 +1,1 @@
-export {default} from './ToolBar.tsx'
+export { default } from './ToolBar.tsx'

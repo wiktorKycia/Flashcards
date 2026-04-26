@@ -5,13 +5,16 @@ export default function ButtonTop() {
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
-        });
-    };
+        })
+    }
 
     return (
-        <button className={styles.ButtonTop} onClick={scrollToTop} aria-label="Scroll to top">
+        <button
+            className={styles.ButtonTop}
+            onClick={scrollToTop}
+            aria-label="Scroll to top"
+        >
             ↑
         </button>
     )
 }
-
