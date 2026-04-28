@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { useLogin } from '@/hooks/useLogin.ts'
-import Header from '@/components/Header'
-import ToolBar from '@/components/ToolBar'
 import styles from './Login.module.scss'
 import type { NavigateFunction } from 'react-router'
 
@@ -40,9 +38,7 @@ export default function Login() {
 
     return (
         <>
-            <Header />
             <main className={styles.Main}>
-                <ToolBar />
                 <div className={styles.MainRight}>
                     <form
                         onSubmit={handleSubmit}

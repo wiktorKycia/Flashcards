@@ -6,10 +6,12 @@ import AuthProvider from '@/context/AuthContext.tsx'
 import Register from '@/pages/Register/Register.tsx'
 import Login from '@/pages/Login/Login.tsx'
 import UserSettings from '@/pages/UserSettings'
+import Header from "@/components/Header";
 
 function App() {
     return (
         <AuthProvider>
+            <Header/>
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/user/" element={<UserSettings />} />

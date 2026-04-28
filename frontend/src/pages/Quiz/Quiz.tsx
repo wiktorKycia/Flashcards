@@ -1,4 +1,3 @@
-import Header from '@/components/Header'
 import Person from '@/components/Person'
 import Container from '@/components/Container'
 import AttachedFlashcardsMode from '@/components/AttachedFlashcardsMode'
@@ -27,9 +26,8 @@ export default function Quiz() {
 
     return (
         <>
-            <Header />
             <main className={styles.Main}>
-                <ToolBar />
+                {isLoggedIn && (<ToolBar />)}
                 {isError && <div>wystąpił błąd</div>}
                 {isLoading && <LoadingSpinner />}
                 {!isLoading && !isError && data && (
