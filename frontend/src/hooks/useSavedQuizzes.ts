@@ -24,3 +24,10 @@ interface Quiz {
     description: string
     authorId: number
 }
+
+interface SavedQuiz {
+    id: number
+    userID: number
+    quizId: number
+    folderId: number | null
+}
