@@ -10,7 +10,7 @@ dotenv.config({path: '.env.app'})
 const token = process.env["GITHUB_TOKEN"];
 const endpoint = "https://models.github.ai/inference";
 const client = new OpenAI({ baseURL: endpoint, apiKey: token, maxRetries: 0 });
-const modelsList: string[] = ["openai/gpt-4.1", "openai/gpt-4o", "openai/gpt-4.1-nano", "openai/gpt-4.1-mini", "openai/gpt-4o-mini"];
+const modelsList: string[] = ["openai/gpt-4.1", "openai/gpt-4o", "DeepSeek-V3-0324", "openai/gpt-4.1-nano", "openai/gpt-4.1-mini", "openai/gpt-4o-mini"];
 const router: Router = express.Router()
 const prisma = new PrismaClient()
 const fillGapPrompt = loadPrompt("fill-gap.txt")
@@ -51,7 +51,13 @@ async function sendAIRequest(systemMessage: string, userMessage: string) {
                 continue
             }
 
-            return JSON.parse(content)
+            const cleanContent = content
+                .replace(/^```json/i, "")
+                .replace(/^```/i, "")
+                .replace(/```$/i, "")
+                .trim()
+
+            return JSON.parse(cleanContent)
         } catch(error) {
             clearTimeout(timeoutId)
 
