@@ -5,4 +5,12 @@
     flex-direction: row;
     justify-content: space-between;
     background-color: var(--color-accent);
+
+    &Left, &Right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-inline: 1.4rem;
+    }
+
 }
