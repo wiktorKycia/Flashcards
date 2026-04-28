@@ -1,11 +1,11 @@
 import styles from './EditableFlashcard.module.scss'
-import {useState} from "react";
+import { useState } from 'react'
 
 interface EditableFlashcardProps {
-    front: string,
-    back: string,
-    isStarred: boolean,
-    isUserLoggedIn: boolean,
+    front: string
+    back: string
+    isStarred: boolean
+    isUserLoggedIn: boolean
     isUserAuthor: boolean
 }
 
@@ -18,27 +18,35 @@ export default function EditableFlashcard(props: EditableFlashcardProps) {
 
     return (
         <div className={styles.EditableFlashcard}>
-            { isEditing ? (
-                <input type="text" value={text1} onChange={(event) => setText1(event.target.value)}/>
+            {isEditing ? (
+                <input
+                    type="text"
+                    value={text1}
+                    onChange={(event) => setText1(event.target.value)}
+                />
             ) : (
                 <div>{text1}</div>
             )}
 
-            { isEditing ? (
-                <input type="text" value={text2} onChange={(event) => setText2(event.target.value)}/>
+            {isEditing ? (
+                <input
+                    type="text"
+                    value={text2}
+                    onChange={(event) => setText2(event.target.value)}
+                />
             ) : (
                 <div>{text2}</div>
             )}
 
-            { props.isUserLoggedIn && ( /*zalogowany*/
+            {props.isUserLoggedIn /*zalogowany*/ && (
                 <button onClick={() => setIsStarred((prevState) => !prevState)}>
-                    {isStarred ? "*" : "-"}
+                    {isStarred ? '*' : '-'}
                 </button>
             )}
 
-            { props.isUserLoggedIn && props.isUserAuthor && ( /*twórca*/
+            {props.isUserLoggedIn && props.isUserAuthor /*twórca*/ && (
                 <button onClick={() => setIsEditing((prevState) => !prevState)}>
-                    {isEditing ? "Save" : "Edit"}
+                    {isEditing ? 'Save' : 'Edit'}
                 </button>
             )}
         </div>

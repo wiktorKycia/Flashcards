@@ -14,7 +14,6 @@ interface SavedQuizCreateAndUpdate {
     quizId: number
     folderId?: number
 }
-
 router.get("/:id(\\d+)", async (req: Request<SavedQuizParams>, res: Response, next: NextFunction) => {
     try {
         const savedQuizId: number = parseInt(req.params.id)
