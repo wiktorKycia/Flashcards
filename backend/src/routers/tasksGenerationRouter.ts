@@ -2,6 +2,8 @@ import OpenAI from 'openai'
 import dotenv from 'dotenv'
 import { PrismaClient } from '@prisma/client'
 import express, { NextFunction, Request, Response, Router } from 'express'
+import fs from 'fs'
+import path from 'path'
 
 dotenv.config({path: '.env.app'})
 
@@ -11,31 +13,13 @@ const client = new OpenAI({ baseURL: endpoint, apiKey: token, maxRetries: 0 });
 const modelsList: string[] = ["openai/gpt-4.1", "openai/gpt-4o", "openai/gpt-4.1-nano", "openai/gpt-4.1-mini", "openai/gpt-4o-mini"];
 const router: Router = express.Router()
 const prisma = new PrismaClient()
+const fillGapPrompt = loadPrompt("fill-gap.txt")
+const singleChoicePrompt = loadPrompt("single-choice.txt")
 
-const mainSystemMessage = 'Your job is to create tasks for setbooks in particular language.\n' +
-    'You will be given some phrases. For each provided phrase, create one natural sentence in the same language. ' +
-    'The sentence must match the phrase\'s difficulty level (e.g., A1, B2, C1) and provide enough context to understand the phrase\'s meaning. ' +
-    'Replace the phrase with a gap, so the student will have to guess it.\n\n' +
-    'For example: The given phrase is "downhill". ' +
-    'The sentence should then look something like: "The punctuality of the train service has been going _____ since the beginning of this year.".\n' +
-    'Second example: The given phrase is "completely unjustified". ' +
-    'The output sentence: "Her anger at his comment was ________, given the explanation he had offered.".\n' +
-    'RULE FOR MULTI_WORD PHRASES:\n' +
-    '- multi-word phrases must NOT create multiple gaps or word-by-word gaps. They must always become one continuous gap (e.g. p_____ not p____ o___ c___ for the phrase "piece of cake").\n' +
-    'You can think of any sentence, that was only the example. Remember that your answer should contain only the sentence with the gap marked as underscores.\n' +
-    'Return the data as a JSON array of objects with the following structure:\n' +
-    '{\n' +
-    '   data: [\n' +
-    '       {\n' +
-    '           "phrase": "text",\n' +
-    '           "sentence": "text"\n' +
-    '       },\n' +
-    '       {\n' +
-    '           "phrase": "text",\n' +
-    '           "sentence": "text"\n' +
-    '       }\n' +
-    '   ]\n' +
-    '}'
+function loadPrompt(fileName: string): string {
+    const filePath = path.join(__dirname, "..", "prompts", fileName)
+    return fs.readFileSync(filePath, "utf-8")
+}
 
 async function sendAIRequest(systemMessage: string, userMessage: string) {
     let modelIndex: number = 0;
@@ -190,7 +174,7 @@ router.post("/fill-gap", async (req: Request, res: Response, next: NextFunction)
             req.body.quizId,
             req.body.languageSide
         )
-        const subtasks = await sendAIRequest(mainSystemMessage, phrases)
+        const subtasks = await sendAIRequest(fillGapPrompt, phrases)
 
         if (warning) {
             return res.json({ subtasks, warning })
@@ -207,7 +191,7 @@ router.post("/fill-gap", async (req: Request, res: Response, next: NextFunction)
 router.post("/first-letter-gap", async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { phrases, warning } = await chooseFlashcards(req.body.questionsAmount, req.body.quizId, req.body.languageSide)
-        const subtasks = await sendAIRequest(mainSystemMessage, phrases)
+        const subtasks = await sendAIRequest(fillGapPrompt, phrases)
 
         // This part is for changing the first underscore in the gap to the first letter of the phrase, because weaker models cannot handle it for multi-word phrases according to my tests
         for (let resultIndex in subtasks.data) {
@@ -228,41 +212,8 @@ router.post("/first-letter-gap", async (req: Request, res: Response, next: NextF
 
 router.post("/single-choice", async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const systemMessage =
-            'Your job is to create tasks for setbooks in particular language.\n' +
-            'You will be given some phrases. For each 3 of provided phrases, choose one phrase and create one natural sentence in the same language with that phrase. ' +
-            'The rest of the phrases will serve as incorrect answers in the given multiple choice tasks. ' +
-            'The sentence must match the phrase\'s difficulty level (e.g., A1, B2, C1) and provide enough context to understand the phrase\'s meaning. ' +
-            'Replace the phrase with a gap, so the student will have to guess it.\n' +
-            'For example: The given phrases are "downhill, left, up in flames". ' +
-            'The sentence should then look something like: "The punctuality of the train service has been going _____ since the beginning of this year.".\n' +
-            'Second example: The given phrases are "completely unjustified, full of soup, too much blue". ' +
-            'The output sentence: "Her anger at his comment was ________, given the explanation he had offered.".\n' +
-            'You can think of any sentence, that was only the example. Remember that your answer should contain sentences with the gap marked as underscores and phrases as answers for each question.\n' +
-            'RULE FOR MULTI_WORD PHRASES:\n' +
-            '- multi-word phrases must NOT create multiple gaps or word-by-word gaps. They must always become one continuous gap (e.g. p_____ not p____ o___ c___ for the phrase "piece of cake").\n' +
-            'Return the data as a JSON array of objects with the following structure:\n' +
-            '{\n' +
-            '   data: [\n' +
-            '       {\n' +
-            '           "phrase1": "text",\n' +
-            '           "phrase2": "text",\n' +
-            '           "phrase3": "text",\n' +
-            '           "correctAnswer": "text",\n' +
-            '           "sentence": "text"\n' +
-            '       },\n' +
-            '       {\n' +
-            '           "phrase1": "text",\n' +
-            '           "phrase2": "text",\n' +
-            '           "phrase3": "text",\n' +
-            '           "correctAnswer": "text",\n' +
-            '           "sentence": "text"\n' +
-            '       }\n' +
-            '   ]\n' +
-            '}'
-
         const { phrases, warning } = await chooseFlashcards(req.body.questionsAmount, req.body.quizId, req.body.languageSide, true)
-        const subtasks = await sendAIRequest(systemMessage, phrases)
+        const subtasks = await sendAIRequest(singleChoicePrompt, phrases)
 
         if (warning) {
             return res.json({ subtasks, warning })
