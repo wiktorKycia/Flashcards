@@ -25,7 +25,6 @@ interface FlashcardUpdate {
     front: string
     back: string
 }
-
 router.get("/:id(\\d+)", async (req: Request<FlashcardParams>, res: Response, next: NextFunction) => {
     try {
         const flashcardId: number = parseInt(req.params.id)

@@ -1,4 +1,4 @@
 export default interface DisplayedPerson {
-    name: string,
+    name: string
     title: string | null
 }

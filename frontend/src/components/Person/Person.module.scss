@@ -1,14 +1,11 @@
-.Person
-{
+.Person {
     width: 180px;
 
-    &Icon
-    {
+    &Icon {
         float: left;
     }
 
-    &Description
-    {
+    &Description {
         float: right;
         display: flex;
         flex-direction: column;

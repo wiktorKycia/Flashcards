@@ -1,1 +1,1 @@
-export {default} from './ButtonTop.tsx'
+export { default } from './ButtonTop.tsx'

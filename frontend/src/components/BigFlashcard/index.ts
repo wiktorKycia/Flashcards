@@ -1,1 +1,1 @@
-export {default} from './BigFlashcard.tsx'
+export { default } from './BigFlashcard.tsx'

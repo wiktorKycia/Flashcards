@@ -10,6 +10,7 @@ import quizzesProgressRouter from "./routers/quizzesProgressRouter"
 import savedQuizzesRouter from "./routers/savedQuizzesRouter"
 import quizzesLikesRouter from "./routers/quizzesLikesRouter"
 import { PrismaClientKnownRequestError, PrismaClientValidationError } from '@prisma/client/runtime/library'
+import authRouter from './routers/auth'
 import { MongoClient, Collection } from "mongodb"
 
 const myenv = dotenv.config({ path: '.env.app' })
@@ -87,13 +88,14 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
     next()
 })
 
-app.use("/users", usersRouter)
-app.use("/folders", foldersRouter)
-app.use("/saved-quizzes", savedQuizzesRouter)
-app.use("/flashcards", flashcardsRouter)
-app.use("/quizzes", quizzesRouter)
-app.use("/quizzes-progress", quizzesProgressRouter)
-app.use("/quizzes-likes", quizzesLikesRouter)
+app.use('/api/auth', authRouter)
+app.use("/api/users", usersRouter)
+app.use("/api/folders", foldersRouter)
+app.use("/api/saved-quizzes", savedQuizzesRouter)
+app.use("/api/flashcards", flashcardsRouter)
+app.use("/api/quizzes", quizzesRouter)
+app.use("/api/quizzes-progress", quizzesProgressRouter)
+app.use("/api/quizzes-likes", quizzesLikesRouter)
 
 app.get('/', (_req: Request, res: Response) => {
     res.status(200).json({content: "Hello world!"})

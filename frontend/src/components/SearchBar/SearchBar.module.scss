@@ -1,7 +1,5 @@
-.SearchBar
-{
-    &Input
-    {
+.SearchBar {
+    &Input {
         min-width: 200px;
         width: 30rem;
         height: 1.6rem;
@@ -13,8 +11,7 @@
         color: forestgreen;
     }
 
-    &Input:focus
-    {
+    &Input:focus {
         border: 2px solid green;
     }
 }

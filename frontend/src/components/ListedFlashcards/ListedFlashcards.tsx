@@ -1,13 +1,13 @@
 import styles from './ListedFlashcards.module.scss'
-import Container from "../Container";
-import EditableFlashcard from "../EditableFlashcard";
-import FlashcardsFilter from "../FlashcardsFilter";
-import type FlashcardWithStar from "../../types/FlashcardWithStar";
-import {useState} from "react";
+import Container from '../Container'
+import EditableFlashcard from '../EditableFlashcard'
+import FlashcardsFilter from '../FlashcardsFilter'
+import type FlashcardWithStar from '../../types/FlashcardWithStar'
+import { useState } from 'react'
 
 interface ListedFlashcardsProps {
-    flashcards: FlashcardWithStar[],
-    isUserLoggedIn: boolean,
+    flashcards: FlashcardWithStar[]
+    isUserLoggedIn: boolean
     isUserAuthor: boolean
 }
 
@@ -26,7 +26,11 @@ export default function ListedFlashcards(props: ListedFlashcardsProps) {
         <div className={styles.ListedFlashcards}>
             <Container>
                 <h2>Flashcards</h2>
-                <FlashcardsFilter buttonText={"Only starred"} isSelected={isStarredOnly} toggleFn={toggleIsStarred}/>
+                <FlashcardsFilter
+                    buttonText={'Only starred'}
+                    isSelected={isStarredOnly}
+                    toggleFn={toggleIsStarred}
+                />
                 <button onClick={resetFilters}>Reset filters</button>
             </Container>
             <Container>
@@ -54,9 +58,7 @@ export default function ListedFlashcards(props: ListedFlashcardsProps) {
                             />
                         )
                 })}
-
             </Container>
         </div>
     )
 }
-
