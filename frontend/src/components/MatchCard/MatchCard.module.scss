@@ -1,0 +1,53 @@
+.MatchCard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+
+    &Content{
+        font-weight: 500;
+    }
+
+    &.idle:hover {
+        box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+    }
+
+    &.idle:active {
+      transform: scale(0.95)
+    }
+
+    &.selected {
+      background-color: #eff6ff;
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+      transform: scale(1.05);
+      cursor: default;
+    }
+
+    &.wrong {
+      background-color: #fef2f2;
+      animation: shake 0.4s ease-in-out;
+    }
+
+    &.correct {
+      border-color: #22c55e;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    &.hidden {
+      opacity: 0;
+    }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  50% { transform: translateX(8px); }
+  75% { transform: translateX(-8px); }
+}
