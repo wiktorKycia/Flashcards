@@ -6,6 +6,7 @@ import AuthProvider from '@/context/AuthContext.tsx'
 import Register from '@/pages/Register/Register.tsx'
 import Login from '@/pages/Login/Login.tsx'
 import UserSettings from '@/pages/UserSettings'
+import MatchChallenge from '@/pages/MatchChallenge'
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                 <Route path="/user/:id" element={<UserProfile />} />
                 <Route path="/quiz/">
                     <Route path=":id" element={<Quiz />} />
+                    <Route path=":id/match-challenge" element={<MatchChallenge/>} />
                 </Route>
                 <Route path="/register/" element={<Register />} />
                 <Route path="/login/" element={<Login />} />
