@@ -101,6 +101,14 @@ input {
     border: none
 }
 
+.container-positioner {
+    border: none;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+}
+
+
 .container-vertical-borderless {
     display: flex;
     flex-direction: row;

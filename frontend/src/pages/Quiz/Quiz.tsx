@@ -33,39 +33,41 @@ export default function Quiz() {
                 {!isLoading && !isError && data && (
                     <div className={styles.MainWrapper}>
                         <Container
-                            cssClassName={'container-borderless ' + styles.MainContainerTitle}
+                            cssClassName={'container-borderless ' + styles.MainTitleContainer}
                         >
                             <h1>{data.quiz.name || 'Nazwa quizu'}</h1>
                             {data.quiz.description && (
                                 <p>{data.quiz.description}</p>
                             )}
                         </Container>
-                        <Container
-                            cssClassName={'container-borderless ' + styles.MainOptions}
-                        >
-                            <button>eksport do pliku</button>
-                            <button>udostępnij</button>
+                        <Container cssClassName={'container-positioner ' + styles.MainOptionsContaier}>
+                            <Container
+                                cssClassName={'container-borderless ' + styles.MainOptions}
+                            >
+                                <button>eksport do pliku</button>
+                                <button>udostępnij</button>
 
-                            {isLoggedIn && (
-                                <>
-                                    <button>zapisz</button>
-                                    <button>kopiuj</button>
-                                </>
-                            )}
-                            {isUserAuthor && (
-                                <>
-                                    <button>edytuj</button>
-                                    <button>usuń</button>
-                                </>
-                            )}
+                                {isLoggedIn && (
+                                    <>
+                                        <button>zapisz</button>
+                                        <button>kopiuj</button>
+                                    </>
+                                )}
+                                {isUserAuthor && (
+                                    <>
+                                        <button>edytuj</button>
+                                        <button>usuń</button>
+                                    </>
+                                )}
+                            </Container>
+                            <Container
+                                cssClassName={'container-borderless ' + styles.MainLearnOptions}
+                            >
+                                <button>ucz się</button>
+                                <button>dopasowania</button>
+                            </Container>
                         </Container>
-                        <Container
-                            cssClassName={'container-borderless ' + styles.MainLearnOptions}
-                        >
-                            <button>ucz się</button>
-                            <button>dopasowania</button>
-                        </Container>
-                        <Container>
+                        <Container cssClassName={'container-borderless'}>
                             <AttachedFlashcardsMode
                                 flashcards={data.flashcards.map((flashcard) => {
                                     return {
