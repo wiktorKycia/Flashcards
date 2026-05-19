@@ -1,3 +1,5 @@
+import styles from './SingleChoiceTask.module.scss'
+
 type TaskData = {
     task: {
         sentence: string
@@ -24,28 +26,27 @@ export default function SingleChoiceTask({ task, taskId, selectedValue, onChange
         }
 
         if (isCorrect) {
-            return 'correctOption'
+            return styles.correctOption
         }
 
         if (isSelected) {
-            return 'incorrectOption'
+            return styles.incorrectOption
         }
 
         return ''
     }
 
     return(
-        <div>
-            <p>
+        <div className={styles.task}>
+            <p className={styles.sentence}>
                 {task.sentence.split(/_+/)[0]}
-                <span>_____</span>
+                <span className={styles.gap}>_____</span>
                 {task.sentence.split(/_+/)[1]}
             </p>
 
-            <div>
-                <label>
+            <div className={styles.options}>
+                <label className={getOptionClassName(task.phrase1)}>
                     <input
-                        className={getOptionClassName(task.phrase1)}
                         type="radio"
                         name={`options-${taskId}`}
                         value={task.phrase1}
@@ -58,9 +59,8 @@ export default function SingleChoiceTask({ task, taskId, selectedValue, onChange
                     {task.phrase1}
                 </label>
 
-                <label>
+                <label className={getOptionClassName(task.phrase2)}>
                     <input
-                        className={getOptionClassName(task.phrase2)}
                         type="radio"
                         name={`options-${taskId}`}
                         value={task.phrase2}
@@ -73,9 +73,8 @@ export default function SingleChoiceTask({ task, taskId, selectedValue, onChange
                     {task.phrase2}
                 </label>
 
-                <label>
+                <label className={getOptionClassName(task.phrase3)}>
                     <input
-                        className={getOptionClassName(task.phrase3)}
                         type="radio"
                         name={`options-${taskId}`}
                         value={task.phrase3}
