@@ -9,14 +9,12 @@ interface FlashcardParams {
 }
 
 interface FlashcardCreate {
-    starred?: boolean
     front: string
     back: string
     quizId: number
 }
 
 interface FlashcardUpdate {
-    starred?: boolean
     front?: string
     back?: string
 }

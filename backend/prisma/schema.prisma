@@ -44,10 +44,9 @@ model Quiz {
 }
 
 model Flashcard {
-  id      Int     @id @default(autoincrement())
-  starred Boolean @default(false)
-  front   String
-  back    String
+  id    Int    @id @default(autoincrement())
+  front String
+  back  String
 
   quizId Int
   quiz   Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
@@ -56,8 +55,8 @@ model Flashcard {
 }
 
 model UserQuizProgress {
-  id        Int     @id @default(autoincrement())
-  isStarred Boolean @default(false)
+  id      Int     @id @default(autoincrement())
+  isKnown Boolean @default(false)
 
   userId      Int
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)

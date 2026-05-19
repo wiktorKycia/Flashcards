@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient, type Prisma } from "@prisma/client"
 import express, { type Router, type Request, type Response, type NextFunction } from "express"
 
 const router: Router = express.Router()
@@ -9,14 +9,14 @@ interface QuizProgressParams {
 }
 
 interface QuizProgressCreate {
-    isStarred?: boolean
+    isKnown?: boolean
     userId: number
     quizId: number
     flashcardId: number
 }
 
 interface QuizProgressUpdate {
-    isStarred: boolean // only the isStarred parameter will be updated, prisma.update always returns the whole object even if we specify only one parameter
+    isKnown: boolean
 }
 
 router.get("/:id(\\d+)", async (req: Request<QuizProgressParams>, res: Response, next: NextFunction) => {
@@ -56,13 +56,15 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
 router.patch("/:id(\\d+)", async (req: Request<QuizProgressParams>, res: Response, next: NextFunction) => {
     try {
         const quizProgressId: number = parseInt(req.params.id)
-        const updatedQuizProgressData = req.body as QuizProgressUpdate
+        const updatedQuizProgressData: QuizProgressUpdate = req.body as QuizProgressUpdate
 
         const updatedQuizProgress = await prisma.userQuizProgress.update({
             where: {
                 id: quizProgressId,
             },
-            data: updatedQuizProgressData
+            data: {
+                isKnown: updatedQuizProgressData.isKnown
+            } as Prisma.UserQuizProgressUpdateInput
         })
 
         return res.status(200).json(updatedQuizProgress)
