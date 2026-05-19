@@ -9,7 +9,7 @@ export default function KnowledgeTest() {
     const [settings, setSettings] = useState<KnowledgeTestSettings | null>(null)
     const { mutate, data, isPending, isError } = useGenerateTasks()
     const params = useParams()
-    const quizId = params.id
+    const quizId = Number(params.id)
 
     if (Number.isNaN(quizId)) {
         throw new Error("Invalid quiz id")
@@ -22,7 +22,7 @@ export default function KnowledgeTest() {
             fillGapCount: s.fillGapCount,
             firstLetterCount: s.firstLetterCount,
             singleChoiceCount: s.singleChoiceCount,
-            quizId: Number(quizId),
+            quizId: quizId,
             languageSide: s.flashcardsSide
         })
     }

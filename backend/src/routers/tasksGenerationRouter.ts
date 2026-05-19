@@ -10,7 +10,7 @@ dotenv.config({path: '.env.app'})
 const token = process.env["GITHUB_TOKEN"];
 const endpoint = "https://models.github.ai/inference";
 const client = new OpenAI({ baseURL: endpoint, apiKey: token, maxRetries: 0 });
-const modelsList: string[] = ["openai/gpt-4.1", "openai/gpt-4o", "DeepSeek-V3-0324", "openai/gpt-4.1-nano", "openai/gpt-4.1-mini", "openai/gpt-4o-mini"];
+const modelsList: string[] = ["openai/gpt-4o", "openai/gpt-4.1", "DeepSeek-V3-0324", "openai/gpt-4.1-nano", "openai/gpt-4.1-mini", "openai/gpt-4o-mini"];
 const router: Router = express.Router()
 const prisma = new PrismaClient()
 const fillGapPrompt = loadPrompt("fill_gap.txt")
@@ -30,7 +30,7 @@ async function sendAIRequest(systemMessage: string, userMessage: string) {
 
     while (modelIndex < modelsList.length) {
         const controller = new AbortController();
-        const timeoutId = setTimeout(async () => controller.abort(), 12000)
+        const timeoutId = setTimeout(async () => controller.abort(), 14000)
 
         try {
             const response = await client.chat.completions.create({
@@ -70,7 +70,7 @@ async function sendAIRequest(systemMessage: string, userMessage: string) {
                     continue
                 }
             }
-            if (error instanceof Error && error.name === "AbortError") {
+            if (error instanceof Error && (error.name === "APIUserAbortError" || error.message === "Request was aborted.")) {
                 modelIndex++
                 continue
             }
