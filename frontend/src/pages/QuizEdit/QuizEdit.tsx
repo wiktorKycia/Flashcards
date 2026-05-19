@@ -17,7 +17,6 @@ interface DraftFlashcard {
     clientId: string
     front: string
     back: string
-    starred: boolean
 }
 
 interface QuizDraft {
@@ -172,8 +171,7 @@ export default function QuizEdit(){
                 quizId: id,
                 flashcards: draft.flashcards.map((flashcard) => ({
                     front: flashcard.front,
-                    back: flashcard.back,
-                    starred: flashcard.starred
+                    back: flashcard.back
                 }))
             })
 
