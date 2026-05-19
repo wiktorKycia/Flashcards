@@ -1,22 +1,26 @@
-import Home from './pages/Home'
-import UserProfile from './pages/UserProfile'
 import { Routes, Route } from 'react-router'
-import Quiz from './pages/Quiz'
+import Home from '@/pages/Home'
+import UserProfile from '@/pages/UserProfile'
+import Quiz from '@/pages/Quiz'
 import AuthProvider from '@/context/AuthContext.tsx'
 import Register from '@/pages/Register/Register.tsx'
 import Login from '@/pages/Login/Login.tsx'
 import UserSettings from '@/pages/UserSettings'
+import Header from "@/components/Header"
+import QuizCreate from '@/pages/QuizCreate'
 import MatchChallenge from '@/pages/MatchChallenge'
 import KnowledgeTest from '@/pages/KnowledgeTest'
 
 function App() {
     return (
         <AuthProvider>
+            <Header/>
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/user/" element={<UserSettings />} />
                 <Route path="/user/:id" element={<UserProfile />} />
                 <Route path="/quiz/">
+                    <Route path="create" element={<QuizCreate/>}/>
                     <Route path=":id" element={<Quiz />} />
                     <Route path=":id/match-challenge" element={<MatchChallenge />} />
                     <Route path=":id/test" element={<KnowledgeTest />} />

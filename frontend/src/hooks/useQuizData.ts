@@ -42,6 +42,7 @@ interface Flashcard {
     front: string
     back: string
     quizId: number
+    starred: boolean
 }
 
 interface QuizAuthor {
