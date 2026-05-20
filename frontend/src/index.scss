@@ -89,7 +89,7 @@ html {
     font-size: 1.4rem;
 }
 
-button {
+button, .redirectButton {
     padding: 1rem;
     background-color: var(--color-accent);
     color: var(--color-text-buttons);

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useParams } from 'react-router'
+import { Link, useParams } from 'react-router'
 import type KnowledgeTestSettings from '@/types/KnowledgeTestSettings'
 import KnowledgeTestSetup from '@/components/KnowledgeTestSetup'
 import KnowledgeTestView from '@/components/KnowledgeTestView'
@@ -34,6 +34,12 @@ export default function KnowledgeTest() {
 
     return (
         <div className={styles.mainWrapper}>
+            <div className={styles.buttonWrapper}>
+                <Link
+                    to={`/quiz/${quizId}`}
+                    className="redirectButton"
+                >Wróć do zestawu fiszek</Link>
+            </div>
             {!settings ? (
                 <KnowledgeTestSetup onSubmitSettings={handleStart} />
             ) : (

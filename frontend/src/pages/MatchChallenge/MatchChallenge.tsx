@@ -114,6 +114,12 @@ export default function MatchChallenge(){
     return (
         <>
             <div className={styles.MatchChallenge}>
+                <div className={styles.buttonWrapper}>
+                    <Link
+                        to={`/quiz/${id}`}
+                        className="redirectButton"
+                    >Wróć do zestawu fiszek</Link>
+                </div>
                 <h2>Wyzwanie dopasowywania</h2>
                 {isError && <div>Wystąpił błąd</div>}
                 {isLoading && <LoadingSpinner />}
@@ -136,11 +142,6 @@ export default function MatchChallenge(){
                         ))}
                     </div>
                 )}
-
-                <Link
-                    to={`/quiz/${id}`}
-                    className={styles.backButton}
-                >Wróć do zestawu fiszek</Link>
             </div>
         </>
     )
