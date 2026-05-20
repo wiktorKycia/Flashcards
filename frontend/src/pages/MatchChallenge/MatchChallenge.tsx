@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import MatchCard from '@/components/MatchCard'
 import styles from './MatchChallenge.module.scss'
-import { useParams } from 'react-router'
+import { useParams, Link } from 'react-router'
 import { useQuizData } from '@/hooks/useQuizData.ts'
 import LoadingSpinner from '@/components/LoadingSpinner'
 
@@ -136,6 +136,11 @@ export default function MatchChallenge(){
                         ))}
                     </div>
                 )}
+
+                <Link
+                    to={`/quiz/${id}`}
+                    className={styles.backButton}
+                >Wróć do zestawu fiszek</Link>
             </div>
         </>
     )
