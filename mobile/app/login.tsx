@@ -15,6 +15,7 @@ import { ThemedText } from '@/components/themed-text'
 import { ThemedView } from '@/components/themed-view'
 import { useAuth } from '@/context/AuthContext'
 import { loginUser } from '@/lib/auth'
+import { useColorScheme } from '@/hooks/use-color-scheme'
 
 export default function LoginScreen() {
 	const [login, setLogin] = useState('')
@@ -22,6 +23,7 @@ export default function LoginScreen() {
 	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 	const { login: storeLogin } = useAuth()
+	const colorScheme = useColorScheme() ?? 'light'
 
 	const handleSubmit = async () => {
 		if (!login || !password) {
@@ -43,7 +45,12 @@ export default function LoginScreen() {
 	}
 
 	return (
-		<ThemedView style={styles.screen}>
+		<ThemedView
+			style={[
+				styles.screen,
+				colorScheme === 'dark' ? styles.screenDark : styles.screenLight
+			]}
+		>
 			<KeyboardAvoidingView
 				behavior={Platform.select({ ios: 'padding', android: undefined })}
 				style={styles.keyboard}
@@ -52,7 +59,14 @@ export default function LoginScreen() {
 					contentContainerStyle={styles.scrollContent}
 					keyboardShouldPersistTaps="handled"
 				>
-					<View style={styles.card}>
+					<View
+						style={[
+							styles.card,
+							colorScheme === 'dark'
+								? styles.cardDark
+								: styles.cardLight
+						]}
+					>
 						<ThemedText type="title" style={styles.title}>
 							Login
 						</ThemedText>
@@ -63,7 +77,12 @@ export default function LoginScreen() {
 							autoCapitalize="none"
 							autoCorrect={false}
 							textContentType="username"
-							style={styles.input}
+							style={[
+								styles.input,
+								colorScheme === 'dark'
+									? styles.inputDark
+									: styles.inputLight
+							]}
 						/>
 						<TextInput
 							value={password}
@@ -71,7 +90,12 @@ export default function LoginScreen() {
 							placeholder="password"
 							secureTextEntry
 							textContentType="password"
-							style={styles.input}
+							style={[
+								styles.input,
+								colorScheme === 'dark'
+									? styles.inputDark
+									: styles.inputLight
+							]}
 						/>
 						{error ? (
 							<ThemedText style={styles.errorText}>
@@ -110,8 +134,13 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
 	screen: {
-		flex: 1,
+		flex: 1
+	},
+	screenDark: {
 		backgroundColor: '#121613'
+	},
+	screenLight: {
+		backgroundColor: '#ffffff'
 	},
 	keyboard: {
 		flex: 1
@@ -123,30 +152,38 @@ const styles = StyleSheet.create({
 		paddingVertical: 32
 	},
 	card: {
-		backgroundColor: '#1e2621',
 		borderRadius: 16,
 		padding: 28,
 		gap: 16,
-		borderWidth: 1,
-		borderColor: '#2a3d30',
-		shadowColor: '#000',
-		shadowOpacity: 0.3,
-		shadowRadius: 12,
-		shadowOffset: { width: 0, height: 6 },
-		elevation: 6
+		borderWidth: 1
+	},
+	cardDark: {
+		backgroundColor: '#1e2621',
+		borderColor: '#2a3d30'
+	},
+	cardLight: {
+		backgroundColor: '#f0fff4',
+		borderColor: '#88d0d0'
 	},
 	title: {
 		textAlign: 'center'
 	},
 	input: {
-		backgroundColor: '#1e2621',
 		borderWidth: 1,
-		borderColor: '#2a3d30',
 		borderRadius: 8,
 		paddingHorizontal: 12,
 		paddingVertical: 10,
-		fontSize: 16,
+		fontSize: 16
+	},
+	inputDark: {
+		backgroundColor: '#1e2621',
+		borderColor: '#2a3d30',
 		color: '#e8f3ea'
+	},
+	inputLight: {
+		backgroundColor: '#f0fff4',
+		borderColor: '#88d0d0',
+		color: '#3c4a3e'
 	},
 	button: {
 		backgroundColor: '#22c55e',

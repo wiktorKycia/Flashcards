@@ -27,18 +27,37 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="explore"
+                name="quiz"
                 options={{
-                    title: 'Explore',
+                    title: 'Quiz',
+                    tabBarIcon: ({ color }) => (
+                        <IconSymbol size={28} name="list.bullet" color={color} />
+                    )
+                }}
+            />
+            <Tabs.Screen
+                name="settings"
+                options={{
+                    title: 'Settings',
                     tabBarIcon: ({ color }) => (
                         <IconSymbol
                             size={28}
-                            name="paperplane.fill"
+                            name="gearshape.fill"
                             color={color}
                         />
                     )
                 }}
             />
+            <Tabs.Screen
+                name="profile"
+                options={{
+                    title: 'Profile',
+                    tabBarIcon: ({ color }) => (
+                        <IconSymbol size={28} name="person.fill" color={color} />
+                    )
+                }}
+            />
+            <Tabs.Screen name="explore" options={{ href: null }} />
         </Tabs>
     )
 }
