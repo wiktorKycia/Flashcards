@@ -257,35 +257,6 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     }
 })
 
-router.post("/auth/login", async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        if (!req.body.email || !req.body.password) {
-            return res.sendStatus(400)
-        }
-
-        const user = await prisma.user.findUnique({
-            where: {
-                email: req.body.email
-            }
-        })
-
-        if (!user) {
-            return res.sendStatus(401)
-        }
-
-        const isValid: boolean = await bcrypt.compare(req.body.password, user.password)
-
-        if (!isValid) {
-            return res.sendStatus(401)
-        }
-
-        return res.sendStatus(200)
-    }
-    catch(error) {
-        next(error)
-    }
-})
-
 router.patch("/:id(\\d+)", async (req: Request<UserParams>, res: Response, next: NextFunction) => {
     try {
         const userId = parseInt(req.params.id)
