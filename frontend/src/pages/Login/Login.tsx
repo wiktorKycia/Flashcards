@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { useLogin } from '@/hooks/useLogin.ts'
 import styles from './Login.module.scss'
-import type { NavigateFunction } from 'react-router'
+import  { Link, type NavigateFunction } from 'react-router'
 
 export default function Login() {
     const navigate: NavigateFunction = useNavigate()
@@ -58,7 +58,9 @@ export default function Login() {
                             setForm({ ...form, password: e.target.value })
                         }
                     />
-                    <button type="submit">Login</button>
+                    <button type="submit">Zaloguj się</button>
+                    <div>Zapomniałeś hasła? <Link to={'/'}>Resetuj hasło</Link></div>
+                    <div>Nie masz konta? <Link to={'/register'}>Zarejestruj się</Link></div>
                 </form>
             </main>
         </>

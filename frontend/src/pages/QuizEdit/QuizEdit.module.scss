@@ -1,7 +1,7 @@
+@use "@/styles/mixins" as *;
+
 .QuizEdit {
-    display: flex;
-    justify-content: center;
-    padding: 3rem 0 6rem;
+    @include content-centered;
 }
 
 .MainWrapper {

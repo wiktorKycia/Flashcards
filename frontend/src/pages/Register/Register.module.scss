@@ -1,25 +1,9 @@
+@use "@/styles/mixins" as *;
+
 .Main {
-    display: flex;
-    justify-content: center;
-    padding-top: 10vh;
+    @include content-centered;
 }
 
 .FormContainer {
-    background-color: var(--color-surface);
-    border: var(--border);
-    border-radius: 1.6rem;
-    padding: 4rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: var(--shadow-big);
-
-    h1 {
-        text-align: center;
-        color: var(--color-text-primary);
-        margin: 0 0 1rem 0;
-        font-family: sans-serif;
-    }
+    @include login-register;
 }

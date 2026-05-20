@@ -20,3 +20,39 @@
 @mixin message {
     font-size: 1.4rem;
 }
+
+@mixin content-centered {
+    display: flex;
+    justify-content: center;
+    padding-block: 10vh;
+}
+
+@mixin login-register{
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: 1.6rem;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: var(--shadow-big);
+
+    h1 {
+        text-align: center;
+        color: var(--color-text-primary);
+        margin: 0 0 1rem 0;
+        font-family: sans-serif;
+    }
+
+    div {
+        font-size: 1.4rem;
+        color: var(--color-text-secondary);
+
+        a {
+            font-size: 1.4rem;
+            color: var(--color-accent3)
+        }
+    }
+}
