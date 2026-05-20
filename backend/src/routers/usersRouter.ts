@@ -23,6 +23,11 @@ interface UserCreate {
     path_to_img?: string
 }
 
+interface UserUpdate {
+    name: string
+    email: string
+}
+
 interface SavedQuizData {
     quiz: {
         id: number
@@ -278,6 +283,58 @@ router.post("/auth/login", async (req: Request, res: Response, next: NextFunctio
     }
     catch(error) {
         next(error)
+    }
+})
+
+router.patch("/:id(\\d+)", async (req: Request<UserParams>, res: Response, next: NextFunction) => {
+    try {
+        const userId = parseInt(req.params.id)
+        const payload: UserUpdate = req.body
+
+        if (!payload.name && !payload.email) {
+            return res.status(400).json({
+                error: "Brak danych do aktualizacji"
+            })
+        }
+
+        const updatedUser = await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                name: payload.name,
+                email: payload.email
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                path_to_img: true
+            }
+        })
+
+        return res.json(updatedUser)
+    }
+    catch(error) {
+        if (
+            error instanceof PrismaClientKnownRequestError &&
+            error.code === "P2002"
+        ) {
+            const field = (error.meta?.target as string[] | undefined)?.[0]
+
+            if (field === "name") {
+                return res.status(409).json({
+                    error: "Podana nazwa użytkownika jest zajęta"
+                })
+            }
+            else if (field === "email") {
+                return res.status(409).json({
+                    error: "Istnieje już konto z podanym adresem email"
+                })
+            }
+        }
+
+        return next(error)
     }
 })
 

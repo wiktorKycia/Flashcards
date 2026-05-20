@@ -16,3 +16,7 @@
     justify-content: flex-start;
     align-items: flex-start;
 }
+
+@mixin message {
+    font-size: 1.4rem;
+}

@@ -169,3 +169,12 @@ a {
     flex-direction: column;
 }
 
+.message-info {
+    @include message;
+    color: var(--color-text-secondary)
+}
+
+.message-error {
+    @include message;
+    color: red;
+}

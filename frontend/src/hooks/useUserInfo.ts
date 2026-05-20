@@ -1,40 +1,23 @@
 import { useQuery } from '@tanstack/react-query'
+import resolvePromise from '@/helpers/resolvePromise.ts'
 
 const getData = async (userId: number): Promise<UserInfo> => {
-    const quizResponse = await fetch(`/api/user-with-quizzes?userId=${userId}`) // rename this path
+    const user = await fetch(`/api/users/${userId}`)
 
-    return {
-        name: 'Mock',
-        createdQuizzes: [
-            {
-                id: 1,
-                name: 'MockQuiz1',
-                description: 'This is the mock quiz'
-            }
-        ]
-    }
-
-    if (!quizResponse.ok) {
-        throw new Error(`HTTP ${quizResponse.status}`)
-    } else {
-        return await quizResponse.json()
-    }
+    return resolvePromise(user)
 }
 
-export const useUserInfo = (id: number) => {
+export const useUserInfo = (id?: number | null) => {
     return useQuery({
-        queryKey: ['userInfo', id],
-        queryFn: () => getData(id)
+        queryKey: ["userInfo", id],
+        queryFn: () => getData(id as number),
+        enabled: typeof id === "number",
     })
 }
 
 interface UserInfo {
-    name: string
-    createdQuizzes: Quiz[]
-}
-
-interface Quiz {
     id: number
     name: string
-    description: string
+    email: string
+    path_to_img: string
 }
