@@ -107,7 +107,7 @@ export default function MatchChallenge(){
     return (
         <>
             <div className={styles.MatchChallenge}>
-                <h1>Match Challenge</h1>
+                <h2>Wyzwanie dopasowywania</h2>
                 {isError && <div>Wystąpił błąd</div>}
                 {isLoading && <LoadingSpinner />}
                 {isFinished && (

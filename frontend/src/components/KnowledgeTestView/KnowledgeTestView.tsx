@@ -106,6 +106,7 @@ export default function KnowledgeTestView({ data }: Props) {
                             task={task}
                             taskId={`fill-gap${i}`}
                             value={answers[`fill-gap${i}`] || ''}
+                            isFirstLetter={false}
                             onChange={handleAnswerChange}
                             isFinished={isFinished}
                         />
@@ -123,6 +124,7 @@ export default function KnowledgeTestView({ data }: Props) {
                             task={task}
                             taskId={`first-letter${i}`}
                             value={answers[`first-letter${i}`] || ''}
+                            isFirstLetter={true}
                             onChange={handleAnswerChange}
                             isFinished={isFinished}
                         />

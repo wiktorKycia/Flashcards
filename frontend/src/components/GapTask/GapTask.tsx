@@ -7,13 +7,15 @@ type TaskData = {
     }
     taskId: string
     value: string
+    isFirstLetter: boolean
     onChange: (taskID: string, value: string) => void
     isFinished: boolean
 }
 
-export default function GapTask({ task, taskId, value, onChange, isFinished }: TaskData) {
+export default function GapTask({ task, taskId, value, isFirstLetter, onChange, isFinished }: TaskData) {
     const parts: string[] = task.sentence.split(/_+/)
-    const isCorrect: boolean = value.trim() === task.phrase.trim()
+    const phrase: string = isFirstLetter ? task.phrase.slice(1) : task.phrase
+    const isCorrect: boolean = value.trim() === phrase.trim()
 
     return (
         <div className={styles.taskWrapper}>
@@ -39,7 +41,7 @@ export default function GapTask({ task, taskId, value, onChange, isFinished }: T
             </label>
 
             {isFinished && !isCorrect && (
-                <p>Poprawna odpowiedź: {task.phrase}</p>
+                <p>Poprawna odpowiedź: {phrase}</p>
             )}
         </div>
     )
