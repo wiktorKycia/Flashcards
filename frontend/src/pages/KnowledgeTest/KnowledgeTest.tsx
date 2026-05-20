@@ -4,6 +4,7 @@ import type KnowledgeTestSettings from '@/types/KnowledgeTestSettings'
 import KnowledgeTestSetup from '@/components/KnowledgeTestSetup'
 import KnowledgeTestView from '@/components/KnowledgeTestView'
 import { useGenerateTasks } from '@/hooks/useGenerateTasks.ts'
+import styles from './KnowledgeTest.module.scss'
 
 export default function KnowledgeTest() {
     const [settings, setSettings] = useState<KnowledgeTestSettings | null>(null)
@@ -32,7 +33,7 @@ export default function KnowledgeTest() {
         data?.singleChoice?.data?.length)
 
     return (
-        <>
+        <div className={styles.mainWrapper}>
             {!settings ? (
                 <KnowledgeTestSetup onSubmitSettings={handleStart} />
             ) : (
@@ -68,6 +69,6 @@ export default function KnowledgeTest() {
                     )}
                 </div>
             )}
-        </>
+        </div>
     )
 }

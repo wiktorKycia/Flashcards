@@ -5,7 +5,7 @@ type GenerateTasksProps = {
     firstLetterCount: number
     singleChoiceCount: number
     quizId: number
-    languageSide: 'FRONT' | 'BACK'
+    languageSide: string
 }
 
 export const useGenerateTasks = () => {
@@ -115,10 +115,12 @@ export const useGenerateTasks = () => {
                 warning = data3?.warning
             }
 
+
+
             return {
-                fillGap: data1,
-                firstLetterGap: data2,
-                singleChoice: data3,
+                fillGap: data1?.subtasks ?? null,
+                firstLetterGap: data2?.subtasks ?? null,
+                singleChoice: data3?.subtasks ?? null,
                 status: firstWrongStatus,
                 errorMessage: firstError,
                 warning,

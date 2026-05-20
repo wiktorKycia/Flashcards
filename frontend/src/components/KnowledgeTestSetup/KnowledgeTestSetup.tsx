@@ -1,5 +1,6 @@
 import { useState, type SubmitEvent } from 'react'
 import type KnowledgeTestSettings from '@/types/KnowledgeTestSettings'
+import styles from './KnowledgeTestSetup.module.scss'
 
 type Props = {
     onSubmitSettings: (settings: KnowledgeTestSettings) => void
@@ -23,11 +24,12 @@ export default function KnowledgeTestSetup({ onSubmitSettings }: Props) {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
-                Podaj liczbę pytań z luką:
+        <form onSubmit={handleSubmit} className={styles.setupForm}>
+            <label className={styles.setupLabel}>
+                Wybierz liczbę pytań z luką:
                 <input
-                    type="range"
+                    className={styles.setupInput}
+                    type="number"
                     value={fillGapCount}
                     min="0"
                     max="5"
@@ -37,10 +39,11 @@ export default function KnowledgeTestSetup({ onSubmitSettings }: Props) {
                 />
             </label>
 
-            <label>
-                Podaj liczbę pytań z luką, w których podana jest pierwsza litera odpowiedzi:
+            <label className={styles.setupLabel}>
+                Wybierz liczbę pytań z luką, w których podana jest pierwsza litera odpowiedzi:
                 <input
-                    type="range"
+                    className={styles.setupInput}
+                    type="number"
                     value={firstLetterCount}
                     min="0"
                     max="5"
@@ -50,10 +53,11 @@ export default function KnowledgeTestSetup({ onSubmitSettings }: Props) {
                 />
             </label>
 
-            <label>
-                Podaj liczbę pytań jednokrotnego wyboru:
+            <label className={styles.setupLabel}>
+                Wybierz liczbę pytań jednokrotnego wyboru:
                 <input
-                    type="range"
+                    className={styles.setupInput}
+                    type="number"
                     value={singleChoiceCount}
                     min="0"
                     max="5"
@@ -63,16 +67,19 @@ export default function KnowledgeTestSetup({ onSubmitSettings }: Props) {
                 />
             </label>
 
-            <label htmlFor="flashcards-side">Wybierz stronę fiszek, której mają dotyczyć pytania:</label>
+            <div className={styles.wrapper}>
+                <label className={styles.setupLabel} htmlFor="flashcards-side">Wybierz stronę fiszek, której mają dotyczyć pytania:</label>
 
-            <select
-                id="flashcards-side"
-                value={flashcardsSide}
-                onChange={(e) =>setFlashcardsSide(e.target.value)}
-            >
-                <option value="FRONT">Przód</option>
-                <option value="BACK">Tył</option>
-            </select>
+                <select
+                    className={styles.setupSelect}
+                    id="flashcards-side"
+                    value={flashcardsSide}
+                    onChange={(e) =>setFlashcardsSide(e.target.value)}
+                >
+                    <option value="FRONT">Przód</option>
+                    <option value="BACK">Tył</option>
+                </select>
+            </div>
 
             <button type="submit">
                 Rozpocznij
