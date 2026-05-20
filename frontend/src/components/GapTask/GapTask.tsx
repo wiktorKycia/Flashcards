@@ -15,14 +15,8 @@ export default function GapTask({ task, taskId, value, onChange, isFinished }: T
 
     return (
         <div>
-            <label
-                htmlFor={`${taskId}-gap`}
-            >
-                Fill the gap
-            </label>
-
-            <p>
-                {parts[0]}
+            <label>
+                <span>{parts[0]}</span>
                 <input
                     id={`${taskId}-gap`}
                     className={
@@ -39,8 +33,8 @@ export default function GapTask({ task, taskId, value, onChange, isFinished }: T
                         onChange(taskId, e.target.value)
                     }
                 />
-                {parts[1]}
-            </p>
+                <span>{parts[1]}</span>
+            </label>
 
             {isFinished && !isCorrect && (
                 <p>Poprawna odpowiedź: {task.phrase}</p>
