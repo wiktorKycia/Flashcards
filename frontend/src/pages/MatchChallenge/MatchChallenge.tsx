@@ -19,7 +19,13 @@ export default function MatchChallenge(){
     const { data, isLoading, isError } = useQuizData(id)
 
     const initialCards: CardItem[] = useMemo<CardItem[]>(() => {
-        const mapped = data?.flashcards.flatMap((flashcard) => [
+        if (!data?.flashcards || data.flashcards.length === 0) {
+            return []
+        }
+
+        const randomizedFlashcards = shuffle(data?.flashcards).slice(0, 8)
+
+        const mapped = randomizedFlashcards.flatMap((flashcard) => [
             {
                 id: `${flashcard.id}-a`,
                 pairId: flashcard.id,
@@ -34,7 +40,7 @@ export default function MatchChallenge(){
             }
         ])
 
-        return mapped ? shuffle(mapped) : []
+        return shuffle(mapped)
     }, [data?.flashcards])
 
     const [cards, setCards] = useState<CardItem[]>([])
@@ -103,6 +109,7 @@ export default function MatchChallenge(){
     }
 
     const isFinished = cards.length > 0 && cards.every((card) => card.status === 'hidden')
+    const hasNoData = !isLoading && !isError && (!data?.flashcards || data.flashcards.length === 0)
 
     return (
         <>
@@ -110,22 +117,25 @@ export default function MatchChallenge(){
                 <h2>Wyzwanie dopasowywania</h2>
                 {isError && <div>Wystąpił błąd</div>}
                 {isLoading && <LoadingSpinner />}
+                {hasNoData && <div>Brak dostępnych fiszek w tym zestawie</div>}
                 {isFinished && (
                     <div className={styles.Finished}>
                         Ukończono!
                     </div>
                 )}
 
-                <div className={styles.Grid}>
-                    {cards.map((card) => (
-                        <MatchCard
-                            key={card.id}
-                            content={card.content}
-                            status={card.status}
-                            onClick={() => handleCardClick(card.id)}
-                        />
-                    ))}
-                </div>
+                {!hasNoData && (
+                    <div className={styles.Grid}>
+                        {cards.map((card) => (
+                            <MatchCard
+                                key={card.id}
+                                content={card.content}
+                                status={card.status}
+                                onClick={() => handleCardClick(card.id)}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
         </>
     )
