@@ -1,3 +1,5 @@
+import styles from "./GapTask.module.scss"
+
 type TaskData = {
     task: {
         sentence: string
@@ -14,7 +16,7 @@ export default function GapTask({ task, taskId, value, onChange, isFinished }: T
     const isCorrect: boolean = value.trim() === task.phrase.trim()
 
     return (
-        <div>
+        <div className={styles.taskWrapper}>
             <label>
                 <span>{parts[0]}</span>
                 <input
@@ -22,8 +24,8 @@ export default function GapTask({ task, taskId, value, onChange, isFinished }: T
                     className={
                         isFinished
                             ? isCorrect
-                                ? 'correctGap'
-                                : 'incorrectGap'
+                                ? styles.correctGap
+                                : styles.incorrectGap
                             : ''
                     }
                     type="text"

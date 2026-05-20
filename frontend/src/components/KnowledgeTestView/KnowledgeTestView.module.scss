@@ -1,0 +1,21 @@
+.tasksForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.taskGroup {
+  margin: 2rem;
+  width: 100%;
+  font-size: 1.5rem;
+  color: var(--color-text-primary);
+}
+
+.resultWrapper {
+  font-size: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1.5rem;
+  color: var(--color-text-primary);
+}

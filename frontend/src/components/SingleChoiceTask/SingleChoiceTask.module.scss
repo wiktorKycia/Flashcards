@@ -1,3 +1,7 @@
+.taskWrapper {
+  margin: 1rem;
+  font-size: 1.7rem;
+}
 
 .correctOption {
   color: limegreen;
@@ -5,4 +9,18 @@
 
 .incorrectOption {
   color: red;
+}
+
+.optionMark {
+  margin-right: 3px;
+
+  &:focus {
+    border-color: var(--color-accent);
+    box-shadow: none;
+  }
+}
+
+.optionsWrapper {
+  display: flex;
+  flex-direction: column;
 }

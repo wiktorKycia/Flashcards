@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import GapTask from '@/components/GapTask'
 import SingleChoiceTask from '@/components/SingleChoiceTask'
+import styles from './KnowledgeTestView.module.scss'
 
 type GapTask = {
     sentence: string
@@ -89,13 +90,14 @@ export default function KnowledgeTestView({ data }: Props) {
 
     return (
         <form
+            className={styles.tasksForm}
             onSubmit={(e) => {
                 e.preventDefault()
                 handleCheck()
             }}
         >
             {data.fillGap?.data?.length ? (
-                <section>
+                <section className={styles.taskGroup}>
                     <h2>Wypełnij luki</h2>
 
                     {data.fillGap.data.map((task, i) => (
@@ -112,7 +114,7 @@ export default function KnowledgeTestView({ data }: Props) {
             ) : null}
 
             {data.firstLetterGap?.data?.length ? (
-                <section>
+                <section className={styles.taskGroup}>
                     <h2>Wypełnij pozostałe części fraz w lukach na podstawie ich pierwszych liter</h2>
 
                     {data.firstLetterGap.data.map((task, i) => (
@@ -129,7 +131,7 @@ export default function KnowledgeTestView({ data }: Props) {
             ) : null}
 
             {data.singleChoice?.data?.length ? (
-                <section>
+                <section className={styles.taskGroup}>
                     <h2>Wybierz poprawne uzupełnienie luki</h2>
 
                     {data.singleChoice.data.map((task, i) => (
@@ -146,7 +148,7 @@ export default function KnowledgeTestView({ data }: Props) {
             ) : null}
 
             {isFinished && (
-                <div>
+                <div className={styles.resultWrapper}>
                     <h2>Wynik</h2>
                     <p>{score} / {totalQuestions}</p>
                     <p>{percentage}%</p>

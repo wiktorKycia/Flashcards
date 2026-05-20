@@ -37,16 +37,15 @@ export default function SingleChoiceTask({ task, taskId, selectedValue, onChange
     }
 
     return(
-        <div className={styles.task}>
+        <div className={styles.taskWrapper}>
             <p className={styles.sentence}>
-                {task.sentence.split(/_+/)[0]}
-                <span className={styles.gap}>_____</span>
-                {task.sentence.split(/_+/)[1]}
+                {task.sentence.split(/_+/)[0]}_____{task.sentence.split(/_+/)[1]}
             </p>
 
-            <div className={styles.options}>
+            <div className={styles.optionsWrapper}>
                 <label className={getOptionClassName(task.phrase1)}>
                     <input
+                        className={styles.optionMark}
                         type="radio"
                         name={`options-${taskId}`}
                         value={task.phrase1}
@@ -61,6 +60,7 @@ export default function SingleChoiceTask({ task, taskId, selectedValue, onChange
 
                 <label className={getOptionClassName(task.phrase2)}>
                     <input
+                        className={styles.optionMark}
                         type="radio"
                         name={`options-${taskId}`}
                         value={task.phrase2}
@@ -75,6 +75,7 @@ export default function SingleChoiceTask({ task, taskId, selectedValue, onChange
 
                 <label className={getOptionClassName(task.phrase3)}>
                     <input
+                        className={styles.optionMark}
                         type="radio"
                         name={`options-${taskId}`}
                         value={task.phrase3}
