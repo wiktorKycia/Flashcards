@@ -24,7 +24,7 @@ export default function UserSettings() {
         <main className={styles.UserSettings}>
             <h1>Ustawienia użytkownika</h1>
             <section className={styles.UserSettingsSection}>
-                <Container cssClassName={styles.UserSettingsLeft}>
+                <Container>
                     <h2>Dane</h2>
 
                     <form>
@@ -52,7 +52,7 @@ export default function UserSettings() {
                     </form>
                 </Container>
 
-                <Container cssClassName={styles.UserSettingsRight}>
+                <Container>
                     <h2>Akcje</h2>
                     <button onClick={auth.logout}>Wyloguj</button>
                     <button>Resetuj hasło</button>
