@@ -1,4 +1,4 @@
-import { PrismaClient, type Prisma } from "@prisma/client"
+import { PrismaClient } from "@prisma/client"
 import express, { type Router, type Request, type Response, type NextFunction } from "express"
 
 const router: Router = express.Router()
@@ -63,8 +63,8 @@ router.patch("/:id(\\d+)", async (req: Request<QuizProgressParams>, res: Respons
                 id: quizProgressId,
             },
             data: {
-                isKnown: updatedQuizProgressData.isKnown
-            } as Prisma.UserQuizProgressUpdateInput
+                isKnown: updatedQuizProgressData.isKnown,
+            },
         })
 
         return res.status(200).json(updatedQuizProgress)
