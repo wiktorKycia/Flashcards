@@ -5,6 +5,7 @@ import KnowledgeTestSetup from '@/components/KnowledgeTestSetup'
 import KnowledgeTestView from '@/components/KnowledgeTestView'
 import { useGenerateTasks } from '@/hooks/useGenerateTasks.ts'
 import styles from './KnowledgeTest.module.scss'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 export default function KnowledgeTest() {
     const [settings, setSettings] = useState<KnowledgeTestSettings | null>(null)
@@ -45,7 +46,7 @@ export default function KnowledgeTest() {
             ) : (
                 <div>
                     {isPending && (
-                        <div>Generowanie testu...</div>
+                        <LoadingSpinner />
                     )}
 
                     {isError && (
@@ -71,7 +72,7 @@ export default function KnowledgeTest() {
                     {hasAnyData ? (
                         <KnowledgeTestView data={data} />
                     ) : (
-                        <div>Brak zadań</div>
+                        !isPending && (<div>Brak zadań</div>)
                     )}
                 </div>
             )}

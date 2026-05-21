@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type MouseEvent } from 'react'
 import GapTask from '@/components/GapTask'
 import SingleChoiceTask from '@/components/SingleChoiceTask'
 import styles from './KnowledgeTestView.module.scss'
@@ -75,7 +75,9 @@ export default function KnowledgeTestView({ data }: Props) {
         setIsFinished(true)
     }
 
-    const handleReset = () => {
+    const handleReset = (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+
         setAnswers({})
         setScore(0)
         setIsFinished(false)
