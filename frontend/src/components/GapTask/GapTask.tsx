@@ -33,6 +33,7 @@ export default function GapTask({ task, taskId, value, isFirstLetter, onChange, 
                     type="text"
                     value={value}
                     disabled={isFinished}
+                    autoComplete="off"
                     onChange={(e) =>
                         onChange(taskId, e.target.value)
                     }
