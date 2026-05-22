@@ -38,7 +38,6 @@ export default function Quiz() {
     return (
         <>
             <main className={styles.Main}>
-                {/*{isLoggedIn && (<ToolBar />)}*/}
                 {isError && <div>wystąpił błąd</div>}
                 {isLoading && <LoadingSpinner />}
                 {!isLoading && !isError && data && (
@@ -56,7 +55,6 @@ export default function Quiz() {
                                 cssClassName={'container-borderless ' + styles.MainOptions}
                             >
                                 <button>eksport do pliku</button>
-                                <button>udostępnij</button>
 
                                 {isLoggedIn && (
                                     <>

@@ -13,7 +13,7 @@ const getData = async (quizId: number): Promise<QuizData> => {
         const flashcards: Flashcard[] = await flashcardsResponse.json()
 
         const quizAuthorResponse = await fetch(
-            `/api/users/?userId=${quiz.authorId}`
+            `/api/users/${quiz.authorId}`
         )
         const quizAuthor: QuizAuthor = await quizAuthorResponse.json()
 
@@ -46,8 +46,10 @@ interface Flashcard {
 }
 
 interface QuizAuthor {
+    id: string
     name: string
-    image: string // base64 string, that needs to be converted to image
+    email: string
+    path_to_img: string
 }
 
 interface QuizData {

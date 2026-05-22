@@ -17,6 +17,8 @@ export default function AttachedFlashcardsMode(
 
     const [flashcards, setFlashcards] = useState<Array<Flashcard>>(() => props.flashcards)
 
+    const [isFront, setIsFront] = useState<boolean>()
+
     function handleShuffle() {
         const array = [...flashcards]
         for (let i = array.length - 1; i > 0; i--) {
@@ -30,12 +32,18 @@ export default function AttachedFlashcardsMode(
     function handleIncrement() {
         if (flashcardsIterator < flashcards.length - 1) {
             setFlashcardsIterator((prevState) => prevState + 1)
+            setIsFront(true)
         }
     }
     function handleDecrement() {
         if (flashcardsIterator > 0) {
             setFlashcardsIterator((prevState) => prevState - 1)
+            setIsFront(true)
         }
+    }
+
+    function handleFlashcardOnClick() {
+        setIsFront((prevState) => !prevState)
     }
 
     const authInfo = useAuth()
@@ -58,6 +66,8 @@ export default function AttachedFlashcardsMode(
                 <BigFlashcard
                     front={flashcards[flashcardsIterator].front}
                     back={flashcards[flashcardsIterator].back}
+                    isFront={isFront ?? true}
+                    handleOnClick={handleFlashcardOnClick}
                 />
                 {/* oddzielny komponent na wielką fiszkę */}
             </div>
@@ -86,14 +96,12 @@ export default function AttachedFlashcardsMode(
                             />
                         </div>
                     )}
-
-                    {isTrackingProgress && (
-                        <button className={styles.ButtonPrev}>previous</button> //*tylko jak checkbox ze śledzeniem postępów jest zaznaczony*/}
-                    )}
-                    <button onClick={handleShuffle} className={styles.ButtonShuffle}>change order</button>
-                    {/*takie tasowanie*/}
-                    <button className={styles.ButtonSettings}>settings</button>
-                    <button className={styles.ButtonFullScreen}>full screeen</button>
+                    <div>
+                        {isTrackingProgress && (
+                            <button className={styles.ButtonPrev}>previous</button> //*tylko jak checkbox ze śledzeniem postępów jest zaznaczony*/}
+                        )}
+                        <button onClick={handleShuffle} className={styles.ButtonShuffle}>change order</button>
+                    </div>
                 </Container>
             </div>
         </>
