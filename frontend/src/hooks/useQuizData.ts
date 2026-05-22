@@ -23,7 +23,7 @@ const getData = async (quizId: number): Promise<QuizData> => {
 
 export const useQuizData = (id: number) => {
     return useQuery({
-        queryKey: ['quiz', 'flashcards', 'quizAuthor', id],
+        queryKey: ['quiz', id],
         queryFn: () => getData(id)
     })
 }
@@ -46,7 +46,7 @@ interface Flashcard {
 }
 
 interface QuizAuthor {
-    id: string
+    id: number
     name: string
     email: string
     path_to_img: string

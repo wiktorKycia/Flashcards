@@ -96,7 +96,7 @@ export default function Quiz() {
                         <Container
                             cssClassName={'container-borderless ' + styles.MainAuthor}
                         >
-                            <Person id={1} name={'John doe'} title={'author'} />
+                            <Person id={data.quizAuthor.id} name={data.quizAuthor.name} title={'Autor'} />
                             <Container cssClassName={'container-positioner ' + styles.MainAuthorLikeContainer}>
                                 <button>like</button>
                                 <button>dislike</button>
