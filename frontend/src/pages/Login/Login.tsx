@@ -59,7 +59,7 @@ export default function Login() {
                         }
                     />
                     <button type="submit">Zaloguj się</button>
-                    <div>Zapomniałeś hasła? <Link to={'/'}>Resetuj hasło</Link></div>
+                    <div>Zapomniałeś hasła? <Link to={'/forgot-password'}>Resetuj hasło</Link></div>
                     <div>Nie masz konta? <Link to={'/register'}>Zarejestruj się</Link></div>
                 </form>
             </main>

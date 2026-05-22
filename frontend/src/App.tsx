@@ -8,6 +8,8 @@ import Login from '@/pages/Login/Login.tsx'
 import UserSettings from '@/pages/UserSettings'
 import Header from "@/components/Header";
 import QuizEdit from '@/pages/QuizEdit'
+import ForgotPassword from '@/pages/ForgotPassword'
+import ResetPassword from '@/pages/ResetPassword'
 
 function App() {
     return (
@@ -23,6 +25,8 @@ function App() {
                 </Route>
                 <Route path="/register/" element={<Register />} />
                 <Route path="/login/" element={<Login />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
             </Routes>
         </AuthProvider>
     )

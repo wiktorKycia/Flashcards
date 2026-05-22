@@ -8,6 +8,7 @@ import { type ChangeEvent, type SubmitEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useUserInfo } from '@/hooks/useUserInfo.ts'
 import { useUpdateUser } from '@/hooks/useUpdateUser.ts'
+import { useChangePassword } from '@/hooks/useChangePassword'
 
 
 interface UserDraft {
@@ -25,11 +26,21 @@ export default function UserSettings() {
 
     const { data, isLoading, isError } = useUserInfo(user?.id)
     const updateUser = useUpdateUser()
+    const changePassword = useChangePassword()
 
     const [draft, setDraft] = useState<UserDraft | null>(null)
     const [isSaving, setIsSaving] = useState(false)
     const [saveError, setSaveError] = useState<string | null>(null)
     const [saveMessage, setSaveMessage] = useState<string | null>(null)
+
+    const [passwordDraft, setPasswordDraft] = useState({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+    })
+    const [passwordError, setPasswordError] = useState<string | null>(null)
+    const [passwordMessage, setPasswordMessage] = useState<string | null>(null)
+    const [isChangingPassword, setIsChangingPassword] = useState(false)
 
     useEffect(() => {
         if (isLoading || isError) return
@@ -100,6 +111,53 @@ export default function UserSettings() {
         }
     }
 
+    async function handlePasswordSave(event: SubmitEvent<HTMLFormElement>)
+    {
+        event.preventDefault()
+        if (!user) return
+
+        const currentPassword = passwordDraft.currentPassword.trim()
+        const newPassword = passwordDraft.newPassword.trim()
+        const confirmPassword = passwordDraft.confirmPassword.trim()
+
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            setPasswordError('Uzupełnij wszystkie pola')
+            setPasswordMessage(null)
+            return
+        }
+
+        if (newPassword !== confirmPassword) {
+            setPasswordError('Hasła nie są zgodne')
+            setPasswordMessage(null)
+            return
+        }
+
+        setIsChangingPassword(true)
+        setPasswordError(null)
+        setPasswordMessage(null)
+
+        try {
+            const result = await changePassword.mutateAsync({
+                id: user.id,
+                currentPassword,
+                newPassword
+            })
+
+            setPasswordDraft({
+                currentPassword: '',
+                newPassword: '',
+                confirmPassword: ''
+            })
+            setPasswordMessage(result.message)
+        }
+        catch {
+            setPasswordError('Nie udało się zmienić hasła')
+        }
+        finally {
+            setIsChangingPassword(false)
+        }
+    }
+
     if (!user)
     {
         return <LoadingSpinner/>
@@ -147,9 +205,62 @@ export default function UserSettings() {
                 </Container>
 
                 <Container>
+                    <h2>Hasło</h2>
+                    <form onSubmit={handlePasswordSave}>
+                        <FieldGroup
+                            labelText="Aktualne hasło"
+                            inputHTMLId="input_current_password"
+                            inputType="password"
+                            inputValue={passwordDraft.currentPassword}
+                            onInputChange={(event: ChangeEvent) => {
+                                setPasswordDraft((prev) => ({
+                                    ...prev,
+                                    currentPassword: (event.target as HTMLInputElement).value
+                                }))
+                            }}
+                            isVertical={false}
+                        />
+
+                        <FieldGroup
+                            labelText="Nowe hasło"
+                            inputHTMLId="input_new_password"
+                            inputType="password"
+                            inputValue={passwordDraft.newPassword}
+                            onInputChange={(event: ChangeEvent) => {
+                                setPasswordDraft((prev) => ({
+                                    ...prev,
+                                    newPassword: (event.target as HTMLInputElement).value
+                                }))
+                            }}
+                            isVertical={false}
+                        />
+
+                        <FieldGroup
+                            labelText="Powtórz hasło"
+                            inputHTMLId="input_confirm_password"
+                            inputType="password"
+                            inputValue={passwordDraft.confirmPassword}
+                            onInputChange={(event: ChangeEvent) => {
+                                setPasswordDraft((prev) => ({
+                                    ...prev,
+                                    confirmPassword: (event.target as HTMLInputElement).value
+                                }))
+                            }}
+                            isVertical={false}
+                        />
+
+                        <button type="submit" disabled={isChangingPassword}>
+                            {isChangingPassword ? 'Zapisywanie...' : 'Zmień hasło'}
+                        </button>
+
+                        {passwordError && <div className={'message-error'}>{passwordError}</div>}
+                        {passwordMessage && <div className={'message-info'}>{passwordMessage}</div>}
+                    </form>
+                </Container>
+
+                <Container>
                     <h2>Akcje</h2>
                     <button onClick={auth.logout}>Wyloguj</button>
-                    <button>Resetuj hasło</button>
                     {user.id && (
                         <button onClick={() => navigate(`/user/${user.id}`)}>Zobacz profil</button>
                     )}
