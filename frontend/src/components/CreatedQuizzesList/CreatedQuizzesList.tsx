@@ -3,6 +3,7 @@ import Container from '@/components/Container'
 import { useCreatedQuizzes } from '@/hooks/useCreatedQuizzes.ts'
 import { useAuth } from '@/context/AuthContext.tsx'
 import LoadingSpinner from '@/components/LoadingSpinner'
+import styles from './CreatedQuizzesList.module.scss'
 
 interface CreatedQuizzesListProps {
     userId: number
@@ -19,7 +20,7 @@ export default function CreatedQuizzesList(props: CreatedQuizzesListProps) {
     }
 
     return (
-        <>
+        <div className={styles.CreatedQuizzesList}>
             <h2>Utworzone quizy</h2>
             {isError && (
                 <div>Wystąpił błąd</div>
@@ -37,6 +38,6 @@ export default function CreatedQuizzesList(props: CreatedQuizzesListProps) {
                     ))}
                 </Container>
             )}
-        </>
+        </div>
     )
 }

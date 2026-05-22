@@ -5,6 +5,7 @@ import { useLoggedInOnly } from '@/hooks/useLoggedInOnly'
 import { useUserName } from '@/hooks/useUserName'
 import CreatedQuizzesList from '@/components/CreatedQuizzesList'
 import SavedQuizzesList from '@/components/SavedQuizzesList'
+import styles from './UserProfile.module.scss'
 
 export default function UserProfile() {
     useLoggedInOnly()
@@ -21,7 +22,7 @@ export default function UserProfile() {
     }
 
     return (
-        <main>
+        <main className={styles.UserProfile}>
             {isError && <p style={{ color: 'var(--color-accent2)' }}>wystąpił błąd</p>}
             {isLoading && <LoadingSpinner />}
 
