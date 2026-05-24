@@ -1,22 +1,18 @@
-.EditableFlashcard {
+.ListableFlashcard {
     border: var(--border-thick);
     padding: 2rem;
     border-radius: 2rem;
     width: 80%;
-    display: grid;
-    grid-template-columns: 4fr 4fr 1fr 1fr;
-    grid-gap: 1rem;
+    display: flex;
+    justify-content: space-around;
 
-    input, div
+    div
     {
         font-size: 2rem;
         display: flex;
         justify-content: center;
         align-items: center;
         text-align: center;
-    }
-    div
-    {
         color: var(--color-text-secondary);
     }
 }
