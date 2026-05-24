@@ -20,16 +20,22 @@ interface QuizProgressUpdate {
 }
 
 interface QuizProgressQuery {
-    userId?: string
-    quizId?: string
+    userId?: number
+    quizId?: number
 }
 
-router.get("/user/:id(\\d+)/quiz/:id(\\d+)", async (req: Request<QuizProgressQuery>, res: Response, next: NextFunction) => {
-    try {
-        const userId = parseInt(req.params.userId as string)
-        const quizId = parseInt(req.params.quizId as string)
+interface QuizProgressFlashcardUpdate {
+    userId?: number
+    quizId?: number
+    flashcardId?: number
+}
 
-        if (Number.isNaN(userId) || Number.isNaN(quizId)) {
+router.get("/user/:userId(\\d+)/quiz/:quizId(\\d+)", async (req: Request<QuizProgressQuery>, res: Response, next: NextFunction) => {
+    try {
+        const userId = req.params.userId
+        const quizId = req.params.quizId
+
+        if (!userId || !quizId) {
             return res.sendStatus(400)
         }
 
@@ -79,6 +85,36 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
         })
 
         return res.status(201).json(createdQuizProgress)
+    }
+    catch (error) {
+        next(error)
+    }
+})
+
+router.patch("/user/:userId(\\d+)/quiz/:quizId(\\d+)/flashcard/:flashcardId(\\d+)", async (req: Request<QuizProgressFlashcardUpdate>, res: Response, next: NextFunction) => {
+    try {
+        const userId = req.params.userId
+        const quizId = req.params.quizId
+        const flashcardId = req.params.flashcardId
+        const updatedQuizProgressData: QuizProgressUpdate = req.body as QuizProgressUpdate
+
+        if (!userId || !quizId || !flashcardId || !updatedQuizProgressData) {
+            return res.sendStatus(400)
+        }
+
+        const updatedQuizProgress: QuizProgressUpdate = await prisma.userQuizProgress.update({
+            where: {
+                userId_flashcardId: {
+                    userId: userId,
+                    flashcardId: flashcardId
+                }
+            },
+            data: {
+                isKnown: updatedQuizProgressData.isKnown
+            }
+        })
+
+        return res.status(200).json(updatedQuizProgress)
     }
     catch (error) {
         next(error)

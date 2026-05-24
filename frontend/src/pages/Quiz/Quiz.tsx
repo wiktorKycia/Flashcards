@@ -83,8 +83,10 @@ export default function Quiz() {
                         </Container>
                         <Container cssClassName={'container-borderless'}>
                             <AttachedFlashcardsMode
+                                quizId={id}
                                 flashcards={data.flashcards.map((flashcard) => {
                                     return {
+                                        database_id: flashcard.id,
                                         front: flashcard.front,
                                         back: flashcard.back,
                                         isKnown: flashcard.isKnown

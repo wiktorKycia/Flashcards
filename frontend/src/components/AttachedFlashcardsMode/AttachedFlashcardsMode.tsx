@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext.tsx'
 import styles from './AttachedFlashcardsMode.module.scss'
 import Container from '@/components/Container'
 import ButtonToggle from "@/components/ButtonToggle";
+import { useUpdateFlashcardKnowledge } from '@/hooks/useUpdateFlashcardKnowledge.ts'
 
 interface AttachedFlashcardsModeProps {
     quizId: number
@@ -27,6 +28,8 @@ export default function AttachedFlashcardsMode(
     const [isFront, setIsFront] = useState<boolean>()
 
     const [isShuffled, setIsShuffled] = useState<boolean>(false)
+
+    const updateFlashcardsKnowledge = useUpdateFlashcardKnowledge()
 
     function handleShuffle() {
         setIsShuffled((prevState) => !prevState)
@@ -94,7 +97,16 @@ export default function AttachedFlashcardsMode(
         setRequiresNextTurn(false)
         setFlashcardsIterator(0)
 
-        // database update
+        unknownFlashcards.forEach((flashcard) => {
+            if (flashcard.isKnown && auth.user) {
+                updateFlashcardsKnowledge.mutate({
+                    quizId: props.quizId,
+                    userId: auth.user.id,
+                    flashcardId: flashcard.database_id,
+                    isKnown: true
+                })
+            }
+        })
 
         setUnknownFlashcards(nextTurn)
         if (nextTurn.length === 0)
@@ -161,7 +173,6 @@ export default function AttachedFlashcardsMode(
                 {isLoggedIn && !finishedTrackingProgress && (
                     <div className={styles.TrackProgress}>
                         <label htmlFor="track_progress">Śledź postępy</label>
-                        {/*tylko dla użytkowników zalogowanych*/}
                         <input
                             type="checkbox"
                             name="track_progress"
@@ -179,6 +190,8 @@ export default function AttachedFlashcardsMode(
                         <button onClick={() => {
                             if (window.confirm("czy na pewno chcesz zresetować swoją pamięć?"))
                             {
+                                // extract this into a function and
+                                // database update (put): make all flashcards' isKnown of this quiz and this auth.user.id to false
                                 console.log("Czyszczę wiedzę...")
                             }
                         }}>Zresetuj progres</button>
