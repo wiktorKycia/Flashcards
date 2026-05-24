@@ -91,17 +91,17 @@ export default function AttachedFlashcardsMode(
 
     function handleNextTurn()
     {
+        setRequiresNextTurn(false)
+        setFlashcardsIterator(0)
+
         // database update
 
         setUnknownFlashcards(nextTurn)
-        setNextTurn([])
-        setRequiresNextTurn(false)
-        setFlashcardsIterator(0)
-        console.log(unknownFlashcards)
-        if (unknownFlashcards.length === 0)
+        if (nextTurn.length === 0)
         {
             setFinishedTrackingProgress(true)
         }
+        setNextTurn([])
     }
 
     if (flashcards.length === 0) {
@@ -174,7 +174,17 @@ export default function AttachedFlashcardsMode(
                         />
                     </div>
                 )}
-                <div>
+                {isLoggedIn && finishedTrackingProgress && (
+                    <div className={styles.TrackProgress}>
+                        <button onClick={() => {
+                            if (window.confirm("czy na pewno chcesz zresetować swoją pamięć?"))
+                            {
+                                console.log("Czyszczę wiedzę...")
+                            }
+                        }}>Zresetuj progres</button>
+                    </div>
+                )}
+                <div className={styles.Options}>
                     {!finishedTrackingProgress && isTrackingProgress && (
                         <button className={styles.ButtonPrev}>poprzedni</button> //*tylko jak checkbox ze śledzeniem postępów jest zaznaczony*/}
                     )}
