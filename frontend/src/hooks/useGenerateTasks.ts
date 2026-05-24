@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
+import {type TasksData} from '@/types/TasksData.ts'
 
 type GenerateTasksProps = {
     fillGapCount: number
@@ -16,7 +17,7 @@ export const useGenerateTasks = () => {
            singleChoiceCount,
            quizId,
            languageSide
-        }: GenerateTasksProps) => {
+        }: GenerateTasksProps): Promise<TasksData> => {
             let firstError: string | null = null
             let firstWrongStatus: number | null = null
             let warning: string | null = null
@@ -50,9 +51,22 @@ export const useGenerateTasks = () => {
                     data = await res.json()
                 } catch { /* empty */ }
 
-                if (!res.ok && firstError == null) {
-                    firstWrongStatus = res.status
-                    firstError = data?.error ?? null
+                if (!res.ok) {
+                    if ([503, 404, 422].includes(res.status) || (res.status === 500 && data?.error === "Nie skonfigurowano tokena GitHub wymaganego do korzystania z modeli AI")){
+                        if (
+                            (res.status === 503 || res.status === 422) &&
+                            firstWrongStatus == null
+                        ) {
+                            firstWrongStatus = res.status
+                            firstError = data?.error ?? null
+                        }
+                        else {
+                            throw new Error(data?.error)
+                        }
+                    }
+                    else {
+                        throw new Error("Wystąpił nieoczekiwany błąd")
+                    }
                 }
 
                 if (data?.warning && warning == null) {

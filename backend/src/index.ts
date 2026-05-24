@@ -156,11 +156,15 @@ app.use(async (err: unknown, _req: Request, res: Response, _next: NextFunction) 
         })
     }
     else if (errorMessage === "Flashcards not found") {
-        return res.sendStatus(404)
+        return res.status(404).json({
+            error: "Nie ma jakichkolwiek fiszek"
+        })
     }
 
     else if (errorMessage === "Not enough flashcards found") {
-        return res.sendStatus(422)
+        return res.status(422).json({
+            error: "Nie znaleziono wystarczającej liczby fiszek do wygenerowania zadania"
+        })
     }
 
     return res.sendStatus(500)

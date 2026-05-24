@@ -2,35 +2,9 @@ import { useState, type MouseEvent } from 'react'
 import GapTask from '@/components/GapTask'
 import SingleChoiceTask from '@/components/SingleChoiceTask'
 import styles from './KnowledgeTestView.module.scss'
+import {type Tasks} from '@/types/TasksData'
 
-type GapTask = {
-    sentence: string
-    phrase: string
-}
-
-type SingleChoiceTask = {
-    sentence: string
-    phrase1: string
-    phrase2: string
-    phrase3: string
-    correctAnswer: string
-}
-
-type Props = {
-    data: {
-        fillGap?: {
-            data: GapTask[]
-        }
-        firstLetterGap?: {
-            data: GapTask[]
-        }
-        singleChoice?: {
-            data: SingleChoiceTask[]
-        }
-    }
-}
-
-export default function KnowledgeTestView({ data }: Props) {
+export default function KnowledgeTestView({ data }: Tasks) {
     const [answers, setAnswers] = useState<Record<string, string>>({})
     const [score, setScore] = useState<number>(0)
     const [isFinished, setIsFinished] = useState<boolean>(false)

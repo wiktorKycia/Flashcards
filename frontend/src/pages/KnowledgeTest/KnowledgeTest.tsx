@@ -9,7 +9,7 @@ import LoadingSpinner from '@/components/LoadingSpinner'
 
 export default function KnowledgeTest() {
     const [settings, setSettings] = useState<KnowledgeTestSettings | null>(null)
-    const { mutate, data, isPending, isError } = useGenerateTasks()
+    const { mutate, data, isPending, isError, error } = useGenerateTasks()
     const params = useParams()
     const quizId = Number(params.id)
 
@@ -50,29 +50,21 @@ export default function KnowledgeTest() {
                     )}
 
                     {isError && (
-                        <div>Wystąpił błąd</div>
+                        <div>{error.message}</div>
                     )}
 
-                    {(data?.status == 500 || data?.status == 503) && (
-                        <div>
-                            {data.errorMessage}
-                        </div>
-                    )}
-
-                    {(data?.status == 404 || data?.status == 422) && (
-                        <div>
-                            Brakuje fiszek do utworzenia wymaganej liczby zadań
-                        </div>
+                    {data?.errorMessage && (
+                        <div>{data.errorMessage}</div>
                     )}
 
                     {data?.warning && (
-                        <div>{data.warning}</div>
+                        <div>Uwaga: {data.warning}</div>
                     )}
 
-                    {hasAnyData ? (
+                    {hasAnyData && !isError ? (
                         <KnowledgeTestView data={data} />
                     ) : (
-                        !isPending && (<div>Brak zadań</div>)
+                        !isPending && !isError && (<div>Brak zadań</div>)
                     )}
                 </div>
             )}
