@@ -50,7 +50,7 @@ export default function KnowledgeTestView({ data }: Props) {
         data.fillGap?.data.forEach((task, i) => {
             const id = `fill-gap${i}`
 
-            if (answers[id]?.trim() === task.phrase.trim()) {
+            if (answers[id]?.trim().slice(1) === task.phrase.trim().slice(1) && answers[id]?.trim()[0]?.toLowerCase() === task.phrase.trim()[0]?.toLowerCase()) {
                 points++
             }
         })
@@ -58,7 +58,7 @@ export default function KnowledgeTestView({ data }: Props) {
         data.firstLetterGap?.data.forEach((task, i) => {
             const id = `first-letter${i}`
 
-            if (answers[id]?.trim() === task.phrase.slice(1).trim()) {
+            if (answers[id]?.trim() === task.phrase.trim().slice(1)) {
                 points++
             }
         })

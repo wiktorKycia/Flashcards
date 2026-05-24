@@ -14,8 +14,15 @@ type TaskData = {
 
 export default function GapTask({ task, taskId, value, isFirstLetter, onChange, isFinished }: TaskData) {
     const parts: string[] = task.sentence.split(/_+/)
-    const phrase: string = isFirstLetter ? task.phrase.slice(1) : task.phrase
-    const isCorrect: boolean = value.trim() === phrase.trim()
+    const phrase: string = isFirstLetter ? task.phrase.trim().slice(1) : task.phrase
+    let isCorrect: boolean
+
+    if (isFirstLetter) {
+        isCorrect = value.trim() === phrase.trim()
+    }
+    else {
+        isCorrect = value.trim().slice(1) === phrase.trim().slice(1) && value.trim()[0]?.toLowerCase() === phrase.trim()[0]?.toLowerCase()
+    }
 
     return (
         <div className={styles.taskWrapper}>

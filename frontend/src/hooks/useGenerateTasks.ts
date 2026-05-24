@@ -20,102 +20,62 @@ export const useGenerateTasks = () => {
             let firstError: string | null = null
             let firstWrongStatus: number | null = null
             let warning: string | null = null
-            let data1 = null, data2 = null, data3 = null
 
-            const res1 = await fetch(
-                "/api/tasks/generation/fill-gap",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        questionsAmount: fillGapCount,
-                        quizId,
-                        languageSide,
-                    }),
+            const generateTask = async (
+                endpoint: string,
+                questionsAmount: number
+            ) => {
+                if (questionsAmount <= 0){
+                    return null
                 }
-            )
 
-            try {
-                data1 = await res1.json()
-            }
-            catch {
-                data1 = null
-            }
+                const res = await fetch(
+                    endpoint,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            questionsAmount: questionsAmount,
+                            quizId,
+                            languageSide,
+                        }),
+                    }
+                )
 
-            if (!res1.ok) {
-                firstWrongStatus = res1.status
-                firstError = data1?.error ?? null
-            }
+                let data = null
 
-            if(data1?.warning){
-                warning = data1?.warning
-            }
+                try {
+                    data = await res.json()
+                } catch { /* empty */ }
 
-            const res2 = await fetch(
-                "/api/tasks/generation/first-letter-gap",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        questionsAmount: firstLetterCount,
-                        quizId,
-                        languageSide,
-                    }),
+                if (!res.ok && firstError == null) {
+                    firstWrongStatus = res.status
+                    firstError = data?.error ?? null
                 }
-            )
 
-            try {
-                data2 = await res2.json()
-            }
-            catch {
-                data2 = null
-            }
-
-            if (!res2.ok && firstError == null) {
-                firstWrongStatus = res2.status
-                firstError = data2?.error ?? null
-            }
-
-            if (data2?.warning && warning == null) {
-                warning = data2?.warning
-            }
-
-            const res3 = await fetch(
-                "/api/tasks/generation/single-choice",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        questionsAmount: singleChoiceCount,
-                        quizId,
-                        languageSide,
-                    }),
+                if (data?.warning && warning == null) {
+                    warning = data?.warning
                 }
-            )
 
-            try {
-                data3 = await res3.json()
-            }
-            catch {
-                data3 = null
+                return data
             }
 
-            if (!res3.ok && firstError == null) {
-                firstWrongStatus = res3.status
-                firstError = data3?.error ?? null
-            }
-
-            if (data3?.warning && warning == null) {
-                warning = data3?.warning
-            }
-
-
+            const [data1, data2, data3] = await Promise.all([
+                generateTask(
+                    "/api/tasks/generation/fill-gap",
+                    fillGapCount
+                ),
+                generateTask(
+                    "/api/tasks/generation/first-letter-gap",
+                    firstLetterCount
+                ),
+                generateTask(
+                    "/api/tasks/generation/single-choice",
+                    singleChoiceCount
+                )
+            ])
 
             return {
                 fillGap: data1?.subtasks ?? null,
