@@ -109,12 +109,9 @@ export default function Quiz() {
                                     langFront: data.quiz.frontLanguage,
                                     langBack: data.quiz.backLanguage,
                                     front: flashcard.front,
-                                    back: flashcard.back,
-                                    isStarred: false
+                                    back: flashcard.back
                                 }
                             })}
-                            isUserLoggedIn={isLoggedIn}
-                            isUserAuthor={isUserAuthor}
                         />
                     </div>
                 )}

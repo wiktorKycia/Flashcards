@@ -1,0 +1,23 @@
+.ButtonToggleOn
+{
+    box-shadow: 0 0 4px 4px var(--color-accent);
+    transition: var(--transition);
+
+    &:hover {
+        box-shadow: 0 0 4px 4px var(--color-accent2);
+    }
+}
+
+.ButtonToggleOff
+{
+    background: transparent;
+    border: var(--border);
+    color: var(--color-accent);
+    transition: var(--transition);
+
+    &:hover {
+        background: transparent;
+        color: var(--color-accent);
+        box-shadow: 0 0 4px 4px var(--color-accent);
+    }
+}

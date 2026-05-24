@@ -4,6 +4,7 @@ import type Flashcard from '../../types/Flashcard.ts'
 import { useAuth } from '@/context/AuthContext.tsx'
 import styles from './AttachedFlashcardsMode.module.scss'
 import Container from '@/components/Container'
+import ButtonToggle from "@/components/ButtonToggle";
 
 interface AttachedFlashcardsModeProps {
     flashcards: Flashcard[]
@@ -15,18 +16,29 @@ export default function AttachedFlashcardsMode(
     const [isTrackingProgress, setIsCheckingProgress] = useState<boolean>(false)
     const [flashcardsIterator, setFlashcardsIterator] = useState<number>(0)
 
-    const [flashcards, setFlashcards] = useState<Array<Flashcard>>(() => props.flashcards)
+    const [flashcards, setFlashcards] = useState<Array<Flashcard>>(props.flashcards)
 
     const [isFront, setIsFront] = useState<boolean>()
 
+    const [isShuffled, setIsShuffled] = useState<boolean>(false)
+
     function handleShuffle() {
-        const array = [...flashcards]
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1))
-            ;[array[i], array[j]] = [array[j], array[i]]
+        setIsShuffled((prevState) => !prevState)
+        if(!isShuffled)
+        {
+            const array = [...flashcards]
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1))
+                ;[array[i], array[j]] = [array[j], array[i]]
+            }
+            setFlashcards(array)
+            setFlashcardsIterator(0)
         }
-        setFlashcards(array)
-        setFlashcardsIterator(0)
+        else
+        {
+            setFlashcards(props.flashcards)
+            setFlashcardsIterator(0)
+        }
     }
 
     function handleIncrement() {
@@ -100,7 +112,7 @@ export default function AttachedFlashcardsMode(
                         {isTrackingProgress && (
                             <button className={styles.ButtonPrev}>previous</button> //*tylko jak checkbox ze śledzeniem postępów jest zaznaczony*/}
                         )}
-                        <button onClick={handleShuffle} className={styles.ButtonShuffle}>change order</button>
+                        <ButtonToggle isOn={isShuffled} setIsOn={handleShuffle} content={'Losowa kolejność'}/>
                     </div>
                 </Container>
             </div>

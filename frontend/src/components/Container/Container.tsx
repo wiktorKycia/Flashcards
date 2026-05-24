@@ -1,12 +1,11 @@
 import type { ReactNode } from 'react'
 import styles from './Container.module.scss'
 
-export default function Container({
-    children,
-    cssClassName
-}: {
+interface ContainerProps {
     children: ReactNode
     cssClassName?: string
-}) {
-    return <div className={cssClassName || styles.Container}>{children}</div>
+}
+
+export default function Container(props: ContainerProps) {
+    return <div className={props.cssClassName || styles.Container}>{props.children}</div>
 }
