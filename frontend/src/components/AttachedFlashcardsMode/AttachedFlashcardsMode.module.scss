@@ -1,47 +1,44 @@
-.Options {
+.ArrowsContainer
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    margin-block: 2rem !important;
 
-    &ArrowsContainer
+    font-size: 2.4rem;
+
+    &Iterator
     {
+        text-align: center;
+        color: var(--color-text-primary);
+        font-size: 2.4rem;
+    }
+}
+
+.OptionsContainer
+{
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-block: 2rem !important;
+
+    .TrackProgress {
+        justify-self: flex-start;
+
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
         gap: 1rem;
-        width: 100%;
-        margin-block: 2rem !important;
-
-        font-size: 2.4rem;
-
-        &Iterator
-        {
-            text-align: center;
-            color: var(--color-text-primary);
-            font-size: 2.4rem;
-        }
     }
-
-    &Container
+    div
     {
         display: flex;
-        justify-content: space-between;
+        flex-direction: row;
+        justify-content: space-around;
         gap: 1rem;
-        margin-block: 2rem !important;
-
-        .TrackProgress {
-            justify-self: flex-start;
-
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-        }
-        div
-        {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-around;
-            gap: 1rem;
-        }
     }
 }

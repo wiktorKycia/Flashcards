@@ -1,5 +1,5 @@
 import BigFlashcard from '../BigFlashcard'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type Flashcard from '../../types/Flashcard.ts'
 import { useAuth } from '@/context/AuthContext.tsx'
 import styles from './AttachedFlashcardsMode.module.scss'
@@ -7,6 +7,7 @@ import Container from '@/components/Container'
 import ButtonToggle from "@/components/ButtonToggle";
 
 interface AttachedFlashcardsModeProps {
+    quizId: number
     flashcards: Flashcard[]
 }
 
@@ -16,7 +17,10 @@ export default function AttachedFlashcardsMode(
     const [isTrackingProgress, setIsCheckingProgress] = useState<boolean>(false)
     const [flashcardsIterator, setFlashcardsIterator] = useState<number>(0)
 
-    const [flashcards, setFlashcards] = useState<Array<Flashcard>>(props.flashcards)
+    const [flashcards, setFlashcards] = useState<Flashcard[]>(props.flashcards)
+    const [unknownFlashcards, setUnknownFlashcards] = useState<Flashcard[]>(props.flashcards.filter(flashcard => !flashcard.isKnown))
+    const [nextTurn, setNextTurn] = useState<Flashcard[]>([])
+    const [requiresNextTurn, setRequiresNextTurn] = useState<boolean>(false)
 
     const [isFront, setIsFront] = useState<boolean>()
 
@@ -58,9 +62,40 @@ export default function AttachedFlashcardsMode(
         setIsFront((prevState) => !prevState)
     }
 
-    const authInfo = useAuth()
+    const auth = useAuth()
 
-    const isLoggedIn = !!authInfo.token
+    const isLoggedIn = !!auth.token
+
+    function handleKnow(flashcardsIterator: number) {
+        setUnknownFlashcards((prev) => prev.map((flashcard, index) => index === flashcardsIterator ? {...flashcard, isKnown: true} : flashcard))
+        setFlashcardsIterator((prevState) => prevState + 1)
+        if(flashcardsIterator + 1 == unknownFlashcards.length)
+        {
+            setRequiresNextTurn(true)
+        }
+    }
+
+    function handleDontKnow(flashcardsIterator: number) {
+        setNextTurn((prev) => [
+            ...prev,
+            unknownFlashcards[flashcardsIterator]
+        ])
+        setFlashcardsIterator((prevState) => prevState + 1)
+        if(flashcardsIterator + 1 == unknownFlashcards.length)
+        {
+            setRequiresNextTurn(true)
+        }
+    }
+
+    function handleNextTurn()
+    {
+        // database update
+
+        setUnknownFlashcards(nextTurn)
+        setNextTurn([])
+        setRequiresNextTurn(false)
+        setFlashcardsIterator(0)
+    }
 
     if (flashcards.length === 0) {
         return (
@@ -74,48 +109,72 @@ export default function AttachedFlashcardsMode(
 
     return (
         <>
-            <div>
-                <BigFlashcard
-                    front={flashcards[flashcardsIterator].front}
-                    back={flashcards[flashcardsIterator].back}
-                    isFront={isFront ?? true}
-                    handleOnClick={handleFlashcardOnClick}
-                />
-                {/* oddzielny komponent na wielką fiszkę */}
-            </div>
-            <div className={styles.Options}>
-                <Container cssClassName={'container-positioner ' + styles.OptionsArrowsContainer}>
-                    <button onClick={handleDecrement}>←</button>
-                    <div className={styles.OptionsArrowsContainerIterator}>
-                        {flashcardsIterator + 1} / {flashcards.length}
-                    </div>
-                    <button onClick={handleIncrement}>→</button>
-                </Container>
-
-                <Container cssClassName={'container-positioner ' + styles.OptionsContainer}>
-                    {isLoggedIn && (
-                        <div className={styles.TrackProgress}>
-                            <label htmlFor="track_progress">Śledź postępy</label>
-                            {/*tylko dla użytkowników zalogowanych*/}
-                            <input
-                                type="checkbox"
-                                name="track_progress"
-                                id="track_progress"
-                                checked={isTrackingProgress}
-                                onClick={() =>
-                                    setIsCheckingProgress((prevState) => !prevState)
-                                }
-                            />
-                        </div>
+            {isTrackingProgress ? (
+                <>
+                    {!requiresNextTurn && (
+                        <BigFlashcard
+                            front={unknownFlashcards[flashcardsIterator].front}
+                            back={unknownFlashcards[flashcardsIterator].back}
+                            isFront={isFront ?? true}
+                            handleOnClick={handleFlashcardOnClick}
+                        />
                     )}
-                    <div>
-                        {isTrackingProgress && (
-                            <button className={styles.ButtonPrev}>previous</button> //*tylko jak checkbox ze śledzeniem postępów jest zaznaczony*/}
+                    <Container cssClassName={'container-positioner ' + styles.ArrowsContainer}>
+                        {requiresNextTurn ? (
+                            <button onClick={handleNextTurn}>Następna tura</button>
+                        ) : (
+                            <>
+                                <button onClick={() => handleDontKnow(flashcardsIterator)}>nie znam</button>
+                                <div className={styles.ArrowsContainerIterator}>
+                                    {flashcardsIterator + 1} / {unknownFlashcards.length}
+                                </div>
+                                <button onClick={() => handleKnow(flashcardsIterator)}>znam</button>
+                            </>
                         )}
-                        <ButtonToggle isOn={isShuffled} setIsOn={handleShuffle} content={'Losowa kolejność'}/>
+                    </Container>
+                </>
+            ):(
+                <>
+                    <BigFlashcard
+                        front={flashcards[flashcardsIterator].front}
+                        back={flashcards[flashcardsIterator].back}
+                        isFront={isFront ?? true}
+                        handleOnClick={handleFlashcardOnClick}
+                    />
+
+                    <Container cssClassName={'container-positioner ' + styles.ArrowsContainer}>
+                        <button onClick={handleDecrement}>←</button>
+                        <div className={styles.ArrowsContainerIterator}>
+                            {flashcardsIterator + 1} / {flashcards.length}
+                        </div>
+                        <button onClick={handleIncrement}>→</button>
+                    </Container>
+                </>
+            )}
+
+            <Container cssClassName={'container-positioner ' + styles.OptionsContainer}>
+                {isLoggedIn && (
+                    <div className={styles.TrackProgress}>
+                        <label htmlFor="track_progress">Śledź postępy</label>
+                        {/*tylko dla użytkowników zalogowanych*/}
+                        <input
+                            type="checkbox"
+                            name="track_progress"
+                            id="track_progress"
+                            defaultChecked={isTrackingProgress}
+                            onClick={() =>
+                                setIsCheckingProgress((prevState) => !prevState)
+                            }
+                        />
                     </div>
-                </Container>
-            </div>
+                )}
+                <div>
+                    {isTrackingProgress && (
+                        <button className={styles.ButtonPrev}>poprzedni</button> //*tylko jak checkbox ze śledzeniem postępów jest zaznaczony*/}
+                    )}
+                    <ButtonToggle isOn={isShuffled} setIsOn={handleShuffle} content={'Losowa kolejność'}/>
+                </div>
+            </Container>
         </>
     )
 }
