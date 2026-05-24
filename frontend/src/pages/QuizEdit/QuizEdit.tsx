@@ -72,8 +72,7 @@ export default function QuizEdit(){
                 id: flashcard.id,
                 clientId: createClientId(),
                 front: flashcard.front,
-                back: flashcard.back,
-                starred: flashcard.starred
+                back: flashcard.back
             })),
         })
     }, [auth.user?.id, data?.quiz, data?.flashcards, isLoading, isError, navigate, draft])

@@ -19,6 +19,38 @@ interface QuizProgressUpdate {
     isKnown: boolean
 }
 
+interface QuizProgressQuery {
+    userId?: string
+    quizId?: string
+}
+
+router.get("/user/:id(\\d+)/quiz/:id(\\d+)", async (req: Request<QuizProgressQuery>, res: Response, next: NextFunction) => {
+    try {
+        const userId = parseInt(req.params.userId as string)
+        const quizId = parseInt(req.params.quizId as string)
+
+        if (Number.isNaN(userId) || Number.isNaN(quizId)) {
+            return res.sendStatus(400)
+        }
+
+        const quizProgress = await prisma.userQuizProgress.findMany({
+            where: {
+                userId,
+                quizId,
+            },
+            select: {
+                flashcardId: true,
+                isKnown: true,
+            },
+        })
+
+        return res.json(quizProgress)
+    }
+    catch (error) {
+        next(error)
+    }
+})
+
 router.get("/:id(\\d+)", async (req: Request<QuizProgressParams>, res: Response, next: NextFunction) => {
     try {
         const quizProgressId: number = parseInt(req.params.id)

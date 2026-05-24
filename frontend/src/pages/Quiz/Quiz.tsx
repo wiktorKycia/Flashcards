@@ -15,12 +15,12 @@ import { useDeleteQuiz } from '@/hooks/useDeleteQuiz.ts'
 export default function Quiz() {
     const id: number = parseInt(useParams().id as string)
     const navigate = useNavigate()
-    const { data, isLoading, isError, error } = useQuizData(id)
+    const auth = useAuth()
+    const { data, isLoading, isError, error } = useQuizData(id, auth.user?.id)
     console.log(data, isLoading, isError, error)
 
     let isUserAuthor = true
 
-    const auth = useAuth()
     const isLoggedIn = useCheckIfLoggedIn()
     const { isDeleting, deleteError, handleDeleteQuiz } = useDeleteQuiz()
 
@@ -87,8 +87,7 @@ export default function Quiz() {
                                     return {
                                         front: flashcard.front,
                                         back: flashcard.back,
-                                        langFront: data.quiz.frontLanguage,
-                                        langBack: data.quiz.backLanguage
+                                        isKnown: flashcard.isKnown
                                     }
                                 })}
                             />
