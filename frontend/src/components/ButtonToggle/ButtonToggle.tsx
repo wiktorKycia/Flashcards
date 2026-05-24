@@ -1,9 +1,10 @@
 import styles from './ButtonToggle.module.scss'
+import type { ReactNode } from 'react'
 
 interface ButtonToggleProps {
     isOn: boolean
     setIsOn: () => void
-    content: string
+    content: ReactNode
 }
 
 export default function ButtonToggle(props: ButtonToggleProps) {
