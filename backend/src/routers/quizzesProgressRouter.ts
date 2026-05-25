@@ -128,14 +128,20 @@ router.patch("/user/:userId(\\d+)/quiz/:quizId(\\d+)/flashcard/:flashcardId(\\d+
             return res.sendStatus(400)
         }
 
-        const updatedQuizProgress: QuizProgressUpdate = await prisma.userQuizProgress.update({
+        const updatedQuizProgress = await prisma.userQuizProgress.upsert({
             where: {
                 userId_flashcardId: {
                     userId: userId,
                     flashcardId: flashcardId
                 }
             },
-            data: {
+            create: {
+                userId,
+                quizId,
+                flashcardId,
+                isKnown: updatedQuizProgressData.isKnown
+            },
+            update: {
                 isKnown: updatedQuizProgressData.isKnown
             }
         })
