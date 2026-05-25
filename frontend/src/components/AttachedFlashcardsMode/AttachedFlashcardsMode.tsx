@@ -1,5 +1,5 @@
 import BigFlashcard from '../BigFlashcard'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type Flashcard from '../../types/Flashcard.ts'
 import { useAuth } from '@/context/AuthContext.tsx'
 import styles from './AttachedFlashcardsMode.module.scss'
@@ -32,6 +32,23 @@ export default function AttachedFlashcardsMode(
 
     const updateFlashcardsKnowledge = useUpdateFlashcardKnowledge()
     const resetQuizProgress = useResetQuizProgress()
+
+    const auth = useAuth()
+
+    const isLoggedIn = !!auth.token
+
+    useEffect(() => {
+        // Zaktualizuj stan jedynie, jeśli użytkownik wpada na nowe dane wchodząc na stronę
+        // lub z tła, ale chroniąc przed przerwaniem jego aktualnej, aktywnej sesji.
+        if (!isTrackingProgress) {
+            const newUnknowns = props.flashcards.filter(flashcard => !flashcard.isKnown)
+
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setFlashcards(props.flashcards)
+            setUnknownFlashcards(newUnknowns)
+            setFinishedTrackingProgress(newUnknowns.length === 0)
+        }
+    }, [props.flashcards, isTrackingProgress])
 
     function handleShuffle() {
         setIsShuffled((prevState) => !prevState)
@@ -68,10 +85,6 @@ export default function AttachedFlashcardsMode(
     function handleFlashcardOnClick() {
         setIsFront((prevState) => !prevState)
     }
-
-    const auth = useAuth()
-
-    const isLoggedIn = !!auth.token
 
     function handleKnow(flashcardsIterator: number) {
         setUnknownFlashcards((prev) => prev.map((flashcard, index) => index === flashcardsIterator ? {...flashcard, isKnown: true} : flashcard))

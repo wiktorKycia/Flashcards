@@ -20,20 +20,20 @@ interface QuizProgressUpdate {
 }
 
 interface QuizProgressQuery {
-    userId?: number
-    quizId?: number
+    userId: string
+    quizId: string
 }
 
 interface QuizProgressFlashcardUpdate {
-    userId?: number
-    quizId?: number
-    flashcardId?: number
+    userId: string
+    quizId: string
+    flashcardId: string
 }
 
 router.get("/user/:userId(\\d+)/quiz/:quizId(\\d+)", async (req: Request<QuizProgressQuery>, res: Response, next: NextFunction) => {
     try {
-        const userId = req.params.userId
-        const quizId = req.params.quizId
+        const userId = parseInt(req.params.userId)
+        const quizId = parseInt(req.params.quizId)
 
         if (!userId || !quizId) {
             return res.sendStatus(400)
@@ -93,8 +93,8 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
 
 router.patch("/user/:userId(\\d+)/quiz/:quizId(\\d+)/reset", async (req: Request<QuizProgressQuery>, res: Response, next: NextFunction) => {
     try {
-        const userId = req.params.userId
-        const quizId = req.params.quizId
+        const userId = parseInt(req.params.userId)
+        const quizId = parseInt(req.params.quizId)
 
         if (!userId || !quizId) {
             return res.sendStatus(400)
@@ -119,9 +119,9 @@ router.patch("/user/:userId(\\d+)/quiz/:quizId(\\d+)/reset", async (req: Request
 
 router.patch("/user/:userId(\\d+)/quiz/:quizId(\\d+)/flashcard/:flashcardId(\\d+)", async (req: Request<QuizProgressFlashcardUpdate>, res: Response, next: NextFunction) => {
     try {
-        const userId = req.params.userId
-        const quizId = req.params.quizId
-        const flashcardId = req.params.flashcardId
+        const userId = parseInt(req.params.userId)
+        const quizId = parseInt(req.params.quizId)
+        const flashcardId = parseInt(req.params.flashcardId)
         const updatedQuizProgressData: QuizProgressUpdate = req.body as QuizProgressUpdate
 
         if (!userId || !quizId || !flashcardId || !updatedQuizProgressData) {

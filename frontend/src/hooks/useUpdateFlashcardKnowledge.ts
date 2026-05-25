@@ -29,9 +29,9 @@ export const useUpdateFlashcardKnowledge = () => {
 
     return useMutation({
         mutationFn: updateFlashcardKnowledge,
-        onSuccess: async () => {
+        onSuccess: async (_data, variables) => {
             await queryClient.invalidateQueries({
-                queryKey: ['quiz', 'flashcards', 'user']
+                queryKey: ['quiz', variables.quizId, variables.userId]
             })
         }
     })
