@@ -27,7 +27,7 @@ const getData = async (quizId: number, userId?: number): Promise<QuizData> => {
     }))
 
     if (userId != null) {
-        const quizProgressResponse = await fetch(`/api/quizzes-progress/user${userId}/quiz${quizId}`)
+        const quizProgressResponse = await fetch(`/api/quizzes-progress/user/${userId}/quiz/${quizId}`)
 
         if (quizProgressResponse.ok) {
             const quizProgress: QuizProgress[] = await quizProgressResponse.json()

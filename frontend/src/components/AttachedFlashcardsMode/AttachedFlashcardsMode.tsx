@@ -6,6 +6,7 @@ import styles from './AttachedFlashcardsMode.module.scss'
 import Container from '@/components/Container'
 import ButtonToggle from "@/components/ButtonToggle";
 import { useUpdateFlashcardKnowledge } from '@/hooks/useUpdateFlashcardKnowledge.ts'
+import { useResetQuizProgress } from '@/hooks/useResetQuizProgress.ts'
 
 interface AttachedFlashcardsModeProps {
     quizId: number
@@ -30,6 +31,7 @@ export default function AttachedFlashcardsMode(
     const [isShuffled, setIsShuffled] = useState<boolean>(false)
 
     const updateFlashcardsKnowledge = useUpdateFlashcardKnowledge()
+    const resetQuizProgress = useResetQuizProgress()
 
     function handleShuffle() {
         setIsShuffled((prevState) => !prevState)
@@ -116,6 +118,31 @@ export default function AttachedFlashcardsMode(
         setNextTurn([])
     }
 
+    async function handleResetProgress() {
+        if (!auth.user) return
+        const confirmed = window.confirm("czy na pewno chcesz zresetować swoją pamięć?")
+        if (!confirmed) return
+
+        await resetQuizProgress.mutateAsync({
+            quizId: props.quizId,
+            userId: auth.user.id
+        })
+
+        const resetFlashcards = flashcards.map((flashcard) => ({
+            ...flashcard,
+            isKnown: false
+        }))
+
+        setFlashcards(resetFlashcards)
+        setUnknownFlashcards(resetFlashcards)
+        setFlashcardsIterator(0)
+        setRequiresNextTurn(false)
+        setNextTurn([])
+        setFinishedTrackingProgress(false)
+        setIsCheckingProgress(false)
+
+    }
+
     if (flashcards.length === 0) {
         return (
             <Container cssClassName="container-positioner">
@@ -187,14 +214,9 @@ export default function AttachedFlashcardsMode(
                 )}
                 {isLoggedIn && finishedTrackingProgress && (
                     <div className={styles.TrackProgress}>
-                        <button onClick={() => {
-                            if (window.confirm("czy na pewno chcesz zresetować swoją pamięć?"))
-                            {
-                                // extract this into a function and
-                                // database update (put): make all flashcards' isKnown of this quiz and this auth.user.id to false
-                                console.log("Czyszczę wiedzę...")
-                            }
-                        }}>Zresetuj progres</button>
+                        <button onClick={handleResetProgress} disabled={resetQuizProgress.isPending}>
+                            {resetQuizProgress.isPending ? 'Resetowanie...' : 'Zresetuj progres'}
+                        </button>
                     </div>
                 )}
                 <div className={styles.Options}>

@@ -91,6 +91,32 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     }
 })
 
+router.patch("/user/:userId(\\d+)/quiz/:quizId(\\d+)/reset", async (req: Request<QuizProgressQuery>, res: Response, next: NextFunction) => {
+    try {
+        const userId = req.params.userId
+        const quizId = req.params.quizId
+
+        if (!userId || !quizId) {
+            return res.sendStatus(400)
+        }
+
+        const result = await prisma.userQuizProgress.updateMany({
+            where: {
+                userId,
+                quizId,
+            },
+            data: {
+                isKnown: false,
+            },
+        })
+
+        return res.status(200).json({ count: result.count })
+    }
+    catch (error) {
+        next(error)
+    }
+})
+
 router.patch("/user/:userId(\\d+)/quiz/:quizId(\\d+)/flashcard/:flashcardId(\\d+)", async (req: Request<QuizProgressFlashcardUpdate>, res: Response, next: NextFunction) => {
     try {
         const userId = req.params.userId
