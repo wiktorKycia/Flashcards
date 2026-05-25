@@ -1,40 +1,46 @@
-.setupLabel {
-  font-size: 2rem;
-  margin: 1rem;
+.setupLabel, .wrapper {
+    font-size: 2rem;
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .setupForm {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 3rem;
-  border: var(--border);
-  border-radius: 1.6rem;
-  background-color: var(--color-surface);
-  box-shadow: var(--shadow-big);
-  margin-top: 3rem;
+    @media (min-aspect-ratio: 1/1) {
+        width: 50%;
+    }
+
+    @media (max-aspect-ratio: 1/1) {
+        width: 90%;
+    }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem;
+    border: var(--border);
+    border-radius: 1.6rem;
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-big);
+    margin-top: 3rem;
 }
 
 .setupInput {
-  margin-left: 5px;
+    margin-left: 5px;
 }
 
 .setupSelect {
-  padding: 1rem;
-  border: var(--border);
-  border-radius: 0.5rem;
-  outline: none;
-  color: var(--color-text-primary);
-  background-color: var(--color-surface);
+    padding: 1rem;
+    font-size: 1.6rem;
+    margin-left: 5px;
+    border: var(--border);
+    border-radius: 0.5rem;
+    outline: none;
+    color: var(--color-text-primary);
+    background-color: var(--color-surface);
 
-  &:focus {
-    border-color: var(--color-accent);
-    box-shadow: var(--shadow);
-  }
-}
-
-.wrapper {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+    &:focus {
+        border-color: var(--color-accent);
+        box-shadow: var(--shadow);
+    }
 }

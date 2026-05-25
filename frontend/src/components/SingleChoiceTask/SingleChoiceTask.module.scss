@@ -1,26 +1,26 @@
 .taskWrapper {
-  margin: 1rem;
-  font-size: 1.7rem;
+    margin: 1rem;
+    font-size: 1.7rem;
 }
 
 .correctOption {
-  color: limegreen;
+    color: limegreen;
 }
 
 .incorrectOption {
-  color: red;
+    color: red;
 }
 
 .optionMark {
-  margin-right: 3px;
+    margin-right: 3px;
 
-  &:focus {
-    border-color: var(--color-accent);
-    box-shadow: none;
-  }
+    &:focus {
+        border-color: var(--color-accent);
+        box-shadow: none;
+    }
 }
 
 .optionsWrapper {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }

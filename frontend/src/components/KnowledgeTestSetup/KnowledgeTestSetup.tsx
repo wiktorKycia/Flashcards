@@ -74,7 +74,7 @@ export default function KnowledgeTestSetup({ onSubmitSettings }: Props) {
                     className={styles.setupSelect}
                     id="flashcards-side"
                     value={flashcardsSide}
-                    onChange={(e) =>setFlashcardsSide(e.target.value)}
+                    onChange={(e) => setFlashcardsSide(e.target.value)}
                 >
                     <option value="FRONT">Przód</option>
                     <option value="BACK">Tył</option>

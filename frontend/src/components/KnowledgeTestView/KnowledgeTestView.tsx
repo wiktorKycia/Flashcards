@@ -73,7 +73,7 @@ export default function KnowledgeTestView({ data }: Tasks) {
             }}
         >
             {data.fillGap?.data?.length ? (
-                <section className={styles.taskGroup}>
+                <section className={styles.tasksGroup}>
                     <h2>Wypełnij luki</h2>
 
                     {data.fillGap.data.map((task, i) => (
@@ -91,7 +91,7 @@ export default function KnowledgeTestView({ data }: Tasks) {
             ) : null}
 
             {data.firstLetterGap?.data?.length ? (
-                <section className={styles.taskGroup}>
+                <section className={styles.tasksGroup}>
                     <h2>Wypełnij pozostałe części fraz w lukach na podstawie ich pierwszych liter</h2>
 
                     {data.firstLetterGap.data.map((task, i) => (
@@ -109,7 +109,7 @@ export default function KnowledgeTestView({ data }: Tasks) {
             ) : null}
 
             {data.singleChoice?.data?.length ? (
-                <section className={styles.taskGroup}>
+                <section className={styles.tasksGroup}>
                     <h2>Wybierz poprawne uzupełnienie luki</h2>
 
                     {data.singleChoice.data.map((task, i) => (

@@ -1,16 +1,16 @@
 import OpenAI from 'openai'
 import dotenv from 'dotenv'
 import { PrismaClient } from '@prisma/client'
-import express, { type NextFunction, type Request, type Response, type Router } from 'express';
+import express, { type NextFunction, type Request, type Response, type Router } from 'express'
 import fs from 'fs'
 import path from 'path'
 
 dotenv.config({path: '.env.app'})
 
-const token = process.env["GITHUB_TOKEN"];
-const endpoint = "https://models.github.ai/inference";
-const client = new OpenAI({ baseURL: endpoint, apiKey: token, maxRetries: 0 });
-const modelsList: string[] = ["openai/gpt-4o", "openai/gpt-4.1", "meta/Llama-3.3-70B-Instruct", "cohere/cohere-command-a", "deepseek/DeepSeek-V3-0324", "openai/gpt-4.1-nano", "openai/gpt-4.1-mini", "openai/gpt-4o-mini", "mistral-ai/mistral-medium-2505", "mistral-ai/mistral-small-2503", "meta/Llama-4-Maverick-17B-128E-Instruct-FP8", "meta/Llama-4-Scout-17B-16E-Instruct", "meta/Llama-3.2-11B-Vision-Instruct"];
+const token = process.env["GITHUB_TOKEN"]
+const endpoint = "https://models.github.ai/inference"
+let client: OpenAI | null = null
+const modelsList: string[] = ["openai/gpt-4o", "openai/gpt-4.1", "meta/Llama-3.3-70B-Instruct", "cohere/cohere-command-a", "deepseek/DeepSeek-V3-0324", "openai/gpt-4.1-nano", "openai/gpt-4.1-mini", "openai/gpt-4o-mini", "mistral-ai/mistral-medium-2505", "mistral-ai/mistral-small-2503", "meta/Llama-4-Maverick-17B-128E-Instruct-FP8", "meta/Llama-4-Scout-17B-16E-Instruct", "meta/Llama-3.2-11B-Vision-Instruct"]
 const router: Router = express.Router()
 const prisma = new PrismaClient()
 const fillGapPrompt = loadPrompt("fill_gap.txt")
@@ -26,6 +26,9 @@ async function sendAIRequest(systemMessage: string, userMessage: string) {
 
     if (!token) {
         throw new Error("Missing GITHUB_TOKEN in .env.app file")
+    }
+    else if (client === null) {
+        client = new OpenAI({ baseURL: endpoint, apiKey: token, maxRetries: 0 })
     }
 
     while (modelIndex < modelsList.length) {

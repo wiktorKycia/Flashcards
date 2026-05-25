@@ -50,21 +50,21 @@ export default function KnowledgeTest() {
                     )}
 
                     {isError && (
-                        <div>{error.message}</div>
+                        <div className={styles.vitalInfo}>{error.message}</div>
                     )}
 
                     {data?.errorMessage && (
-                        <div>{data.errorMessage}</div>
+                        <div className={styles.vitalInfo}>{data.errorMessage}</div>
                     )}
 
                     {data?.warning && (
-                        <div>Uwaga: {data.warning}</div>
+                        <div className={styles.vitalInfo}>Uwaga: {data.warning}</div>
                     )}
 
                     {hasAnyData && !isError ? (
                         <KnowledgeTestView data={data} />
                     ) : (
-                        !isPending && !isError && (<div>Brak zadań</div>)
+                        !isPending && !isError && (<div className={styles.vitalInfo}>Brak zadań</div>)
                     )}
                 </div>
             )}

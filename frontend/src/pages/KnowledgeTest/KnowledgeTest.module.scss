@@ -1,11 +1,18 @@
 .mainWrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .buttonWrapper {
-  width: 100%;
-  padding: 2rem;
+    width: 100%;
+    padding: 2rem;
+}
+
+.vitalInfo {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--color-text-secondary);
+    margin: 2rem;
 }
