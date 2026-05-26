@@ -127,7 +127,7 @@ router.put("/user/:userId(\\d+)/quiz/:quizId(\\d+)", async (req: Request<QuizLik
         const quizId = parseInt(req.params.quizId)
         const payload = req.body as QuizLikeUpdatePayload
 
-        if (Number.isNaN(userId) || Number.isNaN(quizId) || typeof payload.isLiked !== "boolean") {
+        if (Number.isNaN(userId) || Number.isNaN(quizId)) {
             return res.sendStatus(400)
         }
 
