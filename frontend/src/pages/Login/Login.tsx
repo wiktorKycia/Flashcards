@@ -44,6 +44,11 @@ export default function Login() {
                     className={styles.FormContainer}
                 >
                     <h1>Login</h1>
+                    {loginMutation.isError && (
+                        <div style={{ color: 'red', marginBottom: '0.5rem' }}>
+                            {(loginMutation.error as Error).message}
+                        </div>
+                    )}
                     <input
                         type="text"
                         placeholder="login"

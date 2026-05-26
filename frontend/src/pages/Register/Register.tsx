@@ -41,6 +41,11 @@ export default function Register() {
                     className={styles.FormContainer}
                 >
                     <h1>Register</h1>
+                    {registerMutation.isError && (
+                        <div style={{ color: 'red', marginBottom: '0.5rem' }}>
+                            {(registerMutation.error as Error).message}
+                        </div>
+                    )}
                     <input
                         type="text"
                         placeholder="login"
