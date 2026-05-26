@@ -9,11 +9,83 @@ interface QuizLikeParams {
     id: string
 }
 
+interface QuizLikeUserQuizParams {
+    userId: string
+    quizId: string
+}
+
+interface QuizLikeQuizParams {
+    quizId: string
+}
+
 interface QuizLikeCreateAndUpdate {
     isLiked: boolean
     userId: number
     quizId: number
 }
+
+interface QuizLikeUpdatePayload {
+    isLiked: boolean
+}
+
+router.get("/quiz/:quizId(\\d+)/counts", async (req: Request<QuizLikeQuizParams>, res: Response, next: NextFunction) => {
+    try {
+        const quizId = parseInt(req.params.quizId)
+
+        if (Number.isNaN(quizId)) {
+            return res.sendStatus(400)
+        }
+
+        const [likes, dislikes] = await Promise.all([
+            prisma.userQuizLike.count({
+                where: {
+                    quizId,
+                    isLiked: true,
+                }
+            }),
+            prisma.userQuizLike.count({
+                where: {
+                    quizId,
+                    isLiked: false,
+                }
+            })
+        ])
+
+        return res.json({ likes, dislikes })
+    }
+    catch (error) {
+        next(error)
+    }
+})
+
+router.get("/user/:userId(\\d+)/quiz/:quizId(\\d+)", async (req: Request<QuizLikeUserQuizParams>, res: Response, next: NextFunction) => {
+    try {
+        const userId = parseInt(req.params.userId)
+        const quizId = parseInt(req.params.quizId)
+
+        if (Number.isNaN(userId) || Number.isNaN(quizId)) {
+            return res.sendStatus(400)
+        }
+
+        const quizLike = await prisma.userQuizLike.findUnique({
+            where: {
+                userId_quizId: {
+                    userId,
+                    quizId,
+                }
+            }
+        })
+
+        if (!quizLike) {
+            return res.sendStatus(404)
+        }
+
+        return res.json(quizLike)
+    }
+    catch (error) {
+        next(error)
+    }
+})
 
 router.get("/:id(\\d+)", async (req: Request<QuizLikeParams>, res: Response, next: NextFunction) => {
     try {
@@ -43,6 +115,65 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
         })
 
         return res.status(201).json(createdQuizLike)
+    }
+    catch (error) {
+        next(error)
+    }
+})
+
+router.put("/user/:userId(\\d+)/quiz/:quizId(\\d+)", async (req: Request<QuizLikeUserQuizParams>, res: Response, next: NextFunction) => {
+    try {
+        const userId = parseInt(req.params.userId)
+        const quizId = parseInt(req.params.quizId)
+        const payload = req.body as QuizLikeUpdatePayload
+
+        if (Number.isNaN(userId) || Number.isNaN(quizId) || typeof payload.isLiked !== "boolean") {
+            return res.sendStatus(400)
+        }
+
+        const quizLike = await prisma.userQuizLike.upsert({
+            where: {
+                userId_quizId: {
+                    userId,
+                    quizId,
+                }
+            },
+            update: {
+                isLiked: payload.isLiked,
+            },
+            create: {
+                userId,
+                quizId,
+                isLiked: payload.isLiked,
+            }
+        })
+
+        return res.status(200).json(quizLike)
+    }
+    catch (error) {
+        next(error)
+    }
+})
+
+router.delete("/user/:userId(\\d+)/quiz/:quizId(\\d+)", async (req: Request<QuizLikeUserQuizParams>, res: Response, next: NextFunction) => {
+    try {
+        const userId = parseInt(req.params.userId)
+        const quizId = parseInt(req.params.quizId)
+
+        if (Number.isNaN(userId) || Number.isNaN(quizId)) {
+            return res.sendStatus(400)
+        }
+
+        await prisma.userQuizLike.delete({
+            where: {
+                userId_quizId: {
+                    userId,
+                    quizId,
+                }
+            }
+        })
+
+        return res.sendStatus(200)
     }
     catch (error) {
         next(error)

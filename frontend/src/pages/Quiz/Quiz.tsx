@@ -11,6 +11,7 @@ import LoadingSpinner from '@/components/LoadingSpinner'
 import { useQuizData } from '@/hooks/useQuizData.ts'
 import { useCheckIfLoggedIn } from '@/hooks/useCheckIfLoggedIn.ts'
 import { useDeleteQuiz } from '@/hooks/useDeleteQuiz.ts'
+import QuizLikeButtons from '@/components/QuizLikeButtons'
 
 export default function Quiz() {
     const id: number = parseInt(useParams().id as string)
@@ -99,8 +100,7 @@ export default function Quiz() {
                         >
                             <Person id={data.quizAuthor.id} name={data.quizAuthor.name} title={'Autor'} />
                             <Container cssClassName={'container-positioner ' + styles.MainAuthorLikeContainer}>
-                                <button>like</button>
-                                <button>dislike</button>
+                                <QuizLikeButtons quizId={id} />
                             </Container>
                         </Container>
                         <ListedFlashcards
