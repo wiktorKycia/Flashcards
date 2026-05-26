@@ -27,24 +27,33 @@ export default function GapTask({ task, taskId, value, isFirstLetter, onChange, 
     return (
         <div className={styles.taskWrapper}>
             <label>
-                <span>{parts[0]}</span>
-                <input
-                    id={`${taskId}-gap`}
-                    className={
-                        isFinished
-                            ? isCorrect
-                                ? styles.correctGap
-                                : styles.incorrectGap
-                            : ''
-                    }
-                    type="text"
-                    value={value}
-                    disabled={isFinished}
-                    autoComplete="off"
-                    onChange={(e) =>
-                        onChange(taskId, e.target.value)
-                    }
-                />
+                {isFirstLetter ? (
+                    <span>{parts[0].slice(0, -1)}</span>
+                ) : (
+                    <span>{parts[0]}</span>
+                )}
+                <div className={styles.answerWrapper}>
+                    {isFirstLetter && (
+                        <span>{parts[0].slice(-1)}</span>
+                    )}
+                    <input
+                        id={`${taskId}-gap`}
+                        className={
+                            isFinished
+                                ? isCorrect
+                                    ? styles.correctGap
+                                    : styles.incorrectGap
+                                : ''
+                        }
+                        type="text"
+                        value={value}
+                        disabled={isFinished}
+                        autoComplete="off"
+                        onChange={(e) =>
+                            onChange(taskId, e.target.value)
+                        }
+                    />
+                </div>
                 <span>{parts[1]}</span>
             </label>
 

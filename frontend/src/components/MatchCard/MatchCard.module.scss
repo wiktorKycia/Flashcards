@@ -1,16 +1,25 @@
 .MatchCard {
+    @media (min-aspect-ratio: 1/1) {
+        font-size: 2rem;
+        max-width: 20vw;
+        padding: 1rem;
+    }
+
+    @media (max-aspect-ratio: 1/1) {
+        font-size: 1.5rem;
+        max-width: 40vw;
+        padding: 0;
+    }
+
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 1rem;
     border: 2px solid darkslategrey;
     border-radius: 10px;
     transition: all 0.3s ease;
     cursor: pointer;
     text-align: center;
-    font-size: 2rem;
     background-color: var(--color-surface);
-    max-width: 20vw;
     overflow-wrap: anywhere;
 
     & .MatchCardContent{
