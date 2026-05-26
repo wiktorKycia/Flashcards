@@ -13,6 +13,69 @@
         justify-content: center;
         align-items: center;
         padding-inline: 1.4rem;
+        gap: 1.2rem;
     }
 
+}
+
+
+.PictureContainer
+{
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: visible;
+}
+
+.ProfileTooltip {
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    right: 0;
+    z-index: 0;
+    min-width: 18rem;
+    padding: 0.9rem 1rem;
+    border-radius: 0.8rem;
+    background-color: var(--color-surface);
+    border: var(--border);
+    box-shadow: var(--shadow-big);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.ProfileTooltipOpen {
+    opacity: 1;
+    z-index: 10;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.ProfileTooltipTitle {
+    color: var(--color-text-primary);
+    font-weight: 600;
+    margin-bottom: 0.7rem;
+}
+
+.ProfileTooltipUsername {
+    color: var(--color-accent4);
+}
+
+.ProfileTooltipLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.ProfileTooltipLink {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.ProfileTooltipLink:hover {
+    color: var(--color-accent2);
+    text-decoration: underline;
 }

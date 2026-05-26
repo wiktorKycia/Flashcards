@@ -33,7 +33,7 @@ export default function ButtonAdd() {
             <button onClick={handleButtonOnClick} className={styles.ButtonAdd}>
                 +
             </button>
-            <span className={styles.TooltipText}>Add new quiz</span>
+            <span className={styles.TooltipText}>Stwórz quiz</span>
         </>
     )
 }
