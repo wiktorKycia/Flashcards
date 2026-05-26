@@ -26,7 +26,6 @@ interface QuizUpdate {
 interface QuizFlashcardReplace {
     front: string
     back: string
-    starred?: boolean
 }
 
 router.get("/", async (_req: Request, res: Response, next: NextFunction) => {
@@ -142,8 +141,7 @@ router.put("/:id(\\d+)/flashcards", async (req: Request<QuizParams>, res: Respon
                     data: flashcards.map((flashcard) => ({
                         quizId,
                         front: flashcard.front,
-                        back: flashcard.back,
-                        starred: flashcard.starred ?? false
+                        back: flashcard.back
                     }))
                 })
             }

@@ -8,7 +8,6 @@ interface ReplaceQuizFlashcardsVariables {
 interface ReplaceQuizFlashcard {
     front: string
     back: string
-    starred: boolean
 }
 
 const replaceQuizFlashcards = async ({

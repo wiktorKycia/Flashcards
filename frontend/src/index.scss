@@ -1,3 +1,4 @@
+@use "@/styles/mixins" as *;
 * {
     margin: 0;
     padding: 0;
@@ -41,14 +42,7 @@
 
     --color-text-primary: #e8f3ea;
     --color-text-secondary: #a0ada2;
-    --color-text-buttons: #e3f0e3;//#121613;
-/*
-    --color-accent: #4ade80;
-    --color-accent2: #22c55e;
-    --color-accent3: #16a34a;
-    --color-accent4: #15803d;
-    --color-accent5: #166534;
-*/
+    --color-text-buttons: #e3f0e3;
 
     --color-accent5: #22c55e;
     --color-accent4: #009e3b;
@@ -66,6 +60,7 @@
     --transition: all 0.3s ease;
     --transition-long: all 550ms;
 }
+
 html {
     font-family: Roboto, sans-serif;
     font-size: 10px;
@@ -125,6 +120,23 @@ input {
     }
 }
 
+textarea {
+    min-height: 10rem;
+    padding: 1rem;
+    border: var(--border);
+    border-radius: 0.5rem;
+    font-size: 1.6rem;
+    color: var(--color-text-primary);
+    background-color: var(--color-surface);
+    resize: vertical;
+
+    &:focus {
+        border-color: var(--color-accent);
+        box-shadow: var(--shadow);
+        outline: none;
+    }
+}
+
 a {
     color: var(--color-accent);
     text-decoration: none;
@@ -132,35 +144,28 @@ a {
 }
 
 .container-borderless {
-    padding: 2rem;
-    background-color: transparent;
-    border: none
+    @include container-base;
+    @include borderless;
 }
 
 .container-positioner {
-    border: none;
+    @include container-base;
+    @include borderless;
     padding: 0;
     margin: 0;
-    background-color: transparent;
 }
 
 .container-horizontal-borderless {
-    display: flex;
+    @include container-base;
+    @include borderless;
+    @include flex;
     flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    padding: 2rem;
-    border: none;
-    background-color: transparent;
 }
 
 .container-vertical-borderless {
-    display: flex;
+    @include container-base;
+    @include borderless;
+    @include flex;
     flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    padding: 2rem;
-    border: none;
-    background-color: transparent;
 }
 
