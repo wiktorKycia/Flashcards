@@ -1,14 +1,14 @@
 import { Image } from 'expo-image'
 import { useEffect, useState } from 'react'
-import { Platform, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 import { HelloWave } from '@/components/hello-wave'
 import ParallaxScrollView from '@/components/parallax-scroll-view'
 import { ThemedText } from '@/components/themed-text'
 import { ThemedView } from '@/components/themed-view'
+import { API_BASE_URL } from '@/lib/auth'
 import { Link } from 'expo-router'
 
-const API_BASE_URL = 'http://localhost:3000'
 
 type ApiResponse = {
     content?: string
@@ -75,25 +75,13 @@ export default function HomeScreen() {
             }
         >
             <ThemedView style={styles.titleContainer}>
-                <ThemedText type="title">Welcome!</ThemedText>
+                <ThemedText type="title">Flashcards</ThemedText>
                 <HelloWave />
             </ThemedView>
             <ThemedView style={styles.stepContainer}>
-                <ThemedText type="subtitle">Step 1: Try it</ThemedText>
+                <ThemedText type="subtitle">Home</ThemedText>
                 <ThemedText>
-                    Edit{' '}
-                    <ThemedText type="defaultSemiBold">
-                        app/(tabs)/index.tsx
-                    </ThemedText>{' '}
-                    to see changes. Press{' '}
-                    <ThemedText type="defaultSemiBold">
-                        {Platform.select({
-                            ios: 'cmd + d',
-                            android: 'cmd + m',
-                            web: 'F12'
-                        })}
-                    </ThemedText>{' '}
-                    to open developer tools.
+                    Your learning dashboard will live here.
                 </ThemedText>
             </ThemedView>
             <ThemedView style={styles.stepContainer}>
@@ -108,56 +96,19 @@ export default function HomeScreen() {
                     <ThemedText>{apiMessage}</ThemedText>
                 )}
             </ThemedView>
-            {/*<ThemedView style={styles.stepContainer}>*/}
-            {/*    <Link href="/modal">*/}
-            {/*        <Link.Trigger>*/}
-            {/*            <ThemedText type="subtitle">*/}
-            {/*                Step 67: Explore*/}
-            {/*            </ThemedText>*/}
-            {/*        </Link.Trigger>*/}
-            {/*        <Link.Preview />*/}
-            {/*        <Link.Menu>*/}
-            {/*            <Link.MenuAction*/}
-            {/*                title="Action"*/}
-            {/*                icon="cube"*/}
-            {/*                onPress={() => alert('Action pressed')}*/}
-            {/*            />*/}
-            {/*            <Link.MenuAction*/}
-            {/*                title="Share"*/}
-            {/*                icon="square.and.arrow.up"*/}
-            {/*                onPress={() => alert('Share pressed')}*/}
-            {/*            />*/}
-            {/*            <Link.Menu title="More" icon="ellipsis">*/}
-            {/*                <Link.MenuAction*/}
-            {/*                    title="Delete"*/}
-            {/*                    icon="trash"*/}
-            {/*                    destructive*/}
-            {/*                    onPress={() => alert('Delete pressed')}*/}
-            {/*                />*/}
-            {/*            </Link.Menu>*/}
-            {/*        </Link.Menu>*/}
-            {/*    </Link>*/}
-
-            {/*    <ThemedText>*/}
-            {/*        {`Tap the Explore tab to learn more about what's included in this starter app.`}*/}
-            {/*    </ThemedText>*/}
-            {/*</ThemedView>*/}
-            {/*<ThemedView style={styles.stepContainer}>*/}
-            {/*    <ThemedText type="subtitle">*/}
-            {/*        Step 3: Get a fresh start*/}
-            {/*    </ThemedText>*/}
-            {/*    <ThemedText>*/}
-            {/*        {`When you're ready, run `}*/}
-            {/*        <ThemedText type="defaultSemiBold">*/}
-            {/*            npm run reset-project*/}
-            {/*        </ThemedText>{' '}*/}
-            {/*        to get a fresh{' '}*/}
-            {/*        <ThemedText type="defaultSemiBold">app</ThemedText>{' '}*/}
-            {/*        directory. This will move the current{' '}*/}
-            {/*        <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}*/}
-            {/*        <ThemedText type="defaultSemiBold">app-example</ThemedText>.*/}
-            {/*    </ThemedText>*/}
-            {/*</ThemedView>*/}
+            <ThemedView style={styles.stepContainer}>
+                <ThemedText type="subtitle">Account</ThemedText>
+                <ThemedView style={styles.authButtons}>
+                    <Link href="../login" asChild>
+                        <ThemedText style={styles.authButtonText}>Login</ThemedText>
+                    </Link>
+                    <Link href="../register" asChild>
+                        <ThemedText style={styles.authButtonSecondaryText}>
+                            Register
+                        </ThemedText>
+                    </Link>
+                </ThemedView>
+            </ThemedView>
         </ParallaxScrollView>
     )
 }
@@ -171,6 +122,29 @@ const styles = StyleSheet.create({
     stepContainer: {
         gap: 8,
         marginBottom: 8
+    },
+    authButtons: {
+        flexDirection: 'row',
+        gap: 12
+    },
+    authButtonText: {
+        backgroundColor: '#22c55e',
+        color: '#e3f0e3',
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+        overflow: 'hidden',
+        fontWeight: '700'
+    },
+    authButtonSecondaryText: {
+        borderColor: '#22c55e',
+        borderWidth: 1,
+        color: '#22c55e',
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+        overflow: 'hidden',
+        fontWeight: '700'
     },
     reactLogo: {
         height: 178,
