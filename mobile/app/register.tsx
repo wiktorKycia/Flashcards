@@ -15,6 +15,7 @@ import { ThemedText } from '@/components/themed-text'
 import { ThemedView } from '@/components/themed-view'
 import { registerUser } from '@/lib/auth'
 import { useColorScheme } from '@/hooks/use-color-scheme'
+import { Colors } from '@/constants/theme'
 
 export default function RegisterScreen() {
     const [name, setName] = useState('')
@@ -23,6 +24,7 @@ export default function RegisterScreen() {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const colorScheme = useColorScheme() ?? 'light'
+    const palette = Colors[colorScheme]
 
     const handleSubmit = async () => {
         if (!name || !email || !password) {
@@ -46,7 +48,7 @@ export default function RegisterScreen() {
         <ThemedView
             style={[
                 styles.screen,
-                colorScheme === 'dark' ? styles.screenDark : styles.screenLight
+                { backgroundColor: palette.background }
             ]}
         >
             <KeyboardAvoidingView
@@ -60,9 +62,10 @@ export default function RegisterScreen() {
                     <View
                         style={[
                             styles.card,
-                            colorScheme === 'dark'
-                                ? styles.cardDark
-                                : styles.cardLight
+                            {
+                                backgroundColor: palette.surface,
+                                borderColor: palette.border
+                            }
                         ]}
                     >
                         <ThemedText type="title" style={styles.title}>
@@ -72,46 +75,55 @@ export default function RegisterScreen() {
                             value={name}
                             onChangeText={setName}
                             placeholder="login"
+                            placeholderTextColor={palette.textSecondary}
                             autoCapitalize="none"
                             autoCorrect={false}
                             textContentType="name"
                             style={[
                                 styles.input,
-                                colorScheme === 'dark'
-                                    ? styles.inputDark
-                                    : styles.inputLight
+                                {
+                                    backgroundColor: palette.surface,
+                                    borderColor: palette.border,
+                                    color: palette.text
+                                }
                             ]}
                         />
                         <TextInput
                             value={email}
                             onChangeText={setEmail}
                             placeholder="email"
+                            placeholderTextColor={palette.textSecondary}
                             autoCapitalize="none"
                             autoCorrect={false}
                             keyboardType="email-address"
                             textContentType="emailAddress"
                             style={[
                                 styles.input,
-                                colorScheme === 'dark'
-                                    ? styles.inputDark
-                                    : styles.inputLight
+                                {
+                                    backgroundColor: palette.surface,
+                                    borderColor: palette.border,
+                                    color: palette.text
+                                }
                             ]}
                         />
                         <TextInput
                             value={password}
                             onChangeText={setPassword}
                             placeholder="password"
+                            placeholderTextColor={palette.textSecondary}
                             secureTextEntry
                             textContentType="newPassword"
                             style={[
                                 styles.input,
-                                colorScheme === 'dark'
-                                    ? styles.inputDark
-                                    : styles.inputLight
+                                {
+                                    backgroundColor: palette.surface,
+                                    borderColor: palette.border,
+                                    color: palette.text
+                                }
                             ]}
                         />
                         {error ? (
-                            <ThemedText style={styles.errorText}>
+                            <ThemedText style={[styles.errorText, { color: palette.error }]}>
                                 {error}
                             </ThemedText>
                         ) : null}
@@ -119,22 +131,27 @@ export default function RegisterScreen() {
                             onPress={handleSubmit}
                             style={({ pressed }) => [
                                 styles.button,
+                                { backgroundColor: palette.tint },
                                 pressed && styles.buttonPressed,
                                 isLoading && styles.buttonDisabled
                             ]}
                             disabled={isLoading}
                         >
                             {isLoading ? (
-                                <ActivityIndicator color="#e3f0e3" />
+                                <ActivityIndicator color={palette.textButtons} />
                             ) : (
-                                <ThemedText style={styles.buttonText}>
+                                <ThemedText
+                                    style={[styles.buttonText, { color: palette.textButtons }]}
+                                >
                                     Create account
                                 </ThemedText>
                             )}
                         </Pressable>
-                        <ThemedText style={styles.linkText}>
+                        <ThemedText
+                            style={[styles.linkText, { color: palette.textSecondary }]}
+                        >
                             Already have an account?{' '}
-                            <Link href="../login" style={styles.link}>
+                            <Link href="../login" style={[styles.link, { color: palette.tint }]}>
                                 Login
                             </Link>
                         </ThemedText>
@@ -148,12 +165,6 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
     screen: {
         flex: 1
-    },
-    screenDark: {
-        backgroundColor: '#121613'
-    },
-    screenLight: {
-        backgroundColor: '#ffffff'
     },
     keyboard: {
         flex: 1
@@ -170,14 +181,6 @@ const styles = StyleSheet.create({
         gap: 16,
         borderWidth: 1
     },
-    cardDark: {
-        backgroundColor: '#1e2621',
-        borderColor: '#2a3d30'
-    },
-    cardLight: {
-        backgroundColor: '#f0fff4',
-        borderColor: '#88d0d0'
-    },
     title: {
         textAlign: 'center'
     },
@@ -188,41 +191,24 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         fontSize: 16
     },
-    inputDark: {
-        backgroundColor: '#1e2621',
-        borderColor: '#2a3d30',
-        color: '#e8f3ea'
-    },
-    inputLight: {
-        backgroundColor: '#f0fff4',
-        borderColor: '#88d0d0',
-        color: '#3c4a3e'
-    },
     button: {
-        backgroundColor: '#22c55e',
         borderRadius: 8,
         paddingVertical: 12,
         alignItems: 'center'
     },
     buttonPressed: {
-        backgroundColor: '#009e3b'
+        opacity: 0.9
     },
     buttonDisabled: {
         opacity: 0.7
     },
     buttonText: {
-        color: '#e3f0e3',
         fontSize: 16,
         fontWeight: '700'
     },
     linkText: {
-        textAlign: 'center',
-        color: '#a0ada2'
+        textAlign: 'center'
     },
-    link: {
-        color: '#22c55e'
-    },
-    errorText: {
-        color: '#f87171'
-    }
+    link: {},
+    errorText: {}
 })

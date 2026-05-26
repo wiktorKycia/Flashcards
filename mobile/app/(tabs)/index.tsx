@@ -8,6 +8,8 @@ import { ThemedText } from '@/components/themed-text'
 import { ThemedView } from '@/components/themed-view'
 import { API_BASE_URL } from '@/lib/auth'
 import { Link } from 'expo-router'
+import { useColorScheme } from '@/hooks/use-color-scheme'
+import { Colors } from '@/constants/theme'
 
 
 type ApiResponse = {
@@ -15,6 +17,8 @@ type ApiResponse = {
 }
 
 export default function HomeScreen() {
+    const colorScheme = useColorScheme() ?? 'light'
+    const palette = Colors[colorScheme]
     const [apiMessage, setApiMessage] = useState<string | null>(null)
     const [apiError, setApiError] = useState<string | null>(null)
     const [apiLoading, setApiLoading] = useState(true)
@@ -66,7 +70,7 @@ export default function HomeScreen() {
 
     return (
         <ParallaxScrollView
-            headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+            headerBackgroundColor={{ light: palette.surface, dark: palette.surface }}
             headerImage={
                 <Image
                     source={require('@/assets/images/partial-react-logo.png')}
@@ -89,7 +93,10 @@ export default function HomeScreen() {
                 {apiLoading ? (
                     <ThemedText>Loading...</ThemedText>
                 ) : apiError ? (
-                    <ThemedText type="defaultSemiBold">
+                    <ThemedText
+                        type="defaultSemiBold"
+                        style={{ color: palette.error }}
+                    >
                         Error: {apiError}
                     </ThemedText>
                 ) : (
@@ -100,10 +107,24 @@ export default function HomeScreen() {
                 <ThemedText type="subtitle">Account</ThemedText>
                 <ThemedView style={styles.authButtons}>
                     <Link href="../login" asChild>
-                        <ThemedText style={styles.authButtonText}>Login</ThemedText>
+                        <ThemedText
+                            style={{
+                                ...styles.authButtonText,
+                                backgroundColor: palette.tint,
+                                color: palette.textButtons
+                            }}
+                        >
+                            Login
+                        </ThemedText>
                     </Link>
                     <Link href="../register" asChild>
-                        <ThemedText style={styles.authButtonSecondaryText}>
+                        <ThemedText
+                            style={{
+                                ...styles.authButtonSecondaryText,
+                                borderColor: palette.tint,
+                                color: palette.tint
+                            }}
+                        >
                             Register
                         </ThemedText>
                     </Link>
@@ -128,8 +149,6 @@ const styles = StyleSheet.create({
         gap: 12
     },
     authButtonText: {
-        backgroundColor: '#22c55e',
-        color: '#e3f0e3',
         paddingVertical: 10,
         paddingHorizontal: 16,
         borderRadius: 8,
@@ -137,9 +156,7 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     },
     authButtonSecondaryText: {
-        borderColor: '#22c55e',
         borderWidth: 1,
-        color: '#22c55e',
         paddingVertical: 10,
         paddingHorizontal: 16,
         borderRadius: 8,

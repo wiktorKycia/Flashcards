@@ -16,6 +16,7 @@ import { ThemedView } from '@/components/themed-view'
 import { useAuth } from '@/context/AuthContext'
 import { loginUser } from '@/lib/auth'
 import { useColorScheme } from '@/hooks/use-color-scheme'
+import { Colors } from '@/constants/theme'
 
 export default function LoginScreen() {
 	const [login, setLogin] = useState('')
@@ -24,6 +25,7 @@ export default function LoginScreen() {
 	const [error, setError] = useState<string | null>(null)
 	const { login: storeLogin } = useAuth()
 	const colorScheme = useColorScheme() ?? 'light'
+	const palette = Colors[colorScheme]
 
 	const handleSubmit = async () => {
 		if (!login || !password) {
@@ -48,7 +50,7 @@ export default function LoginScreen() {
 		<ThemedView
 			style={[
 				styles.screen,
-				colorScheme === 'dark' ? styles.screenDark : styles.screenLight
+				{ backgroundColor: palette.background }
 			]}
 		>
 			<KeyboardAvoidingView
@@ -62,9 +64,10 @@ export default function LoginScreen() {
 					<View
 						style={[
 							styles.card,
-							colorScheme === 'dark'
-								? styles.cardDark
-								: styles.cardLight
+							{
+								backgroundColor: palette.surface,
+								borderColor: palette.border
+							}
 						]}
 					>
 						<ThemedText type="title" style={styles.title}>
@@ -74,31 +77,37 @@ export default function LoginScreen() {
 							value={login}
 							onChangeText={setLogin}
 							placeholder="login"
+							placeholderTextColor={palette.textSecondary}
 							autoCapitalize="none"
 							autoCorrect={false}
 							textContentType="username"
 							style={[
 								styles.input,
-								colorScheme === 'dark'
-									? styles.inputDark
-									: styles.inputLight
+								{
+									backgroundColor: palette.surface,
+									borderColor: palette.border,
+									color: palette.text
+								}
 							]}
 						/>
 						<TextInput
 							value={password}
 							onChangeText={setPassword}
 							placeholder="password"
+							placeholderTextColor={palette.textSecondary}
 							secureTextEntry
 							textContentType="password"
 							style={[
 								styles.input,
-								colorScheme === 'dark'
-									? styles.inputDark
-									: styles.inputLight
+								{
+									backgroundColor: palette.surface,
+									borderColor: palette.border,
+									color: palette.text
+								}
 							]}
 						/>
 						{error ? (
-							<ThemedText style={styles.errorText}>
+							<ThemedText style={[styles.errorText, { color: palette.error }]}>
 								{error}
 							</ThemedText>
 						) : null}
@@ -106,22 +115,27 @@ export default function LoginScreen() {
 							onPress={handleSubmit}
 							style={({ pressed }) => [
 								styles.button,
+								{ backgroundColor: palette.tint },
 								pressed && styles.buttonPressed,
 								isLoading && styles.buttonDisabled
 							]}
 							disabled={isLoading}
 						>
 							{isLoading ? (
-								<ActivityIndicator color="#e3f0e3" />
+								<ActivityIndicator color={palette.textButtons} />
 							) : (
-								<ThemedText style={styles.buttonText}>
+								<ThemedText
+									style={[styles.buttonText, { color: palette.textButtons }]}
+								>
 									Login
 								</ThemedText>
 							)}
 						</Pressable>
-						<ThemedText style={styles.linkText}>
+						<ThemedText
+							style={[styles.linkText, { color: palette.textSecondary }]}
+						>
 							No account yet?{' '}
-							<Link href="../register" style={styles.link}>
+							<Link href="../register" style={[styles.link, { color: palette.tint }]}>
 								Register
 							</Link>
 						</ThemedText>
@@ -135,12 +149,6 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
 	screen: {
 		flex: 1
-	},
-	screenDark: {
-		backgroundColor: '#121613'
-	},
-	screenLight: {
-		backgroundColor: '#ffffff'
 	},
 	keyboard: {
 		flex: 1
@@ -157,14 +165,6 @@ const styles = StyleSheet.create({
 		gap: 16,
 		borderWidth: 1
 	},
-	cardDark: {
-		backgroundColor: '#1e2621',
-		borderColor: '#2a3d30'
-	},
-	cardLight: {
-		backgroundColor: '#f0fff4',
-		borderColor: '#88d0d0'
-	},
 	title: {
 		textAlign: 'center'
 	},
@@ -175,41 +175,24 @@ const styles = StyleSheet.create({
 		paddingVertical: 10,
 		fontSize: 16
 	},
-	inputDark: {
-		backgroundColor: '#1e2621',
-		borderColor: '#2a3d30',
-		color: '#e8f3ea'
-	},
-	inputLight: {
-		backgroundColor: '#f0fff4',
-		borderColor: '#88d0d0',
-		color: '#3c4a3e'
-	},
 	button: {
-		backgroundColor: '#22c55e',
 		borderRadius: 8,
 		paddingVertical: 12,
 		alignItems: 'center'
 	},
 	buttonPressed: {
-		backgroundColor: '#009e3b'
+		opacity: 0.9
 	},
 	buttonDisabled: {
 		opacity: 0.7
 	},
 	buttonText: {
-		color: '#e3f0e3',
 		fontSize: 16,
 		fontWeight: '700'
 	},
 	linkText: {
-		textAlign: 'center',
-		color: '#a0ada2'
+		textAlign: 'center'
 	},
-	link: {
-		color: '#22c55e'
-	},
-	errorText: {
-		color: '#f87171'
-	}
+	link: {},
+	errorText: {}
 })
