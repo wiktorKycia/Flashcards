@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import type Quiz from '@/types/Quiz.ts'
 
 const getData = async (): Promise<Array<Quiz>> => {
     const quizResponse = await fetch(`/api/quizzes`)
@@ -12,18 +13,7 @@ const getData = async (): Promise<Array<Quiz>> => {
 
 export const useQuizzes = () => {
     return useQuery({
-        queryKey: ['quiz'],
+        queryKey: ['quizzes'],
         queryFn: () => getData()
     })
-}
-
-interface Quiz {
-    id: number
-    name: string
-    description: string
-    authorId: number
-    frontLanguage: string
-    backLanguage: string
-    likes: number
-    dislikes: number
 }
