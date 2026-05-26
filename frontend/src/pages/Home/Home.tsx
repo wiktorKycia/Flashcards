@@ -1,15 +1,26 @@
 import { useGetAPI } from '@/hooks/useGetAPI.ts'
+import LoadingSpinner from '@/components/LoadingSpinner'
+import { useQuizzes } from '@/hooks/useQuizzes.ts'
 
 export default function Home() {
-    const { data, isLoading, isError } = useGetAPI('http://localhost:3000/')
+    const { quizzes, isLoading, isError } = useQuizzes()
 
-    console.log(data)
 
     return (
         <>
-            {isLoading && <div>Loading</div>}
-            {isError && <div>Error</div>}
-            {!isLoading && !isError && data && <div>{data.content}</div>}
+            {isLoading && <LoadingSpinner />}
+            {isError && <div>Wystąpił błąd</div>}
+            {!isLoading && !isError && quizzes && (
+                quizzes.length > 0 ? (
+                    <div>
+                        {quizzes.map((quiz) => (
+
+                        ))}
+                    </div>
+                ) : (
+                    <p>Nie znaleziono żadnych quizów</p>
+                )
+            )}
         </>
     )
 }
