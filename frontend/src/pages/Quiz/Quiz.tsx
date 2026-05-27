@@ -14,6 +14,7 @@ import { useDeleteQuiz } from '@/hooks/useDeleteQuiz.ts'
 import QuizLikeButtons from '@/components/QuizLikeButtons'
 import ButtonToggle from '@/components/ButtonToggle'
 import { useSavedQuizToggle } from '@/hooks/useSavedQuizToggle'
+import { useCopyQuiz } from '@/hooks/useCopyQuiz.ts'
 
 export default function Quiz() {
     const id: number = parseInt(useParams().id as string)
@@ -27,6 +28,7 @@ export default function Quiz() {
     const isLoggedIn = useCheckIfLoggedIn()
     const { isDeleting, deleteError, handleDeleteQuiz } = useDeleteQuiz()
     const { isSaved, toggle: toggleSaved } = useSavedQuizToggle(auth.user?.id, id)
+    const { mutateAsync: copyQuiz, isPending: isCopying } = useCopyQuiz()
 
     if (isLoggedIn && auth.user != null && data != undefined) {
         isUserAuthor = auth.user.id == data.quiz.authorId
@@ -72,6 +74,25 @@ export default function Quiz() {
         link.click()
         document.body.removeChild(link)
         URL.revokeObjectURL(url)
+    }
+
+    async function handleCopyQuizClick() {
+        if (!data || !auth.user) return
+
+        try {
+            const newQuizId = await copyQuiz({
+                name: data.quiz.name,
+                description: data.quiz.description,
+                frontLanguage: data.quiz.frontLanguage,
+                backLanguage: data.quiz.backLanguage,
+                authorId: auth.user.id,
+                flashcards: data.flashcards.map(f => ({ front: f.front, back: f.back }))
+            })
+
+            navigate(`/quiz/${newQuizId}/edit`)
+        } catch (e) {
+            console.error(e)
+        }
     }
 
     return (
@@ -138,7 +159,14 @@ export default function Quiz() {
                                                 </span>
                                             } 
                                         />
-                                        <button>kopiuj</button>
+                                        <button onClick={handleCopyQuizClick} disabled={isCopying}>
+                                            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                                </svg>
+                                            </span>
+                                        </button>
                                     </>
                                 )}
                                 {isUserAuthor && (
