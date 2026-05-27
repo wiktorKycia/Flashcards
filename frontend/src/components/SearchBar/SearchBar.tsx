@@ -12,6 +12,9 @@ export default function SearchBar() {
         if (searchQuery.trim() !== '') {
             navigate(`/?search=${encodeURIComponent(searchQuery.trim())}`)
         }
+        else {
+            navigate('/')
+        }
     }
 
     return (
@@ -19,6 +22,7 @@ export default function SearchBar() {
             className={styles.SearchBar}
             onSubmit={handleSearchSubmit}>
             <input
+                id="search-bar"
                 type="search"
                 placeholder="Wyszukaj zestaw fiszek..."
                 className={styles.SearchBarInput}
