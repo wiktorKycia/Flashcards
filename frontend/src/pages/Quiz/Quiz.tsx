@@ -12,6 +12,8 @@ import { useQuizData } from '@/hooks/useQuizData.ts'
 import { useCheckIfLoggedIn } from '@/hooks/useCheckIfLoggedIn.ts'
 import { useDeleteQuiz } from '@/hooks/useDeleteQuiz.ts'
 import QuizLikeButtons from '@/components/QuizLikeButtons'
+import ButtonToggle from '@/components/ButtonToggle'
+import { useSavedQuizToggle } from '@/hooks/useSavedQuizToggle'
 
 export default function Quiz() {
     const id: number = parseInt(useParams().id as string)
@@ -24,6 +26,7 @@ export default function Quiz() {
 
     const isLoggedIn = useCheckIfLoggedIn()
     const { isDeleting, deleteError, handleDeleteQuiz } = useDeleteQuiz()
+    const { isSaved, toggle: toggleSaved } = useSavedQuizToggle(auth.user?.id, id)
 
     if (isLoggedIn && auth.user != null && data != undefined) {
         isUserAuthor = auth.user.id == data.quiz.authorId
@@ -124,7 +127,17 @@ export default function Quiz() {
 
                                 {isLoggedIn && (
                                     <>
-                                        <button>zapisz</button>
+                                        <ButtonToggle 
+                                            isOn={isSaved} 
+                                            setIsOn={toggleSaved} 
+                                            content={
+                                                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill={isSaved ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                                    </svg>
+                                                </span>
+                                            } 
+                                        />
                                         <button>kopiuj</button>
                                     </>
                                 )}
