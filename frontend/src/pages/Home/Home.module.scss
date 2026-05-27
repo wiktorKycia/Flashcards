@@ -1,25 +1,27 @@
 .quizPreviewsBox {
-  width: 70%;
-  display: grid;
-  grid-template-columns: repeat(2, 45%);
-  justify-content: space-around;
-  row-gap: 2rem;
+    width: 70%;
+    display: grid;
+    grid-template-columns: repeat(2, 45%);
+    justify-content: space-around;
+    row-gap: 2rem;
 }
 
 .quizzesListWrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .quizzesBoxTitle, .errorMessage {
-  font-size: 3rem;
-  font-weight: bold;
-  margin: 2rem;
-  color: var(--color-text-primary)
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 2rem;
+    color: var(--color-text-primary)
 }
 
 .errorMessage {
-  margin-top: 30vh;
+    margin-top: 30vh;
+    width: 100%;
+    text-align: center;
 }

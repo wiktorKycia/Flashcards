@@ -10,9 +10,16 @@
 
     &Left, &Right {
         display: flex;
-        justify-content: center;
         align-items: center;
         padding-inline: 1.4rem;
+        flex: 1;
     }
 
+    &Left {
+        justify-content: flex-start;
+    }
+
+    &Right {
+        justify-content: flex-end;
+    }
 }
