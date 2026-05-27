@@ -2,11 +2,33 @@ import styles from './ButtonAdd.module.scss'
 import useCreateQuiz from '@/hooks/useCreateQuiz.ts'
 import {useAuth} from "@/context/AuthContext.tsx";
 import {useNavigate} from "react-router-dom";
+import { useEffect, useRef, useState } from 'react';
 
 export default function ButtonAdd() {
     const navigate = useNavigate()
     const auth = useAuth()
     const createQuiz = useCreateQuiz()
+    const [tooltipOpen, setTooltipOpen] = useState(false)
+    const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+    useEffect(() => {
+        return () => {
+            if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+        }
+    }, [])
+
+    function openTooltip() {
+        if (closeTimerRef.current) {
+            clearTimeout(closeTimerRef.current)
+            closeTimerRef.current = null
+        }
+        setTooltipOpen(true)
+    }
+
+    function scheduleCloseTooltip() {
+        if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+        closeTimerRef.current = setTimeout(() => setTooltipOpen(false), 150)
+    }
 
     async function handleButtonOnClick(){
         if(!auth.user)
@@ -29,11 +51,19 @@ export default function ButtonAdd() {
     }
 
     return (
-        <>
+        <div
+            className={styles.ButtonAddContainer}
+            onMouseEnter={openTooltip}
+            onMouseLeave={scheduleCloseTooltip}
+        >
             <button onClick={handleButtonOnClick} className={styles.ButtonAdd}>
                 +
             </button>
-            <span className={styles.TooltipText}>Stwórz quiz</span>
-        </>
+            <div className={`tooltip ${tooltipOpen ? 'tooltip-open' : ''}`}>
+                <div className={'tooltip-links-container'}>
+                    <span className={'tooltip-text'}>Stwórz quiz</span>
+                </div>
+            </div>
+        </div>
     )
 }

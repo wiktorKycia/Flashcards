@@ -60,21 +60,21 @@ export default function Header() {
                     <ProfilePicture />
                     {(isLoggedIn || !isLoggedIn) && (
                         <div
-                            className={`${styles.ProfileTooltip} ${profileTooltipOpen ? styles.ProfileTooltipOpen : ''}`}
+                            className={`tooltip ${profileTooltipOpen ? 'tooltip-open' : ''}`}
                             onMouseEnter={openProfileTooltip}
                             onMouseLeave={scheduleCloseProfileTooltip}
                         >
                             {isLoggedIn && user ? (
                                 <>
-                                    <div className={styles.ProfileTooltipTitle}>
-                                        Zalogowany jako <span className={styles.ProfileTooltipUsername}>{user.name}</span>
+                                    <div className={'tooltip-title'}>
+                                        Zalogowany jako <span className={styles.Username}>{user.name}</span>
                                     </div>
-                                    <div className={styles.ProfileTooltipLinks}>
-                                        <Link className={styles.ProfileTooltipLink} to={`/user/${user.id}`}>Profil</Link>
-                                        <Link className={styles.ProfileTooltipLink} to={'/user/'}>Ustawienia</Link>
+                                    <div className={'tooltip-links-container'}>
+                                        <Link className={'tooltip-link'} to={`/user/${user.id}`}>Profil</Link>
+                                        <Link className={'tooltip-link'} to={'/user/'}>Ustawienia</Link>
                                         <button
                                             type="button"
-                                            className={styles.ProfileTooltipLink}
+                                            className={'tooltip-link'}
                                             onClick={handleLogoutClick}
                                         >
                                             Wyloguj
@@ -82,9 +82,9 @@ export default function Header() {
                                     </div>
                                 </>
                             ) : (
-                                <div className={styles.ProfileTooltipLinks}>
-                                    <Link className={styles.ProfileTooltipLink} to={'/login/'}>Zaloguj</Link>
-                                    <Link className={styles.ProfileTooltipLink} to={'/register/'}>Zarejestruj</Link>
+                                <div className={'tooltip-links-container'}>
+                                    <Link className={'tooltip-link'} to={'/login/'}>Zaloguj</Link>
+                                    <Link className={'tooltip-link'} to={'/register/'}>Zarejestruj</Link>
                                 </div>
                             )}
                         </div>
