@@ -14,7 +14,7 @@ export default function Header() {
     const {theme, toggleTheme} = useTheme()
 
     const isLoggedIn = useCheckIfLoggedIn()
-    const { user } = useAuth()
+    const { user, logout } = useAuth()
 
     const [profileTooltipOpen, setProfileTooltipOpen] = useState(false)
     const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -24,10 +24,6 @@ export default function Header() {
             if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
         }
     }, [])
-
-    useEffect(() => {
-        if (!isLoggedIn) setProfileTooltipOpen(false)
-    }, [isLoggedIn])
 
     function openProfileTooltip() {
         if (closeTimerRef.current) {
@@ -40,6 +36,11 @@ export default function Header() {
     function scheduleCloseProfileTooltip() {
         if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
         closeTimerRef.current = setTimeout(() => setProfileTooltipOpen(false), 150)
+    }
+
+    function handleLogoutClick() {
+        logout()
+        setProfileTooltipOpen(false)
     }
 
     return (
@@ -57,19 +58,35 @@ export default function Header() {
                     onMouseLeave={scheduleCloseProfileTooltip}
                 >
                     <ProfilePicture />
-                    {isLoggedIn && user && (
+                    {(isLoggedIn || !isLoggedIn) && (
                         <div
                             className={`${styles.ProfileTooltip} ${profileTooltipOpen ? styles.ProfileTooltipOpen : ''}`}
                             onMouseEnter={openProfileTooltip}
                             onMouseLeave={scheduleCloseProfileTooltip}
                         >
-                            <div className={styles.ProfileTooltipTitle}>
-                                Zalogowany jako <span className={styles.ProfileTooltipUsername}>{user.name}</span>
-                            </div>
-                            <div className={styles.ProfileTooltipLinks}>
-                                <Link className={styles.ProfileTooltipLink} to={`/user/${user.id}`}>Profil</Link>
-                                <Link className={styles.ProfileTooltipLink} to={'/user/'}>Ustawienia</Link>
-                            </div>
+                            {isLoggedIn && user ? (
+                                <>
+                                    <div className={styles.ProfileTooltipTitle}>
+                                        Zalogowany jako <span className={styles.ProfileTooltipUsername}>{user.name}</span>
+                                    </div>
+                                    <div className={styles.ProfileTooltipLinks}>
+                                        <Link className={styles.ProfileTooltipLink} to={`/user/${user.id}`}>Profil</Link>
+                                        <Link className={styles.ProfileTooltipLink} to={'/user/'}>Ustawienia</Link>
+                                        <button
+                                            type="button"
+                                            className={styles.ProfileTooltipLink}
+                                            onClick={handleLogoutClick}
+                                        >
+                                            Wyloguj
+                                        </button>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className={styles.ProfileTooltipLinks}>
+                                    <Link className={styles.ProfileTooltipLink} to={'/login/'}>Zaloguj</Link>
+                                    <Link className={styles.ProfileTooltipLink} to={'/register/'}>Zarejestruj</Link>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
