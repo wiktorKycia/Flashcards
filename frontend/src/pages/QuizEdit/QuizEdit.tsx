@@ -329,6 +329,7 @@ export default function QuizEdit(){
                         )}
 
                         <div className={styles.FormActions}>
+                            <button onClick={() => navigate(`/quiz/${id}`)}>Ćwicz</button>
                             <button type="submit" disabled={isSaving}>
                                 {isSaving ? 'Zapisywanie...' : 'Zapisz'}
                             </button>
