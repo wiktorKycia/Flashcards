@@ -16,8 +16,8 @@ export default function QuizPreview({quizId, quizName, quizDescription, likes, d
         <div className={styles.previewWrapper}>
             <h3>{quizName}</h3>
             <p className={styles.description}>
-                {quizDescription.slice(0, 50).trim()}
-                {quizDescription.length > 50 && '...'}
+                {quizDescription && quizDescription.slice(0, 50).trim()}
+                {quizDescription && quizDescription.length > 50 && '...'}
             </p>
             <button onClick={() => navigate(`/quiz/${quizId}`)}>Otwórz zestaw</button>
             <div className={styles.votesWrapper}>

@@ -25,6 +25,10 @@
 }
 
 .previewWrapper button {
+    @media (max-aspect-ratio: 1/1) {
+        font-size: 1.3rem;
+    }
+
     grid-area: button;
     justify-self: end;
     align-self: start;

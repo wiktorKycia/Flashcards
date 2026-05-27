@@ -1,11 +1,20 @@
 .ButtonAdd {
+    @media (min-aspect-ratio: 1/1) {
+      width: 2.4rem;
+      height: 2.4rem;
+      margin-inline: 1.2rem;
+    }
+
+    @media (max-aspect-ratio: 1/1) {
+      width: 1.8rem;
+      height: 1.8rem;
+      margin-inline: 0.8rem;
+    }
+
     background-color: var(--color-accent2);
     color: var(--color-text-buttons);
     border-radius: 100%;
     border: none;
-    margin-inline: 1.2rem;
-    width: 2.4rem;
-    height: 2.4rem;
     font-size: 1rem;
     font-weight: bolder;
     display: flex;

@@ -1,7 +1,15 @@
 .quizPreviewsBox {
-    width: 70%;
+    @media (min-aspect-ratio: 1/1) {
+        grid-template-columns: repeat(2, 45%);
+        width: 70%;
+    }
+
+    @media (max-aspect-ratio: 1/1) {
+        grid-template-columns: repeat(1, 1fr);
+        width: 85%;
+    }
+
     display: grid;
-    grid-template-columns: repeat(2, 45%);
     justify-content: space-around;
     row-gap: 2rem;
 }
@@ -17,11 +25,11 @@
     font-size: 3rem;
     font-weight: bold;
     margin: 2rem;
-    color: var(--color-text-primary)
+    color: var(--color-text-primary);
+    text-align: center;
 }
 
 .errorMessage {
     margin-top: 30vh;
     width: 100%;
-    text-align: center;
 }

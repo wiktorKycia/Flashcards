@@ -9,10 +9,17 @@
     z-index: 2;
 
     &Left, &Right {
+        @media (min-aspect-ratio: 1/1) {
+            padding-inline: 1.4rem;
+            flex: 1;
+        }
+
+        @media (max-aspect-ratio: 1/1) {
+            padding-inline: 0.5rem;
+        }
+
         display: flex;
         align-items: center;
-        padding-inline: 1.4rem;
-        flex: 1;
     }
 
     &Left {
