@@ -36,6 +36,41 @@ export default function Quiz() {
         })
     }
 
+    function handleExportClick() {
+        if (!data) return
+
+        const escapeCsv = (value: string | null | undefined) => {
+            if (value == null) return ''
+            const escaped = value.replace(/"/g, '""')
+            if (/[",\n]/.test(escaped)) {
+                return `"${escaped}"`
+            }
+            return escaped
+        }
+
+        const header = `${escapeCsv(data.quiz.frontLanguage)},${escapeCsv(data.quiz.backLanguage)}`
+        const rows = data.flashcards.map((flashcard) => {
+            const front = escapeCsv(flashcard.front)
+            const back = escapeCsv(flashcard.back)
+            return `${front},${back}`
+        })
+
+        const csvContent = [header, ...rows].join('\n')
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+        const url = URL.createObjectURL(blob)
+
+        const safeName =
+            (data.quiz.name && data.quiz.name.replace(/[^a-z0-9_-]+/gi, '_')) || 'quiz'
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', `${safeName}.csv`)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        URL.revokeObjectURL(url)
+    }
+
     return (
         <>
             <main className={styles.Main}>
@@ -55,7 +90,37 @@ export default function Quiz() {
                             <Container
                                 cssClassName={'container-borderless ' + styles.MainOptions}
                             >
-                                <button>eksport do pliku</button>
+                                <button onClick={handleExportClick} aria-label="Eksportuj do pliku CSV">
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M12 3V15"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                        <path
+                                            d="M6 9L12 15L18 9"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                        <path
+                                            d="M5 19H19"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </button>
 
                                 {isLoggedIn && (
                                     <>
