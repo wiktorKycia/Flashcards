@@ -1,0 +1,158 @@
+import { useEffect, useMemo, useState } from 'react'
+import MatchCard from '@/components/MatchCard'
+import styles from './MatchChallenge.module.scss'
+import { useParams, Link } from 'react-router'
+import { useQuizData } from '@/hooks/useQuizData.ts'
+import LoadingSpinner from '@/components/LoadingSpinner'
+
+type CardStatus = 'idle' | 'selected' | 'correct' | 'wrong' | 'hidden'
+
+type CardItem = {
+    id: string
+    pairId: number
+    content: string
+    status: CardStatus
+}
+
+export default function MatchChallenge(){
+    const id: number = parseInt(useParams().id as string)
+    const { data, isLoading, isError } = useQuizData(id)
+
+    const initialCards: CardItem[] = useMemo<CardItem[]>(() => {
+        if (!data?.flashcards || data.flashcards.length === 0) {
+            return []
+        }
+
+        const randomizedFlashcards = shuffle(data?.flashcards).slice(0, 8)
+
+        const mapped = randomizedFlashcards.flatMap((flashcard) => [
+            {
+                id: `${flashcard.id}-a`,
+                pairId: flashcard.id,
+                content: flashcard.front,
+                status: 'idle' as CardStatus
+            },
+            {
+                id: `${flashcard.id}-b`,
+                pairId: flashcard.id,
+                content: flashcard.back,
+                status: 'idle' as CardStatus
+            }
+        ])
+
+        return shuffle(mapped)
+    }, [data?.flashcards])
+
+    const [cards, setCards] = useState<CardItem[]>([])
+    const [selectedCards, setSelectedCards] = useState<CardItem[]>([])
+
+    useEffect(() => {
+        setCards(initialCards)
+    }, [initialCards])
+
+    const handleCardClick = (id: string) => {
+        if (selectedCards.length >= 2) return
+
+        const clickedCard = cards.find((card) => card.id === id)
+
+        if (!clickedCard || clickedCard.status !== 'idle') return
+
+        const updatedSelected = [...selectedCards, clickedCard]
+
+        setSelectedCards(updatedSelected)
+
+        setCards((prev) =>
+            prev.map((card) =>
+                card.id === id ? { ...card, status: 'selected'} : card
+            )
+        )
+
+        if (updatedSelected.length !== 2) return
+
+        const [first, second] = updatedSelected
+
+        if (first.pairId === second.pairId && first.id !== second.id) {
+            setCards((prev) =>
+                prev.map((card) =>
+                    card.id === first.id || card.id === second.id ? { ...card, status: 'correct' } : card
+                )
+            )
+
+            setTimeout(() => {
+                setCards((prev) =>
+                    prev.map((card) =>
+                        card.id === first.id || card.id === second.id ? { ...card, status: 'hidden' } : card
+                    )
+                )
+
+                setSelectedCards([])
+            }, 500)
+
+            return
+        }
+
+        setCards((prev) =>
+            prev.map((card) =>
+                card.id === first.id || card.id === second.id ? { ...card, status: 'wrong'} : card
+            )
+        )
+
+        setTimeout(() => {
+            setCards((prev) =>
+                prev.map((card) =>
+                    card.status === "wrong" ? { ...card, status: 'idle'} : card
+                )
+            )
+
+            setSelectedCards([])
+        }, 700)
+    }
+
+    const isFinished = cards.length > 0 && cards.every((card) => card.status === 'hidden')
+    const hasNoData = !isLoading && !isError && (!data?.flashcards || data.flashcards.length === 0)
+
+    return (
+        <>
+            <div className={styles.MatchChallenge}>
+                <div className={styles.buttonWrapper}>
+                    <Link
+                        to={`/quiz/${id}`}
+                        className="redirectButton"
+                    >Wróć do zestawu fiszek</Link>
+                </div>
+                <h2>Wyzwanie dopasowywania</h2>
+                {isError && <div>Wystąpił błąd</div>}
+                {isLoading && <LoadingSpinner />}
+                {hasNoData && <div>Brak dostępnych fiszek w tym zestawie</div>}
+                {isFinished && (
+                    <div className={styles.Finished}>
+                        Ukończono!
+                    </div>
+                )}
+
+                {!hasNoData && (
+                    <div className={styles.Grid}>
+                        {cards.map((card) => (
+                            <MatchCard
+                                key={card.id}
+                                content={card.content}
+                                status={card.status}
+                                onClick={() => handleCardClick(card.id)}
+                            />
+                        ))}
+                    </div>
+                )}
+            </div>
+        </>
+    )
+}
+
+function shuffle<T>(array: T[]) {
+    const copied = [...array]
+    for (let i = copied.length - 1; i > 0; i--){
+        const j = Math.floor((Math.random() * (i + 1)))
+        ;[copied[i], copied[j]] = [copied[j], copied[i]]
+    }
+
+    return copied
+}

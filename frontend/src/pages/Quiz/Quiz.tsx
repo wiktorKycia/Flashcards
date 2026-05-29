@@ -79,8 +79,8 @@ export default function Quiz() {
                             <Container
                                 cssClassName={'container-borderless ' + styles.MainLearnOptions}
                             >
-                                <button>ucz się</button>
-                                <button>dopasowania</button>
+                                <button onClick= {() => navigate(`/quiz/${id}/test`)}>ucz się</button>
+                                <button onClick= {() => navigate(`/quiz/${id}/match-challenge`)}>dopasowania</button>
                             </Container>
                         </Container>
                         <Container cssClassName={'container-borderless'}>

@@ -1,0 +1,65 @@
+.MatchCard {
+    @media (min-aspect-ratio: 1/1) {
+        font-size: 2rem;
+        max-width: 20vw;
+        padding: 1rem;
+    }
+
+    @media (max-aspect-ratio: 1/1) {
+        font-size: 1.5rem;
+        max-width: 40vw;
+        padding: 0;
+    }
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid darkslategrey;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+    background-color: var(--color-surface);
+    overflow-wrap: anywhere;
+
+    & .MatchCardContent{
+        font-weight: 500;
+        margin: 3rem;
+    }
+
+    &.idle:hover {
+        box-shadow: var(--shadow);
+    }
+
+    &.idle:active {
+      transform: scale(0.95)
+    }
+
+    &.selected {
+        background-color: skyblue;
+        transform: scale(1.05);
+        cursor: default;
+    }
+
+    &.wrong {
+        background-color: lightcoral;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    &.correct {
+        border-color: limegreen;
+        opacity: 0;
+        transition: opacity 0.65s ease;
+    }
+
+    &.hidden {
+        opacity: 0;
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    50% { transform: translateX(8px); }
+    75% { transform: translateX(-8px); }
+}
