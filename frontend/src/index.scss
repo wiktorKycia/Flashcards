@@ -182,9 +182,10 @@ a {
 
 
 .quiz-container {
+    @include flex-start-both;
     width: 100%;
     padding: 2rem;
-    @include flex-start-both;
+    gap: 1rem;
 }
 
 .quiz-item {
@@ -193,8 +194,8 @@ a {
     border-radius: 1rem;
     padding: 1.5rem;
     color: var(--color-text-primary);
-    width: 100%;
-    max-width: 300px;
+    width: 300px;
+    height: 150px;
     transition: var(--transition);
     cursor: pointer;
 
