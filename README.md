@@ -20,6 +20,16 @@ tests and matching challenge mode
 
 ## Used technologies
 
+| category | technology |
+|---|---|
+| programming language | Typescript |
+| backend | Express |
+| web frontend | React |
+| mobile framework | React Native Expo |
+| ORM | Prisma |
+| database | MySQL |
+| environment | Docker |
+
 ## Setup
 
 ## Status
@@ -27,4 +37,8 @@ tests and matching challenge mode
 Status of this project is: _in progress_
 
 ## Authors
+People who created this app:
 
+[wiktorKycia](https://github.com/wiktorKycia)
+
+[JanTopolewski](https://github.com/JanTopolewski) 
