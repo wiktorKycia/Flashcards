@@ -1,6 +1,12 @@
 import styles from './MatchCard.module.scss'
 
-export default function MatchCard({content, status, onClick}: { content: string, status: "idle" | "selected" | "correct" | "wrong" | "hidden", onClick: () => void}) {
+interface MatchCardProps {
+    content: string
+    status: "idle" | "selected" | "correct" | "wrong" | "hidden"
+    onClick: () => void
+}
+
+export default function MatchCard({content, status, onClick}: MatchCardProps) {
     return (
         <div
             className={`${styles.MatchCard} ${styles[status]}`}
