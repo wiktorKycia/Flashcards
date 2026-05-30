@@ -1,7 +1,9 @@
 import { PrismaClient } from "@prisma/client"
 import express, { type Router, type Request, type Response, type NextFunction } from "express"
 import bcrypt from "bcrypt"
-import fs from 'fs/promises'
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 import type jwt from 'jsonwebtoken'
 import auth from "../middleware/auth"
 
@@ -43,42 +45,43 @@ interface SavedQuizData {
     folderId: number | null
 }
 
-router.get('/', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const userId = req.query.userId ? parseInt(req.query.userId as string): undefined
-        if (!userId)
-        {
-            return res.sendStatus(400)
-        }
-        const user = await prisma.user.findUnique({
-            where: { id: userId },
-            select: {
-                name: true,
-                path_to_img: true
-            },
-        })
+interface SignedUser {
+    id: number
+    name: string
+    email: string
+}
 
-        if (user) {
-            let imageBase64 = null
 
-            if (user.path_to_img) {
-                const imageBuffer = await fs.readFile(user.path_to_img)
-                imageBase64 = imageBuffer.toString('base64')
-            }
+const UPLOAD_DIR = "/uploads/avatars";
 
-            return res.json({
-                name: user.name,
-                image: imageBase64 ? `data:image/jpeg;base64,${imageBase64}` : null
-            })
+// Make sure the folder exists at startup
+fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+
+const storage = multer.diskStorage({
+    destination: (_req, _file, cb) => cb(null, UPLOAD_DIR),
+
+    // Store as "<userId>.<ext>" so each user always has exactly one file.
+    // A re-upload simply overwrites the previous one.
+    filename: (req, file, cb) => {
+        const userId = (req as Request & { userId?: number }).userId;
+        const ext = path.extname(file.originalname).toLowerCase();
+        cb(null, `${userId}${ext}`);
+    },
+});
+
+const upload = multer({
+    storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB cap
+    fileFilter: (_req, file, cb) => {
+        const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+        if (allowed.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error("Only JPEG, PNG, WEBP and GIF images are allowed."));
         }
-        else {
-            return res.sendStatus(404)
-        }
-    }
-    catch(error) {
-        next(error)
-    }
-})
+    },
+});
+
 
 router.get("/:id(\\d+)", async (req: Request<UserParams>, res: Response, next: NextFunction) => {
     try {
@@ -204,6 +207,54 @@ router.get("/:userId(\\d+)/quizzes/:quizId(\\d+)", async (req: Request<UserQuizL
     }
 })
 
+router.get("/:userId/avatar", async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId = Number(req.params.userId);
+        if (isNaN(userId)) {
+            const error: Error & { status?: number } = new Error("Invalid user id.");
+            error.status = 400;
+            throw error;
+        }
+
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { path_to_img: true },
+        });
+
+        if (!user?.path_to_img) {
+            const error: Error & { status?: number } = new Error("No avatar set for this user.");
+            error.status = 404;
+            throw error;
+        }
+
+        const absolutePath = `/uploads/avatars/${userId}`;
+
+        if (!fs.existsSync(absolutePath)) {
+            const error: Error & { status?: number } = new Error("Avatar file not found on disk.");
+            error.status = 404;
+            throw error;
+        }
+
+        // Derive Content-Type from file extension
+        const ext = path.extname(absolutePath).toLowerCase();
+        const mimeTypes: Record<string, string> = {
+            ".jpg": "image/jpeg",
+            ".jpeg": "image/jpeg",
+            ".png": "image/png",
+            ".webp": "image/webp",
+            ".gif": "image/gif",
+        };
+        const contentType = mimeTypes[ext] ?? "application/octet-stream";
+
+        res.setHeader("Content-Type", contentType);
+
+        fs.createReadStream(absolutePath).pipe(res);
+    } catch (err) {
+        next(err)
+    }
+});
+
+
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { password, ...rest } = req.body
@@ -235,6 +286,30 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     catch(error) {
         return next(error)
     }
+})
+
+router.post("/avatar", auth, async (req: Request & {user?: SignedUser}, res: Response, next: NextFunction) => {
+    const userId = req.user!.id
+    if (!req.file) {
+        res.status(400).json({ error: "No file uploaded." });
+        return;
+    }
+
+    // Store a relative path; the GET endpoint reconstructs the absolute path.
+    const relativePath = path.join("uploads", "avatars", req.file.filename);
+
+    try {
+        await prisma.user.update({
+            where: { id: userId! },
+            data: { path_to_img: relativePath },
+        });
+
+        // Return a public URL the frontend can use immediately for <img src>
+        res.json({ avatarUrl: `/api/users/${userId}/avatar/` });
+    } catch (err) {
+        next(err)
+    }
+
 })
 
 router.patch("/:id(\\d+)/password", auth, async (req: Request, res: Response, next: NextFunction) => {
