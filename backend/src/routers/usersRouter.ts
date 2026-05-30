@@ -282,7 +282,7 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     }
 })
 
-router.post("/avatar", auth, async (req: Request & {user?: SignedUser}, res: Response, next: NextFunction) => {
+router.post("/avatar", auth, upload.single("avatar"), async (req: Request & {user?: SignedUser}, res: Response, next: NextFunction) => {
     const userId = req.user!.id
     if (!req.file) {
         res.status(400).json({ error: "No file uploaded." });
