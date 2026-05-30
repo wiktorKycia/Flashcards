@@ -47,6 +47,5 @@ interface QuizFlashcard {
     front: string
     back: string
     quizId: number
-    starred: boolean
 }
 

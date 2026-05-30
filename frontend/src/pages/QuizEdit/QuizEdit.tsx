@@ -72,8 +72,7 @@ export default function QuizEdit(){
                 id: flashcard.id,
                 clientId: createClientId(),
                 front: flashcard.front,
-                back: flashcard.back,
-                starred: flashcard.starred
+                back: flashcard.back
             })),
         })
     }, [auth.user?.id, data?.quiz, data?.flashcards, isLoading, isError, navigate, draft])
@@ -330,6 +329,7 @@ export default function QuizEdit(){
                         )}
 
                         <div className={styles.FormActions}>
+                            <button onClick={() => navigate(`/quiz/${id}`)}>Ćwicz</button>
                             <button type="submit" disabled={isSaving}>
                                 {isSaving ? 'Zapisywanie...' : 'Zapisz'}
                             </button>

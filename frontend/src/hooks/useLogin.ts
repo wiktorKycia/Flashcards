@@ -18,7 +18,22 @@ const login = async ({
     })
 
     if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`)
+        let message = `HTTP ${response.status}`
+
+        try {
+            const errorBody = await response.json() as { message?: string; error?: string }
+            if (errorBody?.message) {
+                message = errorBody.message
+            }
+            else if (errorBody?.error) {
+                message = errorBody.error
+            }
+        }
+        catch (_err) {
+            // ignore JSON parse errors and fall back to default message
+        }
+
+        throw new Error(message)
     }
 
     return response.json()

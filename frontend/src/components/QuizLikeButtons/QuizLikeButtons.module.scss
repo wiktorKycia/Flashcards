@@ -1,0 +1,21 @@
+.Buttons {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.Button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.Active {
+    font-weight: 600;
+}
+
+.Icon {
+    width: 18px;
+    height: 18px;
+}
+

@@ -19,6 +19,44 @@ interface QuizProgressUpdate {
     isKnown: boolean
 }
 
+interface QuizProgressQuery {
+    userId: string
+    quizId: string
+}
+
+interface QuizProgressFlashcardUpdate {
+    userId: string
+    quizId: string
+    flashcardId: string
+}
+
+router.get("/user/:userId(\\d+)/quiz/:quizId(\\d+)", async (req: Request<QuizProgressQuery>, res: Response, next: NextFunction) => {
+    try {
+        const userId = parseInt(req.params.userId)
+        const quizId = parseInt(req.params.quizId)
+
+        if (!userId || !quizId) {
+            return res.sendStatus(400)
+        }
+
+        const quizProgress = await prisma.userQuizProgress.findMany({
+            where: {
+                userId,
+                quizId,
+            },
+            select: {
+                flashcardId: true,
+                isKnown: true,
+            },
+        })
+
+        return res.json(quizProgress)
+    }
+    catch (error) {
+        next(error)
+    }
+})
+
 router.get("/:id(\\d+)", async (req: Request<QuizProgressParams>, res: Response, next: NextFunction) => {
     try {
         const quizProgressId: number = parseInt(req.params.id)
@@ -47,6 +85,68 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
         })
 
         return res.status(201).json(createdQuizProgress)
+    }
+    catch (error) {
+        next(error)
+    }
+})
+
+router.patch("/user/:userId(\\d+)/quiz/:quizId(\\d+)/reset", async (req: Request<QuizProgressQuery>, res: Response, next: NextFunction) => {
+    try {
+        const userId = parseInt(req.params.userId)
+        const quizId = parseInt(req.params.quizId)
+
+        if (!userId || !quizId) {
+            return res.sendStatus(400)
+        }
+
+        const result = await prisma.userQuizProgress.updateMany({
+            where: {
+                userId,
+                quizId,
+            },
+            data: {
+                isKnown: false,
+            },
+        })
+
+        return res.status(200).json({ count: result.count })
+    }
+    catch (error) {
+        next(error)
+    }
+})
+
+router.patch("/user/:userId(\\d+)/quiz/:quizId(\\d+)/flashcard/:flashcardId(\\d+)", async (req: Request<QuizProgressFlashcardUpdate>, res: Response, next: NextFunction) => {
+    try {
+        const userId = parseInt(req.params.userId)
+        const quizId = parseInt(req.params.quizId)
+        const flashcardId = parseInt(req.params.flashcardId)
+        const updatedQuizProgressData: QuizProgressUpdate = req.body as QuizProgressUpdate
+
+        if (!userId || !quizId || !flashcardId || !updatedQuizProgressData) {
+            return res.sendStatus(400)
+        }
+
+        const updatedQuizProgress = await prisma.userQuizProgress.upsert({
+            where: {
+                userId_flashcardId: {
+                    userId: userId,
+                    flashcardId: flashcardId
+                }
+            },
+            create: {
+                userId,
+                quizId,
+                flashcardId,
+                isKnown: updatedQuizProgressData.isKnown
+            },
+            update: {
+                isKnown: updatedQuizProgressData.isKnown
+            }
+        })
+
+        return res.status(200).json(updatedQuizProgress)
     }
     catch (error) {
         next(error)
