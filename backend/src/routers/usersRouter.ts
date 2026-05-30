@@ -208,31 +208,25 @@ router.get("/:userId(\\d+)/quizzes/:quizId(\\d+)", async (req: Request<UserQuizL
 })
 
 router.get("/:userId/avatar", async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const userId = Number(req.params.userId);
-        if (isNaN(userId)) {
-            const error: Error & { status?: number } = new Error("Invalid user id.");
-            error.status = 400;
-            throw error;
-        }
+    const userId = Number(req.params.userId);
+    if (isNaN(userId)) {
+        return res.status(400).json({error: "Invalid user id"})
+    }
 
+    try {
         const user = await prisma.user.findUnique({
             where: { id: userId },
             select: { path_to_img: true },
         });
 
         if (!user?.path_to_img) {
-            const error: Error & { status?: number } = new Error("No avatar set for this user.");
-            error.status = 404;
-            throw error;
+            return res.status(404).json({ error: 'No avatar set for this user.' })
         }
 
         const absolutePath = `/uploads/avatars/${userId}`;
 
         if (!fs.existsSync(absolutePath)) {
-            const error: Error & { status?: number } = new Error("Avatar file not found on disk.");
-            error.status = 404;
-            throw error;
+            return res.status(404).json({ error: "Avatar file not found on disk."})
         }
 
         // Derive Content-Type from file extension
@@ -295,8 +289,7 @@ router.post("/avatar", auth, async (req: Request & {user?: SignedUser}, res: Res
         return;
     }
 
-    // Store a relative path; the GET endpoint reconstructs the absolute path.
-    const relativePath = path.join("uploads", "avatars", req.file.filename);
+    const relativePath = `/uploads/avatars/${userId}`
 
     try {
         await prisma.user.update({
@@ -304,7 +297,6 @@ router.post("/avatar", auth, async (req: Request & {user?: SignedUser}, res: Res
             data: { path_to_img: relativePath },
         });
 
-        // Return a public URL the frontend can use immediately for <img src>
         res.json({ avatarUrl: `/api/users/${userId}/avatar/` });
     } catch (err) {
         next(err)
