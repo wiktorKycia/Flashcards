@@ -18,8 +18,6 @@ dotenvExpand.expand(myenv)
 
 const app = express()
 
-// const frontend_origin = (process.env.FRONTEND_ORIGIN || 'http://localhost:5173').trim()
-
 app.use(cors())
 app.use(express.json())
 
