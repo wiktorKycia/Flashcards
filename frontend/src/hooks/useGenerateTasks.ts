@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import {type TasksData} from '@/types/TasksData.ts'
+import { type TasksData } from '@/types/TasksData.ts'
 
 type GenerateTasksProps = {
     fillGapCount: number
@@ -12,60 +12,55 @@ type GenerateTasksProps = {
 export const useGenerateTasks = () => {
     return useMutation({
         mutationFn: async ({
-           fillGapCount,
-           firstLetterCount,
-           singleChoiceCount,
-           quizId,
-           languageSide
+            fillGapCount,
+            firstLetterCount,
+            singleChoiceCount,
+            quizId,
+            languageSide
         }: GenerateTasksProps): Promise<TasksData> => {
             let firstError: string | null = null
             let firstWrongStatus: number | null = null
             let warning: string | null = null
 
-            const generateTask = async (
-                endpoint: string,
-                questionsAmount: number
-            ) => {
-                if (questionsAmount <= 0){
+            const generateTask = async (endpoint: string, questionsAmount: number) => {
+                if (questionsAmount <= 0) {
                     return null
                 }
 
-                const res = await fetch(
-                    endpoint,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            questionsAmount: questionsAmount,
-                            quizId,
-                            languageSide,
-                        }),
-                    }
-                )
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        questionsAmount: questionsAmount,
+                        quizId,
+                        languageSide
+                    })
+                })
 
                 let data = null
 
                 try {
                     data = await res.json()
-                } catch { /* empty */ }
+                } catch {
+                    /* empty */
+                }
 
                 if (!res.ok) {
-                    if ([503, 404, 422].includes(res.status) || (res.status === 500 && data?.error === "Nie skonfigurowano tokena GitHub wymaganego do korzystania z modeli AI")){
-                        if (
-                            (res.status === 503 || res.status === 422) &&
-                            firstWrongStatus == null
-                        ) {
+                    if (
+                        [503, 404, 422].includes(res.status) ||
+                        (res.status === 500 &&
+                            data?.error === 'Nie skonfigurowano tokena GitHub wymaganego do korzystania z modeli AI')
+                    ) {
+                        if ((res.status === 503 || res.status === 422) && firstWrongStatus == null) {
                             firstWrongStatus = res.status
                             firstError = data?.error ?? null
-                        }
-                        else {
+                        } else {
                             throw new Error(data?.error)
                         }
-                    }
-                    else {
-                        throw new Error("Wystąpił nieoczekiwany błąd")
+                    } else {
+                        throw new Error('Wystąpił nieoczekiwany błąd')
                     }
                 }
 
@@ -77,18 +72,9 @@ export const useGenerateTasks = () => {
             }
 
             const [data1, data2, data3] = await Promise.all([
-                generateTask(
-                    "/api/tasks/generation/fill-gap",
-                    fillGapCount
-                ),
-                generateTask(
-                    "/api/tasks/generation/first-letter-gap",
-                    firstLetterCount
-                ),
-                generateTask(
-                    "/api/tasks/generation/single-choice",
-                    singleChoiceCount
-                )
+                generateTask('/api/tasks/generation/fill-gap', fillGapCount),
+                generateTask('/api/tasks/generation/first-letter-gap', firstLetterCount),
+                generateTask('/api/tasks/generation/single-choice', singleChoiceCount)
             ])
 
             return {
@@ -97,7 +83,7 @@ export const useGenerateTasks = () => {
                 singleChoice: data3?.subtasks ?? null,
                 status: firstWrongStatus,
                 errorMessage: firstError,
-                warning,
+                warning
             }
         }
     })

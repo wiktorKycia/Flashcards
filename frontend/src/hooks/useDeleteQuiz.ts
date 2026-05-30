@@ -8,11 +8,7 @@ interface DeleteQuizVariables {
 interface UseDeleteQuizResult {
     isDeleting: boolean
     deleteError: string | null
-    handleDeleteQuiz: (options: {
-        id: number
-        onSuccess?: () => void
-        confirmMessage?: string
-    }) => Promise<void>
+    handleDeleteQuiz: (options: { id: number; onSuccess?: () => void; confirmMessage?: string }) => Promise<void>
 }
 
 const deleteQuiz = async ({ id }: DeleteQuizVariables): Promise<void> => {
@@ -42,9 +38,7 @@ export const useDeleteQuiz = (): UseDeleteQuizResult => {
         onSuccess?: () => void
         confirmMessage?: string
     }) => {
-        const message =
-            confirmMessage ??
-            'Na pewno chcesz usunąć ten quiz? Ta akcja jest nieodwracalna.'
+        const message = confirmMessage ?? 'Na pewno chcesz usunąć ten quiz? Ta akcja jest nieodwracalna.'
 
         if (!window.confirm(message)) {
             return
@@ -69,4 +63,3 @@ export const useDeleteQuiz = (): UseDeleteQuizResult => {
         handleDeleteQuiz
     }
 }
-

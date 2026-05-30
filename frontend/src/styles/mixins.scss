@@ -27,7 +27,7 @@
     padding-block: 10vh;
 }
 
-@mixin login-register{
+@mixin login-register {
     background-color: var(--color-surface);
     border: var(--border);
     border-radius: 1.6rem;
@@ -52,7 +52,7 @@
 
         a {
             font-size: 1.4rem;
-            color: var(--color-accent3)
+            color: var(--color-accent3);
         }
     }
 }

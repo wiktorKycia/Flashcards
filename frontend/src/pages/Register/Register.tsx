@@ -36,10 +36,7 @@ export default function Register() {
     return (
         <>
             <main className={styles.Main}>
-                <form
-                    onSubmit={handleSubmit}
-                    className={styles.FormContainer}
-                >
+                <form onSubmit={handleSubmit} className={styles.FormContainer}>
                     <h1>Register</h1>
                     {registerMutation.isError && (
                         <div style={{ color: 'red', marginBottom: '0.5rem' }}>
@@ -49,26 +46,22 @@ export default function Register() {
                     <input
                         type="text"
                         placeholder="login"
-                        onChange={(e) =>
-                            setForm({ ...form, name: e.target.value })
-                        }
+                        onChange={(e) => setForm({ ...form, name: e.target.value })}
                     />
                     <input
                         type="email"
                         placeholder="email"
-                        onChange={(e) =>
-                            setForm({ ...form, email: e.target.value })
-                        }
+                        onChange={(e) => setForm({ ...form, email: e.target.value })}
                     />
                     <input
                         type="password"
                         placeholder="hasło"
-                        onChange={(e) =>
-                            setForm({ ...form, password: e.target.value })
-                        }
+                        onChange={(e) => setForm({ ...form, password: e.target.value })}
                     />
                     <button type="submit">Register</button>
-                    <div>Masz już konto? <Link to={'/login'}>Zaloguj się</Link></div>
+                    <div>
+                        Masz już konto? <Link to={'/login'}>Zaloguj się</Link>
+                    </div>
                 </form>
             </main>
         </>

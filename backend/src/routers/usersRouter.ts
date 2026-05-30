@@ -51,7 +51,7 @@ interface SignedUser {
     email: string
 }
 
-
+// absolute filepath
 const UPLOAD_DIR = "/uploads/avatars";
 
 // Make sure the folder exists at startup
@@ -60,8 +60,6 @@ fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 const storage = multer.diskStorage({
     destination: (_req, _file, cb) => cb(null, UPLOAD_DIR),
 
-    // Store as "<userId>.<ext>" so each user always has exactly one file.
-    // A re-upload simply overwrites the previous one.
     filename: (req, file, cb) => {
         const userId = (req as Request & { userId?: number }).userId;
         const ext = path.extname(file.originalname).toLowerCase();

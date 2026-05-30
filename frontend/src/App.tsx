@@ -8,13 +8,13 @@ import Login from '@/pages/Login/Login.tsx'
 import UserSettings from '@/pages/UserSettings'
 import MatchChallenge from '@/pages/MatchChallenge'
 import KnowledgeTest from '@/pages/KnowledgeTest'
-import Header from "@/components/Header"
+import Header from '@/components/Header'
 import QuizEdit from '@/pages/QuizEdit'
 
 function App() {
     return (
         <AuthProvider>
-            <Header/>
+            <Header />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/user/" element={<UserSettings />} />

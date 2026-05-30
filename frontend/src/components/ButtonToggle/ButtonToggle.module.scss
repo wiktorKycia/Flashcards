@@ -1,5 +1,4 @@
-.ButtonToggleOn
-{
+.ButtonToggleOn {
     box-shadow: 0 0 4px 4px var(--color-accent);
     transition: var(--transition);
 
@@ -8,8 +7,7 @@
     }
 }
 
-.ButtonToggleOff
-{
+.ButtonToggleOff {
     background: transparent;
     border: var(--border);
     color: var(--color-accent);

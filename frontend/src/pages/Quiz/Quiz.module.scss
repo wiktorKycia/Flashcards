@@ -6,15 +6,14 @@
         width: 60%;
     }
 
-    &TitleContainer
-    {
+    &TitleContainer {
         h1 {
             font-size: 3.6rem;
-            color: var(--color-text-primary)
+            color: var(--color-text-primary);
         }
         p {
             font-size: 2rem;
-            color: var(--color-text-secondary)
+            color: var(--color-text-secondary);
         }
     }
 
@@ -24,7 +23,8 @@
         justify-content: space-between;
     }
 
-    &Options, &LearnOptions {
+    &Options,
+    &LearnOptions {
         width: 50%;
         display: flex;
         flex-direction: row;

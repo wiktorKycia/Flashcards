@@ -1,15 +1,13 @@
 import { useLoggedInOnly } from '@/hooks/useLoggedInOnly.ts'
-import {useMutation} from "@tanstack/react-query";
+import { useMutation } from '@tanstack/react-query'
 
-export default function useCreateQuiz()
-{
+export default function useCreateQuiz() {
     useLoggedInOnly()
 
-    async function createQuiz(authorId: number): Promise<CreatedQuiz>
-    {
+    async function createQuiz(authorId: number): Promise<CreatedQuiz> {
         const response = await fetch('/api/quizzes/', {
             method: 'POST',
-            body: JSON.stringify({ name: "", authorId: authorId, frontLanguage: "", backLanguage: "" }),
+            body: JSON.stringify({ name: '', authorId: authorId, frontLanguage: '', backLanguage: '' }),
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -28,8 +26,8 @@ export default function useCreateQuiz()
 }
 
 interface CreatedQuiz {
-    id: number,
-    name: string,
-    description: string | null,
+    id: number
+    name: string
+    description: string | null
     authorId: number
 }

@@ -11,7 +11,12 @@ interface ChangePasswordResponse {
     message: string
 }
 
-const changePassword = async ({ id, currentPassword, newPassword, token }: ChangePasswordVariables & { token: string | null }): Promise<ChangePasswordResponse> => {
+const changePassword = async ({
+    id,
+    currentPassword,
+    newPassword,
+    token
+}: ChangePasswordVariables & { token: string | null }): Promise<ChangePasswordResponse> => {
     if (!token) {
         throw new Error('Missing token')
     }
@@ -39,4 +44,3 @@ export const useChangePassword = () => {
         mutationFn: (variables: ChangePasswordVariables) => changePassword({ ...variables, token })
     })
 }
-

@@ -33,7 +33,7 @@ function createClientId() {
     return `${Date.now()}-${Math.random().toString(16).slice(2)}`
 }
 
-export default function QuizEdit(){
+export default function QuizEdit() {
     useLoggedInOnly()
     const auth = useAuth()
     const navigate = useNavigate()
@@ -53,8 +53,7 @@ export default function QuizEdit(){
         if (isLoading || isError) return
         if (!data?.quiz || !data?.flashcards) return
 
-        if (auth.user?.id !== data.quiz.authorId)
-        {
+        if (auth.user?.id !== data.quiz.authorId) {
             navigate(-1) // go back by one page
             return
         }
@@ -73,7 +72,7 @@ export default function QuizEdit(){
                 clientId: createClientId(),
                 front: flashcard.front,
                 back: flashcard.back
-            })),
+            }))
         })
     }, [auth.user?.id, data?.quiz, data?.flashcards, isLoading, isError, navigate, draft])
 
@@ -96,9 +95,7 @@ export default function QuizEdit(){
             return {
                 ...prev,
                 flashcards: prev.flashcards.map((flashcard) =>
-                    flashcard.clientId === clientId
-                        ? { ...flashcard, [field]: value }
-                        : flashcard
+                    flashcard.clientId === clientId ? { ...flashcard, [field]: value } : flashcard
                 )
             }
         })
@@ -109,9 +106,7 @@ export default function QuizEdit(){
             if (!prev) return prev
             return {
                 ...prev,
-                flashcards: prev.flashcards.filter(
-                    (flashcard) => flashcard.clientId !== clientId
-                )
+                flashcards: prev.flashcards.filter((flashcard) => flashcard.clientId !== clientId)
             }
         })
     }
@@ -134,8 +129,7 @@ export default function QuizEdit(){
         })
     }
 
-    async function handleButtonSave(event: SubmitEvent<HTMLFormElement>)
-    {
+    async function handleButtonSave(event: SubmitEvent<HTMLFormElement>) {
         event.preventDefault()
         if (!draft) return
 
@@ -192,27 +186,17 @@ export default function QuizEdit(){
     return (
         <>
             <main className={styles.QuizEdit}>
-                {isError && (
-                    <div className={styles.StatusText}>wystąpił błąd</div>
-                )}
+                {isError && <div className={styles.StatusText}>wystąpił błąd</div>}
                 {isLoading && <LoadingSpinner />}
                 {!isError && !isLoading && draft && (
-                    <form
-                        className={styles.MainWrapper}
-                        onSubmit={handleButtonSave}
-                    >
+                    <form className={styles.MainWrapper} onSubmit={handleButtonSave}>
                         <FieldGroup
                             labelText="Nazwa quizu:"
                             inputHTMLId="quiz_name"
                             inputType="text"
                             inputPlaceholder="Angielski, dział 2, lekcja 1"
                             inputValue={draft.quiz.name}
-                            onInputChange={(event) =>
-                                handleQuizFieldChange(
-                                    'name',
-                                    event.target.value
-                                )
-                            }
+                            onInputChange={(event) => handleQuizFieldChange('name', event.target.value)}
                             isVertical={true}
                         />
 
@@ -221,12 +205,7 @@ export default function QuizEdit(){
                             inputHTMLId="quiz_description"
                             inputType="text"
                             inputValue={draft.quiz.description}
-                            onInputChange={(event) =>
-                                handleQuizFieldChange(
-                                    'description',
-                                    event.target.value
-                                )
-                            }
+                            onInputChange={(event) => handleQuizFieldChange('description', event.target.value)}
                             isVertical={true}
                             useTextarea={true}
                         />
@@ -238,12 +217,7 @@ export default function QuizEdit(){
                                 inputType="text"
                                 inputPlaceholder="en"
                                 inputValue={draft.quiz.frontLanguage}
-                                onInputChange={(event) =>
-                                    handleQuizFieldChange(
-                                        'frontLanguage',
-                                        event.target.value
-                                    )
-                                }
+                                onInputChange={(event) => handleQuizFieldChange('frontLanguage', event.target.value)}
                                 isVertical={true}
                             />
 
@@ -253,12 +227,7 @@ export default function QuizEdit(){
                                 inputType="text"
                                 inputPlaceholder="pl"
                                 inputValue={draft.quiz.backLanguage}
-                                onInputChange={(event) =>
-                                    handleQuizFieldChange(
-                                        'backLanguage',
-                                        event.target.value
-                                    )
-                                }
+                                onInputChange={(event) => handleQuizFieldChange('backLanguage', event.target.value)}
                                 isVertical={true}
                             />
                         </div>
@@ -266,30 +235,19 @@ export default function QuizEdit(){
                         <section className={styles.FlashcardsSection}>
                             <div className={styles.SectionHeader}>
                                 <h2>Fiszki</h2>
-                                <button
-                                    type="button"
-                                    onClick={handleFlashcardAdd}
-                                    className={styles.AddButton}
-                                >
+                                <button type="button" onClick={handleFlashcardAdd} className={styles.AddButton}>
                                     Dodaj fiszke
                                 </button>
                             </div>
 
                             {draft.flashcards.map((flashcard) => (
-                                <div
-                                    key={flashcard.clientId}
-                                    className={styles.FlashcardRow}
-                                >
+                                <div key={flashcard.clientId} className={styles.FlashcardRow}>
                                     <input
                                         type="text"
                                         placeholder={`Przód (${draft.quiz.frontLanguage})`}
                                         value={flashcard.front}
                                         onChange={(event) =>
-                                            handleFlashcardChange(
-                                                flashcard.clientId,
-                                                'front',
-                                                event.target.value
-                                            )
+                                            handleFlashcardChange(flashcard.clientId, 'front', event.target.value)
                                         }
                                     />
                                     <input
@@ -297,20 +255,12 @@ export default function QuizEdit(){
                                         placeholder={`Tył (${draft.quiz.backLanguage})`}
                                         value={flashcard.back}
                                         onChange={(event) =>
-                                            handleFlashcardChange(
-                                                flashcard.clientId,
-                                                'back',
-                                                event.target.value
-                                            )
+                                            handleFlashcardChange(flashcard.clientId, 'back', event.target.value)
                                         }
                                     />
                                     <button
                                         type="button"
-                                        onClick={() =>
-                                            handleFlashcardRemove(
-                                                flashcard.clientId
-                                            )
-                                        }
+                                        onClick={() => handleFlashcardRemove(flashcard.clientId)}
                                         className={styles.RemoveButton}
                                     >
                                         Usuń
@@ -319,21 +269,15 @@ export default function QuizEdit(){
                             ))}
                         </section>
 
-                        {saveError && (
-                            <div className={styles.ErrorText}>{saveError}</div>
-                        )}
-                        {saveMessage && (
-                            <div className={styles.SuccessText}>
-                                {saveMessage}
-                            </div>
-                        )}
+                        {saveError && <div className={styles.ErrorText}>{saveError}</div>}
+                        {saveMessage && <div className={styles.SuccessText}>{saveMessage}</div>}
 
                         <div className={styles.FormActions}>
                             <button onClick={() => navigate(`/quiz/${id}`)}>Ćwicz</button>
                             <button type="submit" disabled={isSaving}>
                                 {isSaving ? 'Zapisywanie...' : 'Zapisz'}
                             </button>
-                            <button 
+                            <button
                                 type="button"
                                 onClick={handleDeleteQuizClick}
                                 disabled={isDeleting}
@@ -343,9 +287,7 @@ export default function QuizEdit(){
                             </button>
                         </div>
 
-                        {deleteError && (
-                            <div className={styles.ErrorText}>{deleteError}</div>
-                        )}
+                        {deleteError && <div className={styles.ErrorText}>{deleteError}</div>}
                     </form>
                 )}
             </main>

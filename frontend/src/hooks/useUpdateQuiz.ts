@@ -49,4 +49,3 @@ interface UpdatedQuiz {
     frontLanguage: string
     backLanguage: string
 }
-

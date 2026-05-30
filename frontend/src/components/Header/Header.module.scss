@@ -8,26 +8,22 @@
     box-shadow: var(--shadow-big);
     z-index: 2;
 
-    &Left, &Right {
+    &Left,
+    &Right {
         display: flex;
         justify-content: center;
         align-items: center;
         padding-inline: 1.4rem;
         gap: 1.2rem;
     }
-
 }
 
-
-.PictureContainer
-{
+.PictureContainer {
     position: relative;
     display: flex;
     align-items: center;
     overflow: visible;
 }
-
-
 
 .Username {
     color: var(--color-accent);
