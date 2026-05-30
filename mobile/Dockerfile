@@ -8,6 +8,6 @@ RUN npm ci
 
 COPY . .
 
-EXPOSE 8081 19006
+EXPOSE 8081
 
 CMD ["npm", "run", "start", "--", "--web", "--clear"]
