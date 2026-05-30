@@ -180,7 +180,7 @@ router.get("/:id(\\d+)/folders", async (req: Request<UserParams>, res: Response,
     }
 })
 
-router.get("/:userId(\\d+)/quizzes/:quizId(\\d+)", async (req: Request<UserQuizLikeParams>, res: Response, next: NextFunction) => {
+router.get("/:userId(\\d+)/quiz/:quizId(\\d+)", async (req: Request<UserQuizLikeParams>, res: Response, next: NextFunction) => {
     try {
         const quizId = parseInt(req.params.quizId)
         const userId = parseInt(req.params.userId)

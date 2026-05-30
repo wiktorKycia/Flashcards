@@ -33,8 +33,8 @@ export default function Home() {
 
     return (
         <>
-            {isLoading && <LoadingSpinner />}
             {isError && <div className={styles.errorMessage}>Wystąpił błąd</div>}
+            {isLoading && <LoadingSpinner />}
             {!isLoading && !isError && quizzes && (
                 sortedItems.length > 0 ? (
                     <div className={styles.quizzesListWrapper}>

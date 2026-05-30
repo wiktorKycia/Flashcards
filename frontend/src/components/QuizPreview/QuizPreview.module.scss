@@ -44,10 +44,32 @@
     font-size: 1.5rem;
 }
 
-.likes {
+.likesWrapper, .dislikesWrapper {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem;
+}
+
+.likesWrapper {
     color: forestgreen;
 }
 
-.dislikes {
+.dislikesWrapper {
     color: #ee3333;
+}
+
+.Icon {
+    width: 2rem;
+    height: 2rem;
+    fill: currentColor;
+    margin: 0 0.5rem;
+}
+
+.activeLike, .activeDislike {
+    fill: white;
+    stroke: currentColor;
+    stroke-width: 3px;
+    width: 3rem;
+    height: 3rem;
+    margin: 0;
 }
