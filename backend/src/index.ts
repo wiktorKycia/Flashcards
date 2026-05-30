@@ -3,7 +3,6 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import dotenvExpand from 'dotenv-expand'
 import usersRouter from "./routers/usersRouter"
-import foldersRouter from "./routers/foldersRouter"
 import flashcardsRouter from "./routers/flashcardsRouter"
 import quizzesRouter from "./routers/quizzesRouter"
 import quizzesProgressRouter from "./routers/quizzesProgressRouter"
@@ -91,7 +90,6 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
 
 app.use('/api/auth', authRouter)
 app.use("/api/users", usersRouter)
-app.use("/api/folders", foldersRouter)
 app.use("/api/saved-quizzes", savedQuizzesRouter)
 app.use("/api/flashcards", flashcardsRouter)
 app.use("/api/quizzes", quizzesRouter)

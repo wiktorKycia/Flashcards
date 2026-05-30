@@ -42,7 +42,6 @@ interface SavedQuizData {
     id: number
     userId: number
     quizId: number
-    folderId: number | null
 }
 
 interface SignedUser {
@@ -145,32 +144,6 @@ router.get("/:id(\\d+)/saved-quizzes", async (req: Request<UserParams>, res: Res
 
         if (user) {
             return res.json(user.SavedQuiz.map((savedQuiz: SavedQuizData) => savedQuiz.quiz))
-        }
-        else {
-            return res.sendStatus(404)
-        }
-    }
-    catch(error) {
-        next(error)
-    }
-})
-
-router.get("/:id(\\d+)/folders", async (req: Request<UserParams>, res: Response, next: NextFunction) => {
-    try {
-        const userId: number = parseInt(req.params.id)
-        const user = await prisma.user.findUnique({
-            where: { id: userId },
-            include: {
-                Folder: {
-                    include: {
-                        SavedQuiz: true,
-                    }
-                }
-            },
-        })
-
-        if (user) {
-            return res.json(user.Folder)
         }
         else {
             return res.sendStatus(404)
