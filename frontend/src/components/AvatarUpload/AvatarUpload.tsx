@@ -1,31 +1,32 @@
-import { useState, useRef, type ChangeEvent } from 'react'
+import { useState, useRef, type ChangeEvent, useEffect } from 'react'
 import styles from './AvatarUpload.module.scss'
-import Container from "@/components/Container";
-import {useAuth} from "@/context/AuthContext.tsx";
+import { useUploadAvatar } from '@/hooks/useUploadAvatar'
+import { useUserProfilePicture } from '@/hooks/useUserProfilePicture'
 
 interface AvatarUploadProps {
     userId: number
-    /** Called with the new avatar URL after a successful upload */
     onUploadSuccess?: (avatarUrl: string) => void
 }
 
-// ─── Component ────────────
-
 export default function AvatarUpload({ userId, onUploadSuccess }: AvatarUploadProps) {
-    // The URL shown in the <img> preview.
-    // Starts as the server's current avatar (may be undefined if none set yet).
-    const [previewSrc, setPreviewSrc] = useState<string>(`/api/user${userId}/avatar/`)
+    const uploadAvatarMutation = useUploadAvatar()
+    const { data: userAvatarUrl } = useUserProfilePicture(userId)
 
+    const [previewSrc, setPreviewSrc] = useState<string | null>(null)
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
-    const [uploading, setUploading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
 
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const auth = useAuth()
+    // Keep preview in sync with fetched avatar when no file is selected
+    useEffect(() => {
+        if (!selectedFile && userAvatarUrl) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setPreviewSrc(userAvatarUrl)
+        }
+    }, [userAvatarUrl, selectedFile])
 
-    // ── 1. User picks a file
     function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0]
         if (!file) return
@@ -34,77 +35,44 @@ export default function AvatarUpload({ userId, onUploadSuccess }: AvatarUploadPr
         setError(null)
         setSuccess(false)
 
-        // Show a local preview immediately — no round-trip needed
         const objectUrl = URL.createObjectURL(file)
         setPreviewSrc(objectUrl)
-
-        // Clean up the object URL when the component unmounts or next file is chosen
-        return () => URL.revokeObjectURL(objectUrl)
     }
 
-    // ── 2. User submits ─────────────────────────────────────────────────────────
     async function handleUpload() {
         if (!selectedFile) return
 
-        setUploading(true)
         setError(null)
         setSuccess(false)
 
         try {
-            const formData = new FormData()
-            formData.append('avatar', selectedFile)
-
-            const res = await fetch('/api/users/avatar', {
-                method: 'POST',
-                headers: {
-                    'authorization': `Bearer ${auth.token}`
-                },
-                body: formData
-            })
-
-            if (!res.ok) {
-                const { error: msg } = await res.json()
-                throw new Error(msg ?? 'Upload failed')
-            }
-
-            const { avatarUrl } = (await res.json()) as { avatarUrl: string }
-
-            // Bust the browser cache by appending a timestamp
-            setPreviewSrc(`${avatarUrl}?t=${Date.now()}`)
+            const avatarUrl = await uploadAvatarMutation.mutateAsync(selectedFile)
             setSelectedFile(null)
             setSuccess(true)
             onUploadSuccess?.(avatarUrl)
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error')
-        } finally {
-            setUploading(false)
         }
     }
 
-    // ── Render ──────────────────────────────────────────────────────────────────
     return (
-        <Container>
-            <h3 className={styles.heading}>Profile Picture</h3>
+        <div className={styles.AvatarUpload}>
+            <h3>Zdjęcie profilowe</h3>
 
-            <div className={styles.avatarWrapper}>
+            <div className={styles.AvatarWrapper}>
                 <img
-                    src={previewSrc}
+                    src={previewSrc || `https://ui-avatars.com/api/?name=User+${userId}&background=random`}
                     alt="Profile avatar"
-                    className={styles.avatar}
-                    // Graceful fallback if no avatar exists yet
-                    onError={(e) => {
-                        ;(e.currentTarget as HTMLImageElement).src =
-                            `https://ui-avatars.com/api/?name=User+${userId}&background=random`
-                    }}
+                    className={styles.Avatar}
                 />
 
                 <div
-                    className={styles.avatarOverlay}
+                    className={styles.AvatarOverlay}
                     onClick={() => inputRef.current?.click()}
                     role="button"
                     aria-label="Choose avatar image"
                 >
-                    <span className={styles.overlayText}>Change</span>
+                    <span>Zmień</span>
                 </div>
             </div>
 
@@ -116,26 +84,23 @@ export default function AvatarUpload({ userId, onUploadSuccess }: AvatarUploadPr
                 onChange={handleFileChange}
             />
 
-            <button className={styles.secondaryButton} onClick={() => inputRef.current?.click()} disabled={uploading}>
-                Choose file
+            <button className={styles.SecondaryButton} onClick={() => inputRef.current?.click()} disabled={uploadAvatarMutation.isPending}>
+                Wybierz plik
             </button>
 
-            {selectedFile && <p className={styles.filename}>Selected: {selectedFile.name}</p>}
+            {selectedFile && <p className={styles.Filename}>Wybrano: {selectedFile.name}</p>}
 
             {selectedFile && (
                 <button
-                    className={styles.primaryButton}
                     onClick={handleUpload}
-                    disabled={uploading}
+                    disabled={uploadAvatarMutation.isPending}
                 >
-                    {uploading ? 'Uploading…' : 'Upload'}
+                    {uploadAvatarMutation.isPending ? 'Wysyłanie…' : 'Zapisz zdjęcie'}
                 </button>
             )}
 
-            {error && <p className={styles.error}>{error}</p>}
-            {success && <p className={styles.successMsg}>Avatar updated!</p>}
-        </Container>
+            {error && <p className="message-error">{error}</p>}
+            {success && <p className="message-info">Zdjęcie zaktualizowane!</p>}
+        </div>
     )
 }
-
-

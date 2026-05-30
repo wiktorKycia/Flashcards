@@ -1,86 +1,92 @@
 
-.container {
+.AvatarUpload {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    padding: 24px;
-    max-width: 280px;
-    font-family: sans-serif
-};
-.heading {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 600
-};
-.avatarWrapper {
-    position: relative;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    overflow: hidden;
-    cursor: pointer
-};
-.avatar {
+    gap: 2rem;
+    padding: 2rem;
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: 1rem;
+    max-width: 300px;
     width: 100%;
-    height: 100%;
-    object-fit: cover
-};
-.avatarOverlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.2s
-};
-.overlayText {
-    color: #fff;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.05em
-};
-.filename {
-    margin: 0;
-    font-size: 0.75rem;
-    color: #555;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap
-};
-.primaryButton {
-    width: 100%;
-    padding: 8px 16px;
-    background: #2563eb;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.9rem
-};
-.secondaryButton {
-    width: 100%;
-    padding: 8px 16px;
-    background: transparent;
-    color: #2563eb;
-    border: 1.5px solid #2563eb;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.9rem
-};
-.error {
-    margin: 0;
-    color: #dc2626;
-    font-size: 0.8rem;
-    text-align: center
-};
-.successMsg {
-    margin: 0;
-    color: #16a34a;
-    font-size: 0.8rem
+    transition: var(--transition);
+
+    &:hover {
+        box-shadow: var(--shadow);
+    }
+
+    h3 {
+        color: var(--color-text-primary);
+        font-size: 2rem;
+        margin: 0;
+    }
+
+    .AvatarWrapper {
+        position: relative;
+        width: 15rem;
+        height: 15rem;
+        border-radius: 50%;
+        overflow: hidden;
+        cursor: pointer;
+        border: var(--border-thick);
+        transition: var(--transition);
+
+        &:hover {
+            box-shadow: var(--shadow);
+            .AvatarOverlay {
+                opacity: 1;
+            }
+        }
+    }
+
+    .Avatar {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .AvatarOverlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: var(--transition);
+
+        span {
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+    }
+
+    .Filename {
+        font-size: 1.4rem;
+        color: var(--color-text-secondary);
+        text-align: center;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .SecondaryButton {
+        background-color: transparent;
+        color: var(--color-accent);
+        border: var(--border-thick);
+        border-color: var(--color-accent);
+
+        &:hover {
+            background-color: var(--color-surface);
+            color: var(--color-accent2);
+            border-color: var(--color-accent2);
+        }
+    }
 }

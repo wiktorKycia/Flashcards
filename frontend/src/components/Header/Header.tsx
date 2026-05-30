@@ -57,7 +57,7 @@ export default function Header() {
                     onMouseEnter={openProfileTooltip}
                     onMouseLeave={scheduleCloseProfileTooltip}
                 >
-                    <ProfilePicture />
+                    <ProfilePicture userId={user?.id} />
                     {(isLoggedIn || !isLoggedIn) && (
                         <div
                             className={`tooltip ${profileTooltipOpen ? 'tooltip-open' : ''}`}

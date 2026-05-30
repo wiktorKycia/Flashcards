@@ -11,7 +11,7 @@ interface PersonProps {
 export default function Person(props: PersonProps) {
     return (
         <div className={styles.Person}>
-            <ProfilePicture />
+            <ProfilePicture userId={props.id} />
             <div className={styles.PersonDescription}>
                 <h3>
                     <Link to={`/user/${props.id}`}>{props.name}</Link>
