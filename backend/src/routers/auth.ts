@@ -44,42 +44,7 @@ router.post('/register', async (req: Request, res: Response, next: NextFunction)
     }
     catch (error)
     {
-        if (
-            error instanceof PrismaClientKnownRequestError &&
-            error.code === "P2002"
-        ) {
-            const rawTarget = error.meta?.target as unknown
-            // Prisma's `P2002` meta.target is not always an array; it can be a string (e.g. "User.name").
-            const field = Array.isArray(rawTarget)
-                ? rawTarget[0]
-                : typeof rawTarget === "string"
-                    ? rawTarget
-                    : undefined
-            const normalizedField = typeof field === "string" ? field.toLowerCase() : undefined
-            // Prisma constraint names can look like: "User_email_key" / "User_name_key"
-            // so we detect via `includes` instead of `endsWith`.
-            const uniqueField =
-                normalizedField?.includes("email") ? "email" :
-                    normalizedField?.includes("name") ? "name" :
-                        undefined
-
-            if (uniqueField === "name") {
-                return res.status(409).json({
-                    error: "Podana nazwa użytkownika jest zajęta"
-                })
-            }
-            else if (uniqueField === "email") {
-                return res.status(409).json({
-                    error: "Istnieje już konto z podanym adresem email"
-                })
-            }
-            else {
-                return next(error)
-            }
-        }
-        else {
-            return next(error)
-        }
+        return next(error)
     }
 })
 
@@ -124,7 +89,7 @@ router.post('/login', async (req: Request, res: Response, next: NextFunction) =>
     }
     catch (error)
     {
-        next(error) // tu nie wiem jakich błędów się spodziewać
+        next(error)
     }
 })
 
