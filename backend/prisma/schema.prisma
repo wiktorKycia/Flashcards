@@ -23,7 +23,6 @@ model User {
   createdQuizzes   Quiz[]
   UserQuizProgress UserQuizProgress[]
   SavedQuiz        SavedQuiz[]
-  Folder           Folder[]
   UserQuizLike     UserQuizLike[]
 }
 
