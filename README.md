@@ -28,7 +28,7 @@ However, we enhanced them. For example, changed the learn mode to a test in a fo
 The user must first specify the number of questions for each type of task.
 Then the AI models do their job of creating specifically tailored sentences with that user needs to fill.
 
-In our app, the user has the ability to like or dislike a certain quiz.
+In our app, the user has also the ability to like or dislike a certain quiz.
 
 ## Used technologies
 
