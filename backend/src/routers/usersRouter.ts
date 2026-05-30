@@ -334,24 +334,6 @@ router.patch("/:id(\\d+)", async (req: Request<UserParams>, res: Response, next:
         return res.json(updatedUser)
     }
     catch(error) {
-        if (
-            error instanceof PrismaClientKnownRequestError &&
-            error.code === "P2002"
-        ) {
-            const field = (error.meta?.target as string[] | undefined)?.[0]
-
-            if (field === "name") {
-                return res.status(409).json({
-                    error: "Podana nazwa użytkownika jest zajęta"
-                })
-            }
-            else if (field === "email") {
-                return res.status(409).json({
-                    error: "Istnieje już konto z podanym adresem email"
-                })
-            }
-        }
-
         return next(error)
     }
 })

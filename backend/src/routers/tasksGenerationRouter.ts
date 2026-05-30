@@ -1,16 +1,16 @@
 import OpenAI from 'openai'
 import dotenv from 'dotenv'
 import { PrismaClient } from '@prisma/client'
-import express, { type NextFunction, type Request, type Response, type Router } from 'express';
+import express, { type NextFunction, type Request, type Response, type Router } from 'express'
 import fs from 'fs'
 import path from 'path'
 
 dotenv.config({path: '.env.app'})
 
-const token = process.env["GITHUB_TOKEN"];
-const endpoint = "https://models.github.ai/inference";
-const client = new OpenAI({ baseURL: endpoint, apiKey: token, maxRetries: 0 });
-const modelsList: string[] = ["openai/gpt-4.1", "openai/gpt-4o", "DeepSeek-V3-0324", "openai/gpt-4.1-nano", "openai/gpt-4.1-mini", "openai/gpt-4o-mini"];
+const token = process.env["GITHUB_TOKEN"]
+const endpoint = "https://models.github.ai/inference"
+let client: OpenAI | null = null
+const modelsList: string[] = ["openai/gpt-4o", "openai/gpt-4.1", "meta/Llama-3.3-70B-Instruct", "cohere/cohere-command-a", "deepseek/DeepSeek-V3-0324", "openai/gpt-4.1-nano", "openai/gpt-4.1-mini", "openai/gpt-4o-mini", "mistral-ai/mistral-medium-2505", "mistral-ai/mistral-small-2503", "meta/Llama-4-Maverick-17B-128E-Instruct-FP8", "meta/Llama-4-Scout-17B-16E-Instruct", "meta/Llama-3.2-11B-Vision-Instruct"]
 const router: Router = express.Router()
 const prisma = new PrismaClient()
 const fillGapPrompt = loadPrompt("fill_gap.txt")
@@ -27,10 +27,13 @@ async function sendAIRequest(systemMessage: string, userMessage: string) {
     if (!token) {
         throw new Error("Missing GITHUB_TOKEN in .env.app file")
     }
+    else if (client === null) {
+        client = new OpenAI({ baseURL: endpoint, apiKey: token, maxRetries: 0 })
+    }
 
     while (modelIndex < modelsList.length) {
         const controller = new AbortController();
-        const timeoutId = setTimeout(async () => controller.abort(), 12000)
+        const timeoutId = setTimeout(async () => controller.abort(), 14000)
 
         try {
             const response = await client.chat.completions.create({
@@ -39,6 +42,7 @@ async function sendAIRequest(systemMessage: string, userMessage: string) {
                     {role: 'user', content: userMessage}
                 ],
                 model: modelsList[modelIndex]  ?? "openai/gpt-4.1-mini",
+                temperature: 0.1,
                 response_format: {type: "json_object"}
             }, {signal: controller.signal})
 
@@ -61,21 +65,12 @@ async function sendAIRequest(systemMessage: string, userMessage: string) {
         } catch(error) {
             clearTimeout(timeoutId)
 
-            if (error instanceof  OpenAI.APIError) {
-                const isRateLimit: boolean = error.status === 429
-                const isForbidden: boolean = error.status === 403
-
-                if (isRateLimit || isForbidden) {
-                    modelIndex++
-                    continue
-                }
-            }
-            if (error instanceof Error && error.name === "AbortError") {
+            if (modelIndex < modelsList.length - 1){
                 modelIndex++
-                continue
             }
-
-            throw error
+            else {
+                throw error
+            }
         }
     }
 
@@ -109,15 +104,15 @@ async function chooseFlashcards(questionsAmount: number, quizId: number, languag
 
     const shuffled = flashcards.sort(() => 0.5 - Math.random())
 
-    let phrases: string
+    let data: string
     if (languageSide === "FRONT") {
         if (isSingleChoice) {
             const result: {
-                data: {
-                    [key: string]: any
-                }
+                data: Record<string, any>,
+                questionsAmount: number
             } = {
-                "data": {}
+                "data": {},
+                questionsAmount
             }
 
             for (let i = 0; i < questionsAmount * 3; i += 3){
@@ -129,23 +124,23 @@ async function chooseFlashcards(questionsAmount: number, quizId: number, languag
                 }
             }
 
-            phrases = JSON.stringify(result)
+            data = JSON.stringify(result)
         }
         else {
-            phrases = shuffled
+            data = `Questions amount: ${questionsAmount}. Phrases: ${shuffled
                 .slice(0, questionsAmount)
                 .map((f: { front: string }) => f.front)
-                .join('; ')
+                .join('; ')}`
         }
     }
     else {
         if (isSingleChoice) {
             const result: {
-                data: {
-                    [key: string]: any
-                }
+                data: Record<string, any>,
+                questionsAmount: number
             } = {
-                "data": {}
+                "data": {},
+                questionsAmount
             }
 
             for (let i = 0; i < questionsAmount * 3; i += 3){
@@ -157,30 +152,30 @@ async function chooseFlashcards(questionsAmount: number, quizId: number, languag
                 }
             }
 
-            phrases = JSON.stringify(result)
+            data = JSON.stringify(result)
         }
         else {
-            phrases = shuffled
+            data = `Questions amount: ${questionsAmount}. Phrases: ${shuffled
                 .slice(0, questionsAmount)
                 .map((f: { back: string }) => f.back)
-                .join('; ')
+                .join('; ')}`
         }
     }
 
     return {
-        phrases,
+        data,
         warning
     }
 }
 
 router.post("/fill-gap", async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { phrases, warning } = await chooseFlashcards(
+        const { data, warning } = await chooseFlashcards(
             req.body.questionsAmount,
             req.body.quizId,
             req.body.languageSide
         )
-        const subtasks = await sendAIRequest(fillGapPrompt, phrases)
+        const subtasks = await sendAIRequest(fillGapPrompt, data)
 
         if (warning) {
             return res.json({ subtasks, warning })
@@ -196,8 +191,8 @@ router.post("/fill-gap", async (req: Request, res: Response, next: NextFunction)
 
 router.post("/first-letter-gap", async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { phrases, warning } = await chooseFlashcards(req.body.questionsAmount, req.body.quizId, req.body.languageSide)
-        const subtasks = await sendAIRequest(fillGapPrompt, phrases)
+        const { data, warning } = await chooseFlashcards(req.body.questionsAmount, req.body.quizId, req.body.languageSide)
+        const subtasks = await sendAIRequest(fillGapPrompt, data)
 
         // This part is for changing the first underscore in the gap to the first letter of the phrase, because weaker models cannot handle it for multi-word phrases according to my tests
         for (const resultIndex in subtasks.data) {
@@ -218,8 +213,8 @@ router.post("/first-letter-gap", async (req: Request, res: Response, next: NextF
 
 router.post("/single-choice", async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { phrases, warning } = await chooseFlashcards(req.body.questionsAmount, req.body.quizId, req.body.languageSide, true)
-        const subtasks = await sendAIRequest(singleChoicePrompt, phrases)
+        const { data, warning } = await chooseFlashcards(req.body.questionsAmount, req.body.quizId, req.body.languageSide, true)
+        const subtasks = await sendAIRequest(singleChoicePrompt, data)
 
         if (warning) {
             return res.json({ subtasks, warning })

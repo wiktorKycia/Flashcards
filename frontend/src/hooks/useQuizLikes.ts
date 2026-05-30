@@ -22,7 +22,7 @@ interface SetUserQuizLikeVars extends UserQuizLikeVars {
 }
 
 const fetchQuizLikeCounts = async (quizId: number): Promise<QuizLikeCounts> => {
-    const response = await fetch(`/api/quizzes-likes/quiz/${quizId}/counts`)
+    const response = await fetch(`/api/quizzes/${quizId}`)
 
     if (!response.ok) {
         throw new Error(`HTTP ${response.status}`)
@@ -32,7 +32,7 @@ const fetchQuizLikeCounts = async (quizId: number): Promise<QuizLikeCounts> => {
 }
 
 const fetchUserQuizLike = async ({ quizId, userId }: UserQuizLikeVars): Promise<UserQuizLike | null> => {
-    const response = await fetch(`/api/quizzes-likes/user/${userId}/quiz/${quizId}`)
+    const response = await fetch(`/api/users/${userId}/quiz/${quizId}`)
 
     if (response.status === 404) {
         return null

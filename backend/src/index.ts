@@ -164,6 +164,7 @@ app.use(async (err: unknown, _req: Request, res: Response, _next: NextFunction) 
         return res.sendStatus(400)
     }
 
+    // This section allows more accurate statuses and error logs to be recorded in the terminal and database in English, while sending messages to the frontend in Polish
     if (errorMessage === "Missing GITHUB_TOKEN in .env.app file") {
         return res.status(500).json({
             error: "Nie skonfigurowano tokena GitHub wymaganego do korzystania z modeli AI"
@@ -175,11 +176,15 @@ app.use(async (err: unknown, _req: Request, res: Response, _next: NextFunction) 
         })
     }
     else if (errorMessage === "Flashcards not found") {
-        return res.sendStatus(404)
+        return res.status(404).json({
+            error: "Nie ma jakichkolwiek fiszek"
+        })
     }
 
     else if (errorMessage === "Not enough flashcards found") {
-        return res.sendStatus(422)
+        return res.status(422).json({
+            error: "Nie znaleziono wystarczającej liczby fiszek do wygenerowania zadania"
+        })
     }
 
     return res.sendStatus(500)

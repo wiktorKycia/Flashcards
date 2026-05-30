@@ -1,0 +1,41 @@
+.MatchChallenge {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    font-size: 2.5rem;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-primary);
+    padding: 1.5rem;
+}
+
+.Grid {
+    @media (min-aspect-ratio: 1/1) {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media (max-aspect-ratio: 1/1) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    display: grid;
+    gap: 1rem;
+}
+
+.Finished {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.buttonWrapper {
+    width: 100%;
+
+    @media (min-aspect-ratio: 1/1) {
+      padding: 2rem;
+    }
+
+    @media (max-aspect-ratio: 1/1) {
+      padding: 0;
+    }
+}
