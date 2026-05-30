@@ -20,6 +20,7 @@
 
         display: flex;
         align-items: center;
+        gap: 1.2rem;
     }
 
     &Left {
@@ -29,4 +30,19 @@
     &Right {
         justify-content: flex-end;
     }
+}
+
+
+.PictureContainer
+{
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: visible;
+}
+
+
+
+.Username {
+    color: var(--color-accent);
 }

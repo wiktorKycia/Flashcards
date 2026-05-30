@@ -9,10 +9,19 @@ interface QuizLikeParams {
     id: string
 }
 
+interface QuizLikeUserQuizParams {
+    userId: string
+    quizId: string
+}
+
 interface QuizLikeCreateAndUpdate {
     isLiked: boolean
     userId: number
     quizId: number
+}
+
+interface QuizLikeUpdatePayload {
+    isLiked: boolean
 }
 
 router.get("/:id(\\d+)", async (req: Request<QuizLikeParams>, res: Response, next: NextFunction) => {
@@ -43,6 +52,65 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
         })
 
         return res.status(201).json(createdQuizLike)
+    }
+    catch (error) {
+        next(error)
+    }
+})
+
+router.put("/user/:userId(\\d+)/quiz/:quizId(\\d+)", async (req: Request<QuizLikeUserQuizParams>, res: Response, next: NextFunction) => {
+    try {
+        const userId = parseInt(req.params.userId)
+        const quizId = parseInt(req.params.quizId)
+        const payload = req.body as QuizLikeUpdatePayload
+
+        if (Number.isNaN(userId) || Number.isNaN(quizId)) {
+            return res.sendStatus(400)
+        }
+
+        const quizLike = await prisma.userQuizLike.upsert({
+            where: {
+                userId_quizId: {
+                    userId,
+                    quizId,
+                }
+            },
+            update: {
+                isLiked: payload.isLiked,
+            },
+            create: {
+                userId,
+                quizId,
+                isLiked: payload.isLiked,
+            }
+        })
+
+        return res.status(200).json(quizLike)
+    }
+    catch (error) {
+        next(error)
+    }
+})
+
+router.delete("/user/:userId(\\d+)/quiz/:quizId(\\d+)", async (req: Request<QuizLikeUserQuizParams>, res: Response, next: NextFunction) => {
+    try {
+        const userId = parseInt(req.params.userId)
+        const quizId = parseInt(req.params.quizId)
+
+        if (Number.isNaN(userId) || Number.isNaN(quizId)) {
+            return res.sendStatus(400)
+        }
+
+        await prisma.userQuizLike.delete({
+            where: {
+                userId_quizId: {
+                    userId,
+                    quizId,
+                }
+            }
+        })
+
+        return res.sendStatus(200)
     }
     catch (error) {
         next(error)

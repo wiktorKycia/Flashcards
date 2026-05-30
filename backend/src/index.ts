@@ -133,8 +133,27 @@ app.use(async (err: unknown, _req: Request, res: Response, _next: NextFunction) 
             return res.sendStatus(404)
         }
         else if (err.code === "P2002"){
-            const field = (err.meta?.target as string[] | undefined)?.[0]
-            const message: string = field ? `${field} jest już zajęte` : "Wartość musi być unikalna"
+            const rawTarget = err.meta?.target as unknown
+            // Prisma's `P2002` meta.target is not always an array; it can be a string (e.g. "User.name").
+            const field = Array.isArray(rawTarget)
+                ? rawTarget[0]
+                : typeof rawTarget === "string"
+                    ? rawTarget
+                    : undefined
+            const normalizedField = typeof field === "string" ? field.toLowerCase() : undefined
+            // Prisma constraint names can look like: "User_email_key" / "User_name_key"
+            // so we detect via `includes` instead of `endsWith`.
+            const uniqueField =
+                normalizedField?.includes("email") ? "email" :
+                    normalizedField?.includes("name") ? "name" :
+                        undefined
+
+            const message: string =
+                uniqueField === "name"
+                    ? "Podana nazwa użytkownika jest zajęta"
+                    : uniqueField === "email"
+                        ? "Istnieje już konto z podanym adresem email"
+                        : "Wartość musi być unikalna"
             return res.status(409).json({
                 error: message
             })
@@ -145,6 +164,7 @@ app.use(async (err: unknown, _req: Request, res: Response, _next: NextFunction) 
         return res.sendStatus(400)
     }
 
+    // This section allows more accurate statuses and error logs to be recorded in the terminal and database in English, while sending messages to the frontend in Polish
     if (errorMessage === "Missing GITHUB_TOKEN in .env.app file") {
         return res.status(500).json({
             error: "Nie skonfigurowano tokena GitHub wymaganego do korzystania z modeli AI"
@@ -156,11 +176,15 @@ app.use(async (err: unknown, _req: Request, res: Response, _next: NextFunction) 
         })
     }
     else if (errorMessage === "Flashcards not found") {
-        return res.sendStatus(404)
+        return res.status(404).json({
+            error: "Nie ma jakichkolwiek fiszek"
+        })
     }
 
     else if (errorMessage === "Not enough flashcards found") {
-        return res.sendStatus(422)
+        return res.status(422).json({
+            error: "Nie znaleziono wystarczającej liczby fiszek do wygenerowania zadania"
+        })
     }
 
     return res.sendStatus(500)

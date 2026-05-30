@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useRegister } from '@/hooks/useRegister.ts'
 import styles from './Register.module.scss'
 import { useAuth } from '@/context/AuthContext'
-import type { NavigateFunction } from 'react-router'
+import { Link, type NavigateFunction } from 'react-router'
 
 export default function Register() {
     const navigate: NavigateFunction = useNavigate()
@@ -41,6 +41,11 @@ export default function Register() {
                     className={styles.FormContainer}
                 >
                     <h1>Register</h1>
+                    {registerMutation.isError && (
+                        <div style={{ color: 'red', marginBottom: '0.5rem' }}>
+                            {(registerMutation.error as Error).message}
+                        </div>
+                    )}
                     <input
                         type="text"
                         placeholder="login"
@@ -63,6 +68,7 @@ export default function Register() {
                         }
                     />
                     <button type="submit">Register</button>
+                    <div>Masz już konto? <Link to={'/login'}>Zaloguj się</Link></div>
                 </form>
             </main>
         </>

@@ -44,11 +44,11 @@
     --color-text-secondary: #a0ada2;
     --color-text-buttons: #e3f0e3;
 
-    --color-accent5: #22c55e;
-    --color-accent4: #009e3b;
-    --color-accent3: #007816;
-    --color-accent2: #005400;
-    --color-accent: #003200;
+    --color-accent: #22c55e;
+    --color-accent2: #16a34a;
+    --color-accent3: #15803d;
+    --color-accent4: #166534;
+    --color-accent5: #1a3a1a;
 
     --color-border: #2a3d30;
     --border: 1px solid var(--color-border);
@@ -84,7 +84,7 @@ html {
     font-size: 1.4rem;
 }
 
-button {
+button, .redirectButton {
     padding: 1rem;
     background-color: var(--color-accent);
     color: var(--color-text-buttons);
@@ -102,6 +102,7 @@ button {
 
 label
 {
+    font-size: 1.6rem;
     color: var(--color-text-primary);
 }
 
@@ -169,3 +170,117 @@ a {
     flex-direction: column;
 }
 
+.message-info {
+    @include message;
+    color: var(--color-text-secondary)
+}
+
+.message-error {
+    @include message;
+    color: red;
+}
+
+
+.quiz-container {
+    @include flex-start-both;
+    width: 100%;
+    padding: 2rem;
+    gap: 1rem;
+}
+
+.quiz-item {
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    color: var(--color-text-primary);
+    width: 300px;
+    height: 150px;
+    transition: var(--transition);
+    cursor: pointer;
+
+    &:hover {
+        box-shadow: var(--shadow);
+    }
+
+    h2 {
+        color: var(--color-accent2);
+        margin-bottom: 0.5rem;
+        font-size: 2rem;
+    }
+
+    p {
+        color: var(--color-text-secondary);
+        font-size: 1.4rem;
+    }
+}
+
+.tooltip {
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    right: 0;
+    z-index: 0;
+    min-width: 15rem;
+    width: max-content;
+    padding: 0.9rem 1rem;
+    border-radius: 0.8rem;
+    background-color: var(--color-surface);
+    border: var(--border);
+    box-shadow: var(--shadow-big);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.tooltip-open {
+    opacity: 1;
+    z-index: 10;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.tooltip-title {
+    color: var(--color-text-primary);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+}
+
+.tooltip-links-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.tooltip-link {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    background: transparent;
+    font-size: 1.4rem;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
+.tooltip-link:hover {
+    color: var(--color-accent2);
+    text-decoration: underline;
+    background: transparent;
+    cursor: pointer;
+}
+
+.tooltip-text {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-weight: 400;
+    background: transparent;
+    font-size: 1.4rem;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    cursor: default;
+}

@@ -1,7 +1,7 @@
 import LoadingSpinner from '@/components/LoadingSpinner'
 import { useQuizzes } from '@/hooks/useQuizzes'
 import QuizPreview from '@/components/QuizPreview'
-import type Quiz from '@/types/Quiz'
+import type FullQuiz from '@/types/FullQuiz'
 import { useLocation } from 'react-router'
 import Fuse from 'fuse.js'
 import { useMemo } from 'react'
@@ -38,7 +38,7 @@ export default function Home() {
                     <div className={styles.quizzesListWrapper}>
                         <p className={styles.quizzesBoxTitle}>Znalezione zestawy fiszek</p>
                         <div className={styles.quizPreviewsBox}>
-                            {sortedItems.map((quiz: Quiz) => (
+                            {sortedItems.map((quiz: FullQuiz) => (
                                 <QuizPreview
                                     key={`quiz-preview-${quiz.id}`}
                                     quizId={quiz.id}

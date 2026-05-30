@@ -35,6 +35,34 @@ router.get("/:id(\\d+)", async (req: Request<SavedQuizParams>, res: Response, ne
     }
 })
 
+router.get('/user/:id(\\d+)/quiz/:id(\\d+)', async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const userId = req.params.userId
+                ? parseInt(req.params.userId as string)
+                : undefined
+            const quizId = req.params.quizId
+                ? parseInt(req.params.quizId as string)
+                : undefined
+
+            if (userId && quizId) {
+                const savedQuiz = await prisma.savedQuiz.findFirst({
+                    where: {
+                        userId,
+                        quizId
+                    }
+                })
+                return res.json({ isSaved: Boolean(savedQuiz) })
+            }
+
+            return res
+                .status(400)
+                .json({ error: 'userId and quizId are required' })
+        } catch (error) {
+            next(error)
+        }
+    }
+)
+
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
         const createdSavedQuiz = await prisma.savedQuiz.create({
@@ -72,6 +100,29 @@ router.delete("/:id(\\d+)", async (req: Request<SavedQuizParams>, res: Response,
         await prisma.savedQuiz.delete({
             where: {
                 id: parseInt(req.params.id),
+            }
+        })
+
+        return res.sendStatus(200)
+    }
+    catch (error) {
+        next(error)
+    }
+})
+
+router.delete("/", async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId = parseInt(req.query.userId as string)
+        const quizId = parseInt(req.query.quizId as string)
+
+        if (!userId || !quizId) {
+            return res.status(400).json({ error: "userId and quizId are required" })
+        }
+
+        await prisma.savedQuiz.deleteMany({
+            where: {
+                userId,
+                quizId
             }
         })
 

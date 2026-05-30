@@ -3,9 +3,12 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import express, { type Router, type Request, type Response, type NextFunction } from "express"
 import bcrypt from "bcrypt"
 import fs from 'fs/promises'
+import type jwt from 'jsonwebtoken'
+import auth from "../middleware/auth"
 
 const router: Router = express.Router()
 const prisma = new PrismaClient()
+
 
 interface UserParams {
     id: string
@@ -21,6 +24,11 @@ interface UserCreate {
     email: string
     password: string
     path_to_img?: string
+}
+
+interface UserUpdate {
+    name: string
+    email: string
 }
 
 interface SavedQuizData {
@@ -252,32 +260,81 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     }
 })
 
-router.post("/auth/login", async (req: Request, res: Response, next: NextFunction) => {
+router.patch("/:id(\\d+)/password", auth, async (req: Request, res: Response, next: NextFunction) => {
     try {
-        if (!req.body.email || !req.body.password) {
-            return res.sendStatus(400)
+        const userId = parseInt(req.params.id as string)
+        const currentPassword = String(req.body.currentPassword || '')
+        const newPassword = String(req.body.newPassword || '').trim()
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ error: "Hasła są wymagane" })
+        }
+
+        const authUser = (req as Request & { user?: string | jwt.JwtPayload }).user
+        const authUserId = typeof authUser === 'object' && authUser && 'id' in authUser ? Number(authUser.id) : null
+
+        if (!authUserId || authUserId !== userId) {
+            return res.status(403).json({ error: "Brak dostępu" })
         }
 
         const user = await prisma.user.findUnique({
-            where: {
-                email: req.body.email
-            }
+            where: { id: userId },
+            select: { password: true }
         })
 
         if (!user) {
-            return res.sendStatus(401)
+            return res.sendStatus(404)
         }
 
-        const isValid: boolean = await bcrypt.compare(req.body.password, user.password)
-
-        if (!isValid) {
-            return res.sendStatus(401)
+        const isMatch = await bcrypt.compare(currentPassword, user.password)
+        if (!isMatch) {
+            return res.status(400).json({ error: "Niepoprawne aktualne hasło" })
         }
 
-        return res.sendStatus(200)
+        const hashedPassword = await bcrypt.hash(newPassword, 10)
+        await prisma.user.update({
+            where: { id: userId },
+            data: { password: hashedPassword }
+        })
+
+        return res.status(200).json({ message: "Hasło zostało zmienione" })
+    }
+    catch (error) {
+        next(error)
+    }
+})
+
+router.patch("/:id(\\d+)", async (req: Request<UserParams>, res: Response, next: NextFunction) => {
+    try {
+        const userId = parseInt(req.params.id)
+        const payload: UserUpdate = req.body
+
+        if (!payload.name && !payload.email) {
+            return res.status(400).json({
+                error: "Brak danych do aktualizacji"
+            })
+        }
+
+        const updatedUser = await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                name: payload.name,
+                email: payload.email
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                path_to_img: true
+            }
+        })
+
+        return res.json(updatedUser)
     }
     catch(error) {
-        next(error)
+        return next(error)
     }
 })
 
