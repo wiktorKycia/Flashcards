@@ -2,6 +2,8 @@ import { useState, useRef, type ChangeEvent, useEffect } from 'react'
 import styles from './AvatarUpload.module.scss'
 import { useUploadAvatar } from '@/hooks/useUploadAvatar'
 import { useUserProfilePicture } from '@/hooks/useUserProfilePicture'
+import Container from "@/components/Container";
+import profileLogo from '@/assets/placeholder-profile-picture-1.png'
 
 interface AvatarUploadProps {
     userId: number
@@ -56,12 +58,12 @@ export default function AvatarUpload({ userId, onUploadSuccess }: AvatarUploadPr
     }
 
     return (
-        <div className={styles.AvatarUpload}>
+        <Container cssClassName={styles.AvatarUpload}>
             <h3>Zdjęcie profilowe</h3>
 
             <div className={styles.AvatarWrapper}>
                 <img
-                    src={previewSrc || `https://ui-avatars.com/api/?name=User+${userId}&background=random`}
+                    src={previewSrc || profileLogo}
                     alt="Profile avatar"
                     className={styles.Avatar}
                 />
@@ -101,6 +103,6 @@ export default function AvatarUpload({ userId, onUploadSuccess }: AvatarUploadPr
 
             {error && <p className="message-error">{error}</p>}
             {success && <p className="message-info">Zdjęcie zaktualizowane!</p>}
-        </div>
+        </Container>
     )
 }
