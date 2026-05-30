@@ -19,15 +19,16 @@ tests and matching challenge mode
 ## General info
 
 We wanted to create an app like quizlet, but with cleaner UI, cut out rarely used features and enhance the "Learn" mode.
+Obviously for free without ads.
 
-TODO: tu coś dopisać bo na razie nie mam pomysłu
-(dodaliśmy lajki,
-staraliśmy się aby widok quizu był zbliżony do tego z quizleta, dla niepoznaki zmieniliśmy koloryztykę na zieloną
-zaprogramowaliśmy najważniejsze funkcje takie jak:
--tryb fiszki (oraz śledź postępy)
--dopasowania(matching challenge)
--tryb "ucz sie" uległ zmianie (opisać zmianę jaka zaszła)
-)
+We tried our best to imitate the quiz page from quizlet. In order not to be sued by the big company behind the original one, we changed the color scheme to green.
+
+Core features such as flashcards mode (with tracking progress), matching challenge (_pl. dopasowania_) learn mode (_pl. tryb "ucz się"_) were implemented into our app.
+However, we enhanced them. For example, changed the learn mode to a test in a form of exercises from language textbook.
+The user must first specify the number of questions for each type of task.
+Then the AI models do their job of creating specifically tailored sentences with that user needs to fill.
+
+In our app, the user has the ability to like or dislike a certain quiz.
 
 ## Used technologies
 
