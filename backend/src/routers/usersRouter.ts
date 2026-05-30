@@ -61,7 +61,8 @@ const storage = multer.diskStorage({
     destination: (_req, _file, cb) => cb(null, UPLOAD_DIR),
 
     filename: (req, file, cb) => {
-        const userId = (req as Request & { userId?: number }).userId;
+        const user = (req as any).user;
+        const userId = user?.id || 'unknown';
         const ext = path.extname(file.originalname).toLowerCase();
         cb(null, `${userId}${ext}`);
     },
@@ -221,7 +222,7 @@ router.get("/:userId/avatar", async (req: Request, res: Response, next: NextFunc
             return res.status(404).json({ error: 'No avatar set for this user.' })
         }
 
-        const absolutePath = `/uploads/avatars/${userId}`;
+        const absolutePath = user.path_to_img;
 
         if (!fs.existsSync(absolutePath)) {
             return res.status(404).json({ error: "Avatar file not found on disk."})
@@ -287,7 +288,7 @@ router.post("/avatar", auth, upload.single("avatar"), async (req: Request & {use
         return;
     }
 
-    const relativePath = `/uploads/avatars/${userId}`
+    const relativePath = `/uploads/avatars/${req.file.filename}`
 
     try {
         await prisma.user.update({
