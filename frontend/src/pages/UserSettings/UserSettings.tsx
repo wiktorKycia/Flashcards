@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router'
 import { useUserInfo } from '@/hooks/useUserInfo.ts'
 import { useUpdateUser } from '@/hooks/useUpdateUser.ts'
 import { useChangePassword } from '@/hooks/useChangePassword'
+import AvatarUpload from '@/components/AvatarUpload'
 
 interface UserDraft {
     name: string
@@ -252,6 +253,7 @@ export default function UserSettings() {
                     {user.id && <button onClick={() => navigate(`/user/${user.id}`)}>Zobacz profil</button>}
                 </Container>
             </section>
+            <AvatarUpload userId={user.id}/>
         </main>
     )
 }

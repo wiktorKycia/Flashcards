@@ -1,4 +1,7 @@
-import React, { useState, useRef, type ChangeEvent } from 'react'
+import { useState, useRef, type ChangeEvent } from 'react'
+import styles from './AvatarUpload.module.scss'
+import Container from "@/components/Container";
+import {useAuth} from "@/context/AuthContext.tsx";
 
 interface AvatarUploadProps {
     userId: number
@@ -8,10 +11,10 @@ interface AvatarUploadProps {
 
 // ─── Component ────────────
 
-export function AvatarUpload({ userId, onUploadSuccess }: AvatarUploadProps) {
+export default function AvatarUpload({ userId, onUploadSuccess }: AvatarUploadProps) {
     // The URL shown in the <img> preview.
     // Starts as the server's current avatar (may be undefined if none set yet).
-    const [previewSrc, setPreviewSrc] = useState<string>(`/api/profile/avatar/${userId}`)
+    const [previewSrc, setPreviewSrc] = useState<string>(`/api/user${userId}/avatar/`)
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const [uploading, setUploading] = useState(false)
@@ -19,6 +22,8 @@ export function AvatarUpload({ userId, onUploadSuccess }: AvatarUploadProps) {
     const [success, setSuccess] = useState(false)
 
     const inputRef = useRef<HTMLInputElement>(null)
+
+    const auth = useAuth()
 
     // ── 1. User picks a file
     function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
@@ -47,15 +52,12 @@ export function AvatarUpload({ userId, onUploadSuccess }: AvatarUploadProps) {
 
         try {
             const formData = new FormData()
-            // "avatar" must match the multer field name on the server
             formData.append('avatar', selectedFile)
 
-            const res = await fetch('/api/profile/avatar', {
+            const res = await fetch('/api/users/avatar', {
                 method: 'POST',
-                // Do NOT set Content-Type manually — the browser must add the boundary
                 headers: {
-                    // Replace with your real auth header / cookie strategy
-                    'x-user-id': String(userId)
+                    'authorization': `Bearer ${auth.token}`
                 },
                 body: formData
             })
@@ -81,33 +83,31 @@ export function AvatarUpload({ userId, onUploadSuccess }: AvatarUploadProps) {
 
     // ── Render ──────────────────────────────────────────────────────────────────
     return (
-        <div style={styles.container}>
-            <h3 style={styles.heading}>Profile Picture</h3>
+        <Container>
+            <h3 className={styles.heading}>Profile Picture</h3>
 
-            {/* Avatar preview */}
-            <div style={styles.avatarWrapper}>
+            <div className={styles.avatarWrapper}>
                 <img
                     src={previewSrc}
                     alt="Profile avatar"
-                    style={styles.avatar}
+                    className={styles.avatar}
                     // Graceful fallback if no avatar exists yet
                     onError={(e) => {
                         ;(e.currentTarget as HTMLImageElement).src =
                             `https://ui-avatars.com/api/?name=User+${userId}&background=random`
                     }}
                 />
-                {/* Clicking the overlay also opens the file picker */}
+
                 <div
-                    style={styles.avatarOverlay}
+                    className={styles.avatarOverlay}
                     onClick={() => inputRef.current?.click()}
                     role="button"
                     aria-label="Choose avatar image"
                 >
-                    <span style={styles.overlayText}>Change</span>
+                    <span className={styles.overlayText}>Change</span>
                 </div>
             </div>
 
-            {/* Hidden file input */}
             <input
                 ref={inputRef}
                 type="file"
@@ -116,17 +116,15 @@ export function AvatarUpload({ userId, onUploadSuccess }: AvatarUploadProps) {
                 onChange={handleFileChange}
             />
 
-            {/* Explicit "Choose file" button */}
-            <button style={styles.secondaryButton} onClick={() => inputRef.current?.click()} disabled={uploading}>
+            <button className={styles.secondaryButton} onClick={() => inputRef.current?.click()} disabled={uploading}>
                 Choose file
             </button>
 
-            {selectedFile && <p style={styles.filename}>Selected: {selectedFile.name}</p>}
+            {selectedFile && <p className={styles.filename}>Selected: {selectedFile.name}</p>}
 
-            {/* Upload button — only shown after a file is chosen */}
             {selectedFile && (
                 <button
-                    style={uploading ? { ...styles.primaryButton, opacity: 0.6 } : styles.primaryButton}
+                    className={styles.primaryButton}
                     onClick={handleUpload}
                     disabled={uploading}
                 >
@@ -134,98 +132,10 @@ export function AvatarUpload({ userId, onUploadSuccess }: AvatarUploadProps) {
                 </button>
             )}
 
-            {error && <p style={styles.error}>{error}</p>}
-            {success && <p style={styles.successMsg}>Avatar updated!</p>}
-        </div>
+            {error && <p className={styles.error}>{error}</p>}
+            {success && <p className={styles.successMsg}>Avatar updated!</p>}
+        </Container>
     )
 }
 
-// ─── Inline styles (replace with your own CSS / Tailwind as preferred) ────────
 
-const styles: Record<string, React.CSSProperties> = {
-    container: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '12px',
-        padding: '24px',
-        maxWidth: '280px',
-        fontFamily: 'sans-serif'
-    },
-    heading: {
-        margin: 0,
-        fontSize: '1rem',
-        fontWeight: 600
-    },
-    avatarWrapper: {
-        position: 'relative',
-        width: 120,
-        height: 120,
-        borderRadius: '50%',
-        overflow: 'hidden',
-        cursor: 'pointer'
-    },
-    avatar: {
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover'
-    },
-    avatarOverlay: {
-        position: 'absolute',
-        inset: 0,
-        background: 'rgba(0,0,0,0.4)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        opacity: 0,
-        transition: 'opacity 0.2s'
-    },
-    overlayText: {
-        color: '#fff',
-        fontSize: '0.85rem',
-        fontWeight: 600,
-        letterSpacing: '0.05em'
-    },
-    filename: {
-        margin: 0,
-        fontSize: '0.75rem',
-        color: '#555',
-        maxWidth: '100%',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap'
-    },
-    primaryButton: {
-        width: '100%',
-        padding: '8px 16px',
-        background: '#2563eb',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '6px',
-        cursor: 'pointer',
-        fontWeight: 600,
-        fontSize: '0.9rem'
-    },
-    secondaryButton: {
-        width: '100%',
-        padding: '8px 16px',
-        background: 'transparent',
-        color: '#2563eb',
-        border: '1.5px solid #2563eb',
-        borderRadius: '6px',
-        cursor: 'pointer',
-        fontWeight: 600,
-        fontSize: '0.9rem'
-    },
-    error: {
-        margin: 0,
-        color: '#dc2626',
-        fontSize: '0.8rem',
-        textAlign: 'center'
-    },
-    successMsg: {
-        margin: 0,
-        color: '#16a34a',
-        fontSize: '0.8rem'
-    }
-}
