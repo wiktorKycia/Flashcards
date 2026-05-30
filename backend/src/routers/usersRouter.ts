@@ -234,29 +234,7 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
         return res.status(201).json({createdUser})
     }
     catch(error) {
-        if (
-            error instanceof PrismaClientKnownRequestError &&
-            error.code === "P2002"
-        ) {
-            const field = (error.meta?.target as string[] | undefined)?.[0]
-
-            if (field === "name") {
-                return res.status(409).json({
-                    error: "Podana nazwa użytkownika jest zajęta"
-                })
-            }
-            else if (field === "email") {
-                return res.status(409).json({
-                    error: "Istnieje już konto z podanym adresem email"
-                })
-            }
-            else {
-                return next(error)
-            }
-        }
-        else {
-            return next(error)
-        }
+        return next(error)
     }
 })
 
