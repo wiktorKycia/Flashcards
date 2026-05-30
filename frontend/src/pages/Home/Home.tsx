@@ -4,12 +4,12 @@ import QuizPreview from '@/components/QuizPreview'
 import type FullQuiz from '@/types/FullQuiz'
 import { useLocation } from 'react-router'
 import Fuse from 'fuse.js'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import styles from './Home.module.scss'
 
 export default function Home() {
     const { data: quizzes = [], isLoading, isError } = useQuizzes()
-
+    const [isExpanded, setIsExpanded] = useState(false)
     const { search: urlQuesryString } = useLocation()
 
     const sortedItems = useMemo(() => {
@@ -29,6 +29,8 @@ export default function Home() {
         return searchResults.map(result => result.item)
     }, [quizzes, urlQuesryString])
 
+    const displayedItems = isExpanded ? sortedItems : sortedItems.slice(0, 16)
+
     return (
         <>
             {isLoading && <LoadingSpinner />}
@@ -38,7 +40,7 @@ export default function Home() {
                     <div className={styles.quizzesListWrapper}>
                         <p className={styles.quizzesBoxTitle}>Znalezione zestawy fiszek</p>
                         <div className={styles.quizPreviewsBox}>
-                            {sortedItems.map((quiz: FullQuiz) => (
+                            {displayedItems.map((quiz: FullQuiz) => (
                                 <QuizPreview
                                     key={`quiz-preview-${quiz.id}`}
                                     quizId={quiz.id}
@@ -49,12 +51,21 @@ export default function Home() {
                                 />
                             ))}
                         </div>
+
+                        {sortedItems.length > 16 && (
+                            <button
+                                onClick={() => setIsExpanded(!isExpanded)}
+                                className={styles.expandButton}
+                            >
+                                {isExpanded ? "Zwiń" : "Rozwiń"}
+                            </button>
+                        )}
                     </div>
                 ) : (
                     quizzes.length > 0 ? (
-                        <p>Nie znaleziono odpowiednich quizów</p>
+                        <p className={styles.infoMessage}>Nie znaleziono odpowiednich quizów</p>
                     ) : (
-                        <p>Nie znaleziono żadnych quizów</p>
+                        <p className={styles.infoMessage}>Nie znaleziono żadnych quizów</p>
                     )
                 )
             )}
