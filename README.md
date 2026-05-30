@@ -18,6 +18,17 @@ tests and matching challenge mode
 
 ## General info
 
+We wanted to create an app like quizlet, but with cleaner UI, cut out rarely used features and enhance the "Learn" mode.
+
+TODO: tu coś dopisać bo na razie nie mam pomysłu
+(dodaliśmy lajki,
+staraliśmy się aby widok quizu był zbliżony do tego z quizleta, dla niepoznaki zmieniliśmy koloryztykę na zieloną
+zaprogramowaliśmy najważniejsze funkcje takie jak:
+-tryb fiszki (oraz śledź postępy)
+-dopasowania(matching challenge)
+-tryb "ucz sie" uległ zmianie (opisać zmianę jaka zaszła)
+)
+
 ## Used technologies
 
 | category | technology |
@@ -31,6 +42,8 @@ tests and matching challenge mode
 | environment | Docker |
 
 ## Setup
+
+
 
 ## Status
 
