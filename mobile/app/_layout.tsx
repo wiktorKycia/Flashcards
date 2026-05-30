@@ -10,6 +10,7 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
 import AuthProvider, { useAuth } from '@/context/AuthContext'
 import ThemeProviderContext, { useTheme } from '@/context/ThemeContext'
+import QueryProvider from '@/providers/QueryProvider'
 import { ThemedText } from '@/components/themed-text'
 
 export const unstable_settings = {
@@ -55,9 +56,11 @@ const RootStack = () => {
 export default function RootLayout() {
     return (
         <ThemeProviderContext>
-            <AuthProvider>
-                <RootStack />
-            </AuthProvider>
+            <QueryProvider>
+                <AuthProvider>
+                    <RootStack />
+                </AuthProvider>
+            </QueryProvider>
         </ThemeProviderContext>
     )
 }
