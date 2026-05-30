@@ -28,7 +28,7 @@ However, we enhanced them. For example, changed the learn mode to a test in a fo
 The user must first specify the number of questions for each type of task.
 Then the AI models do their job of creating specifically tailored sentences with that user needs to fill.
 
-In our app, the user has the ability to like or dislike a certain quiz.
+In our app, the user has also the ability to like or dislike a certain quiz.
 
 ## Used technologies
 
@@ -46,7 +46,7 @@ In our app, the user has the ability to like or dislike a certain quiz.
 
 ### Prerequisites
 In order to run our app, you need to have:
-- [docker](https://www.docker.com/get-started/) installed
+- [docker](https://www.docker.com/get-started/) <a href="https://www.docker.com/get-started/" target="_blank">docker</a> installed
 - all `.env` files in correct places and with correct variables to be able to run all features of the app
 - Github token set up, to be able to do knowledge tests, because example sentences are created by LLMs from github marketplace
 
