@@ -54,7 +54,7 @@ In order to run our app, you need to have:
 
 Just copy all .env.sample files in place
 
-In `./frontend` folder there is one
+In `./frontend` folder there is one .env file
 
 In `./backend` folder there are three (app, database, mongo)
 
