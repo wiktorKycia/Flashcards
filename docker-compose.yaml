@@ -71,26 +71,6 @@ services:
       timeout: 10s
       start_period: 2s
       retries: 3
-#    develop:
-#      watch:
-#        - action: sync
-#          path: ./backend/src
-#          target: /app/src
-##          ignore:
-##            - Dockerfile
-##            - package*.json
-#        - action: sync+restart
-#          path: ./backend/index.ts
-#          target: /app/index.ts
-#          ignore:
-#            - Dockerfile
-#            - package*.json
-#        - action: rebuild
-#          path: ./backend/prisma
-#          target: /app/prisma
-##          ignore:
-##            - index.ts
-##            - ./static
 
   prisma-studio:
     image: node:24-bookworm-slim
@@ -125,17 +105,6 @@ services:
     depends_on:
       app:
         condition: service_started
-#    develop:
-#      watch:
-#        - action: sync
-#          path: ./frontend/src
-#          target: /app/src
-#        - action: rebuild
-#          path: ./frontend
-#          target: /app
-#          ignore:
-#            - ./src
-#
 
   mongo:
     image: mongo:noble

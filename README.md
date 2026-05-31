@@ -5,9 +5,9 @@ tests and matching challenge mode
 > [!CAUTION]
 > Dear teachers checking this repo:
 > 
-> so-called `dokumentacja techniczna` for web app is [here]()
+> so-called `dokumentacja techniczna` for web app is [here](./dokumentacja-web.pdf)
 > 
-> so-called `dokumentacja techniczna` for mobile app is [here]() 
+> so-called `dokumentacja techniczna` for mobile app is [here](./dokumentacja-mob.pdf) 
 
 ## Table of contents
 1. [General info](#general-info)
@@ -107,10 +107,28 @@ After the compose is fully built, you can access various components of our app t
 > 
 > In order to preview mobile app correctly, once you enter the mobile url, please open dev tools and toggle the device design mode  
 
+### Running test
+
+#### Backend
+Backend tests are integrated into docker compose and will run with the `docker compose up` command
+
+More information about tests resides in [test documentation](./backend/dokumentacja%20testowa.md)
+
+#### Frontend
+Frontend is a little bit trickier
+
+All you need to do is run these commands (starting from the project's root directory):
+```sh
+cd frontend
+npm install
+npm run test
+```
+More information about tests resides in [test documentation](./frontend/dokumentacja%20testowa.md)
+
 
 ## Status
 
-Status of this project is: _in progress_
+Status of this project is: _finished_
 
 ## Authors
 People who created this app:
