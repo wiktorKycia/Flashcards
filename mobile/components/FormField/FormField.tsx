@@ -8,18 +8,22 @@ interface FormFieldProps {
     label: string
     value: string
     onChangeText: (value: string) => void
+    placeholder?: string
     secureTextEntry?: boolean
     autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters'
     keyboardType?: 'default' | 'email-address'
+    multiline?: boolean
 }
 
 export default function FormField({
     label,
     value,
     onChangeText,
+    placeholder,
     secureTextEntry = false,
     autoCapitalize = 'none',
-    keyboardType = 'default'
+    keyboardType = 'default',
+    multiline = false
 }: FormFieldProps) {
     const colorScheme = useColorScheme() ?? 'light'
     const palette = Colors[colorScheme]
@@ -32,13 +36,17 @@ export default function FormField({
             <TextInput
                 value={value}
                 onChangeText={onChangeText}
+                placeholder={placeholder}
                 secureTextEntry={secureTextEntry}
                 autoCapitalize={autoCapitalize}
                 autoCorrect={false}
                 keyboardType={keyboardType}
+                multiline={multiline}
+                textAlignVertical={multiline ? 'top' : 'center'}
                 placeholderTextColor={palette.textSecondary}
                 style={[
                     styles.input,
+                    multiline && styles.inputMultiline,
                     {
                         backgroundColor: palette.surface,
                         borderColor: palette.border,
@@ -64,5 +72,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         paddingVertical: 10,
         fontSize: 16
+    },
+    inputMultiline: {
+        minHeight: 96
     }
 })

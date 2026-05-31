@@ -1,4 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
+import { useQueryClient } from '@tanstack/react-query'
+import { useCallback, useMemo, useState } from 'react'
 import {
     ActivityIndicator,
     Pressable,
@@ -32,7 +34,14 @@ export default function HomeScreen() {
     const [searchQuery, setSearchQuery] = useState('')
     const [isExpanded, setIsExpanded] = useState(false)
 
+    const queryClient = useQueryClient()
     const { data: quizzes = [], isLoading, isError } = useQuizzes()
+
+    useFocusEffect(
+        useCallback(() => {
+            void queryClient.refetchQueries({ queryKey: ['quizzes'] })
+        }, [queryClient])
+    )
 
     const filteredQuizzes = useMemo(() => {
         const query = searchQuery.trim()

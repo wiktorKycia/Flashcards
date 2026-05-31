@@ -54,7 +54,7 @@ export default function QuizPreview({
                 <Pressable
                     onPress={() =>
                         router.push({
-                            pathname: '/(tabs)/quiz',
+                            pathname: '/quiz',
                             params: { id: String(quizId) }
                         })
                     }
