@@ -154,7 +154,8 @@ const styles = StyleSheet.create({
     },
     picker: {
         borderWidth: 1,
-        borderRadius: 8
+        borderRadius: 8,
+        padding: 4
     },
     button: {
         borderRadius: 8,

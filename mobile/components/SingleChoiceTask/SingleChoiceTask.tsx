@@ -38,7 +38,7 @@ export default function SingleChoiceTask({
         }
 
         if (isCorrectOption) {
-            return { backgroundColor: 'green', opacity: 0.3 }
+            return { backgroundColor: 'lawngreen', opacity: 0.3 }
         }
 
         if (isSelected) {
