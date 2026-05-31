@@ -16,6 +16,20 @@
     box-shadow: var(--shadow-big);
 }
 
+.LanguageRow
+{
+    @include container-base;
+    @include borderless;
+    @include flex;
+    @media (min-aspect-ratio: 1/1) {
+        flex-direction: row;
+    }
+
+    @media (max-aspect-ratio: 1/1) {
+        flex-direction: column;
+    }
+}
+
 .FlashcardsSection {
     display: flex;
     flex-direction: column;
@@ -35,7 +49,13 @@
 
 .FlashcardRow {
     display: grid;
-    grid-template-columns: 2fr 2fr auto;
+    @media (min-aspect-ratio: 1/1) {
+        grid-template-columns: 2fr 2fr auto;
+    }
+
+    @media (max-aspect-ratio: 1/1) {
+        grid-template-rows: 2fr 2fr auto;
+    }
     gap: 1rem;
     padding: 1.6rem;
     border: var(--border);

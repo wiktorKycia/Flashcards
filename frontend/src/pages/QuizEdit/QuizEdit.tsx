@@ -60,6 +60,7 @@ export default function QuizEdit() {
 
         if (draft) return
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setDraft({
             quiz: {
                 name: data.quiz.name ?? '',
@@ -210,7 +211,7 @@ export default function QuizEdit() {
                             useTextarea={true}
                         />
 
-                        <div className={'container-horizontal-borderless'}>
+                        <div className={styles.LanguageRow}>
                             <FieldGroup
                                 labelText="Język przodu:"
                                 inputHTMLId="quiz_front_language"
