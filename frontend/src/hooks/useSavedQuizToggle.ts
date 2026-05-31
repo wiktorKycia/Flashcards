@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 const checkIsSaved = async (userId: number, quizId: number): Promise<boolean> => {
-    const response = await fetch(`/api/saved-quizzes?userId=${userId}&quizId=${quizId}`)
+    const response = await fetch(`/api/saved-quizzes/user/${userId}/quiz/${quizId}`)
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
     }

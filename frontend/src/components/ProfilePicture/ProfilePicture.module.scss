@@ -1,6 +1,15 @@
-.ProfilePicture {
-    width: 3.6rem;
-    height: 3.6rem;
+.ProfilePicture
+{
+    @media (min-aspect-ratio: 1/1) {
+        width: 3.6rem;
+        height: 3.6rem;
+    }
+
+    @media (max-aspect-ratio: 1/1) {
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+
     cursor: pointer;
     object-fit: cover;
     border-radius: 50%;

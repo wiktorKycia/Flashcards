@@ -2,3 +2,8 @@ h2 {
     font-size: 2.4rem;
     color: var(--color-text-primary);
 }
+
+.infoMessage, .errorMessage {
+    font-size: 2rem;
+    color: var(--color-text-secondary);
+}
