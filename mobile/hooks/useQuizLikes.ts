@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import resolvePromise from '@/helpers/resolvePromise.ts'
+import resolvePromise from '@/helpers/resolvePromise'
 import type FullQuiz from '@/types/FullQuiz.ts'
+import { API_BASE_URL } from '@/lib/auth'
 
 interface QuizLikeCounts {
     likes: number
@@ -24,12 +25,12 @@ interface SetUserQuizLikeVars extends UserQuizLikeVars {
 }
 
 const getUserLikedQuizzes = async(userId: number): Promise<FullQuiz[]> => {
-    const response = await fetch(`/api/users/${userId}/liked-quizzes`)
+    const response = await fetch(`${API_BASE_URL}/api/users/${userId}/liked-quizzes`)
     return resolvePromise<FullQuiz[]>(response)
 }
 
 const fetchQuizLikeCounts = async (quizId: number): Promise<QuizLikeCounts> => {
-    const response = await fetch(`/api/quizzes/${quizId}`)
+    const response = await fetch(`${API_BASE_URL}/api/quizzes/${quizId}`)
 
     if (!response.ok) {
         throw new Error(`HTTP ${response.status}`)
@@ -39,7 +40,7 @@ const fetchQuizLikeCounts = async (quizId: number): Promise<QuizLikeCounts> => {
 }
 
 const fetchUserQuizLike = async ({ quizId, userId }: UserQuizLikeVars): Promise<UserQuizLike | null> => {
-    const response = await fetch(`/api/users/${userId}/quiz/${quizId}`)
+    const response = await fetch(`${API_BASE_URL}/api/users/${userId}/quiz/${quizId}`)
 
     if (response.status === 404) {
         return null
@@ -53,7 +54,7 @@ const fetchUserQuizLike = async ({ quizId, userId }: UserQuizLikeVars): Promise<
 }
 
 const setUserQuizLike = async ({ quizId, userId, isLiked }: SetUserQuizLikeVars): Promise<UserQuizLike> => {
-    const response = await fetch(`/api/quizzes-likes/user/${userId}/quiz/${quizId}`, {
+    const response = await fetch(`${API_BASE_URL}/api/quizzes-likes/user/${userId}/quiz/${quizId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -69,7 +70,7 @@ const setUserQuizLike = async ({ quizId, userId, isLiked }: SetUserQuizLikeVars)
 }
 
 const clearUserQuizLike = async ({ quizId, userId }: UserQuizLikeVars): Promise<void> => {
-    const response = await fetch(`/api/quizzes-likes/user/${userId}/quiz/${quizId}`, {
+    const response = await fetch(`${API_BASE_URL}/api/quizzes-likes/user/${userId}/quiz/${quizId}`, {
         method: 'DELETE'
     })
 
