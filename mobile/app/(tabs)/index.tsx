@@ -1,173 +1,243 @@
-import { Image } from 'expo-image'
-import { useEffect, useState } from 'react'
-import { StyleSheet } from 'react-native'
-
-import { HelloWave } from '@/components/hello-wave'
-import ParallaxScrollView from '@/components/parallax-scroll-view'
+import { useMemo, useState } from 'react'
+import {
+    ActivityIndicator,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    TextInput,
+    View
+} from 'react-native'
+import { Link } from 'expo-router'
+import Fuse from 'fuse.js'
 import { ThemedText } from '@/components/themed-text'
 import { ThemedView } from '@/components/themed-view'
-import { API_BASE_URL } from '@/lib/auth'
-import { Link } from 'expo-router'
 import { useColorScheme } from '@/hooks/use-color-scheme'
 import { Colors } from '@/constants/theme'
-
-
-type ApiResponse = {
-    content?: string
-}
+import { useAuth } from '@/context/AuthContext'
+import { useQuizzes } from '@/hooks/useQuizzes'
+import QuizPreview from '@/components/QuizPreview/QuizPreview'
+import type FullQuiz from '@/types/FullQuiz'
+import LikedQuizzesList from '@/components/LikedQuizzesList/LikedQuizzesList'
 
 export default function HomeScreen() {
     const colorScheme = useColorScheme() ?? 'light'
     const palette = Colors[colorScheme]
-    const [apiMessage, setApiMessage] = useState<string | null>(null)
-    const [apiError, setApiError] = useState<string | null>(null)
-    const [apiLoading, setApiLoading] = useState(true)
+    const { token, user } = useAuth()
+    const isLoggedIn = !!token
 
-    useEffect(() => {
-        const controller = new AbortController()
-        let isActive = true
+    const [searchQuery, setSearchQuery] = useState('')
+    const [isExpanded, setIsExpanded] = useState(false)
 
-        const load = async () => {
-            try {
-                setApiLoading(true)
-                setApiError(null)
+    const { data: quizzes = [], isLoading, isError } = useQuizzes()
 
-                const response = await fetch(`${API_BASE_URL}/`, {
-                    signal: controller.signal
-                })
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`)
-                }
+    const filteredQuizzes = useMemo(() => {
+        const query = searchQuery.trim()
 
-                const data = (await response.json()) as ApiResponse
-                if (isActive) {
-                    setApiMessage(data.content ?? 'No content')
-                }
-            } catch (error) {
-                if (!isActive) {
-                    return
-                }
-                if (error instanceof Error && error.name === 'AbortError') {
-                    return
-                }
-                setApiError(
-                    error instanceof Error ? error.message : 'Unknown error'
-                )
-            } finally {
-                if (isActive) {
-                    setApiLoading(false)
-                }
-            }
+        if (!query) return quizzes
+
+        const fuseOptions = {
+            keys: ['name'],
+            threshold: 0.5
         }
 
-        load()
+        const fuse = new Fuse(quizzes, fuseOptions)
+        const results = fuse.search(query)
+        return results.map((result) => result.item)
+    }, [quizzes, searchQuery])
 
-        return () => {
-            isActive = false
-            controller.abort()
-        }
-    }, [])
+    const displayedQuizzes = isExpanded ? filteredQuizzes : filteredQuizzes.slice(0, 10)
 
     return (
-        <ParallaxScrollView
-            headerBackgroundColor={{ light: palette.surface, dark: palette.surface }}
-            headerImage={
-                <Image
-                    source={require('@/assets/images/partial-react-logo.png')}
-                    style={styles.reactLogo}
+        <ThemedView style={[styles.screen, { backgroundColor: palette.background }]}>
+            <ScrollView
+                contentContainerStyle={styles.scrollContent}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
+            >
+                <View style={[styles.header, {backgroundColor: palette.accent4}]}>
+                    <ThemedText type="title">Fiszki</ThemedText>
+
+                    {!isLoggedIn && (
+                        <View style={styles.authButtons}>
+                            <Link href="../login" asChild>
+                                <Pressable
+                                    style={({ pressed }) => [
+                                        styles.authButton,
+                                        { backgroundColor: palette.tint },
+                                        pressed && styles.buttonPressed
+                                    ]}
+                                >
+                                    <ThemedText style={[styles.authButtonText, { color: palette.textButtons }]}>
+                                        Zaloguj się
+                                    </ThemedText>
+                                </Pressable>
+                            </Link>
+                            <Link href="../register" asChild>
+                                <Pressable
+                                    style={({ pressed }) => [
+                                        styles.authButtonOutline,
+                                        { borderColor: palette.tint },
+                                        pressed && styles.buttonPressed
+                                    ]}
+                                >
+                                    <ThemedText style={[styles.authButtonText, { color: palette.tint }]}>
+                                        Zarejestruj się
+                                    </ThemedText>
+                                </Pressable>
+                            </Link>
+                        </View>
+                    )}
+                </View>
+
+                <TextInput
+                    value={searchQuery}
+                    onChangeText={(text) => {
+                        setSearchQuery(text)
+                        setIsExpanded(false)
+                    }}
+                    placeholder="Wyszukaj zestaw fiszek..."
+                    placeholderTextColor={palette.textSecondary}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    style={[
+                        styles.searchInput,
+                        {
+                            backgroundColor: palette.surface,
+                            borderColor: palette.border,
+                            color: palette.text
+                        }
+                    ]}
                 />
-            }
-        >
-            <ThemedView style={styles.titleContainer}>
-                <ThemedText type="title">Flashcards</ThemedText>
-                <HelloWave />
-            </ThemedView>
-            <ThemedView style={styles.stepContainer}>
-                <ThemedText type="subtitle">Home</ThemedText>
-                <ThemedText>
-                    Your learning dashboard will live here.
-                </ThemedText>
-            </ThemedView>
-            <ThemedView style={styles.stepContainer}>
-                <ThemedText type="subtitle">Backend status</ThemedText>
-                {apiLoading ? (
-                    <ThemedText>Loading...</ThemedText>
-                ) : apiError ? (
-                    <ThemedText
-                        type="defaultSemiBold"
-                        style={{ color: palette.error }}
-                    >
-                        Error: {apiError}
+
+                {isError && (
+                    <ThemedText style={[styles.message, { color: palette.error }]}>
+                        Wystąpił błąd podczas pobierania zestawów
                     </ThemedText>
-                ) : (
-                    <ThemedText>{apiMessage}</ThemedText>
                 )}
-            </ThemedView>
-            <ThemedView style={styles.stepContainer}>
-                <ThemedText type="subtitle">Account</ThemedText>
-                <ThemedView style={styles.authButtons}>
-                    <Link href="../login" asChild>
-                        <ThemedText
-                            style={{
-                                ...styles.authButtonText,
-                                backgroundColor: palette.tint,
-                                color: palette.textButtons
-                            }}
-                        >
-                            Login
-                        </ThemedText>
-                    </Link>
-                    <Link href="../register" asChild>
-                        <ThemedText
-                            style={{
-                                ...styles.authButtonSecondaryText,
-                                borderColor: palette.tint,
-                                color: palette.tint
-                            }}
-                        >
-                            Register
-                        </ThemedText>
-                    </Link>
-                </ThemedView>
-            </ThemedView>
-        </ParallaxScrollView>
+
+                {isLoading && (
+                    <View style={styles.loading}>
+                        <ActivityIndicator size="large" color={palette.tint} />
+                    </View>
+                )}
+
+                {!isLoading && !isError && (
+                    <>
+                        {filteredQuizzes.length > 0 ? (
+                            <>
+                                <ThemedText type="subtitle" style={styles.sectionTitle}>
+                                    Znalezione zestawy fiszek
+                                </ThemedText>
+                                <View style={styles.quizList}>
+                                    {displayedQuizzes.map((quiz: FullQuiz) => (
+                                        <QuizPreview
+                                            key={`quiz-preview-${quiz.id}`}
+                                            quizId={quiz.id}
+                                            quizName={quiz.name}
+                                            quizDescription={quiz.description}
+                                            likes={quiz.likes}
+                                            dislikes={quiz.dislikes}
+                                        />
+                                    ))}
+                                </View>
+                                {filteredQuizzes.length > 10 && (
+                                    <Pressable
+                                        onPress={() => setIsExpanded(!isExpanded)}
+                                        style={({ pressed }) => [
+                                            styles.expandButton,
+                                            { backgroundColor: palette.surface, borderColor: palette.border },
+                                            pressed && styles.buttonPressed
+                                        ]}
+                                    >
+                                        <ThemedText style={{ color: palette.tint, fontWeight: '700' }}>
+                                            {isExpanded ? 'Zwiń' : 'Rozwiń'}
+                                        </ThemedText>
+                                    </Pressable>
+                                )}
+                            </>
+                        ) : (
+                            quizzes.length > 0 ? (
+                                <ThemedText style={[styles.message, { color: palette.textSecondary }]}>
+                                    Nie ma zestawów pasujących do wyszukiwania
+                                </ThemedText>
+                            ) : (
+                                <ThemedText style={[styles.message, { color: palette.textSecondary }]}>
+                                    Nie znaleziono żadnych zestawów w aplikacji
+                                </ThemedText>
+                            )
+                        )}
+                    </>
+                )}
+
+                { isLoggedIn && user &&
+                    <LikedQuizzesList userId={user.id} />
+                }
+            </ScrollView>
+        </ThemedView>
     )
 }
 
 const styles = StyleSheet.create({
-    titleContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8
+    screen: {
+        flex: 1
     },
-    stepContainer: {
-        gap: 8,
-        marginBottom: 8
+    scrollContent: {
+        padding: 20,
+        paddingBottom: 48,
+        gap: 16
+    },
+    header: {
+        gap: 12
     },
     authButtons: {
         flexDirection: 'row',
         gap: 12
     },
-    authButtonText: {
-        paddingVertical: 10,
-        paddingHorizontal: 16,
+    authButton: {
         borderRadius: 8,
-        overflow: 'hidden',
-        fontWeight: '700'
+        paddingVertical: 10,
+        paddingHorizontal: 16
     },
-    authButtonSecondaryText: {
+    authButtonOutline: {
         borderWidth: 1,
-        paddingVertical: 10,
-        paddingHorizontal: 16,
         borderRadius: 8,
-        overflow: 'hidden',
-        fontWeight: '700'
+        paddingVertical: 10,
+        paddingHorizontal: 16
     },
-    reactLogo: {
-        height: 178,
-        width: 290,
-        bottom: 0,
-        left: 0,
-        position: 'absolute'
+    authButtonText: {
+        fontWeight: '700',
+        fontSize: 14
+    },
+    buttonPressed: {
+        opacity: 0.85
+    },
+    searchInput: {
+        borderWidth: 1,
+        borderRadius: 20,
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        fontSize: 16
+    },
+    sectionTitle: {
+        marginTop: 4
+    },
+    quizList: {
+        gap: 12
+    },
+    expandButton: {
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingVertical: 10,
+        alignItems: 'center',
+        marginTop: 4
+    },
+    loading: {
+        paddingVertical: 32,
+        alignItems: 'center'
+    },
+    message: {
+        textAlign: 'center',
+        fontSize: 16,
+        marginTop: 16
     }
 })

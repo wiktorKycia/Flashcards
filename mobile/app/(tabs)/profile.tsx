@@ -2,6 +2,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
 
 import CreatedQuizzesList from '@/components/CreatedQuizzesList/CreatedQuizzesList'
 import SavedQuizzesList from '@/components/SavedQuizzesList/SavedQuizzesList'
+import LikedQuizzesList from '@/components/LikedQuizzesList/LikedQuizzesList'
 import { ThemedText } from '@/components/themed-text'
 import { ThemedView } from '@/components/themed-view'
 import { useAuth } from '@/context/AuthContext'
@@ -57,6 +58,7 @@ export default function ProfileScreen() {
                         </ThemedText>
                         <CreatedQuizzesList userId={userId} />
                         <SavedQuizzesList userId={userId} />
+                        <LikedQuizzesList userId={userId} />
                     </>
                 )}
             </ScrollView>
