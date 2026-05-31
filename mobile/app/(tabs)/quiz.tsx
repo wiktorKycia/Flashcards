@@ -78,7 +78,7 @@ export default function QuizScreen() {
                                 color: palette.tint
                             }}
                         >
-                            Register
+                            Dopasowania
                         </ThemedText>
                     </Link>
                 </ScrollView>
