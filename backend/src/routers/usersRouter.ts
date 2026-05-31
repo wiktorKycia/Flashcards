@@ -72,11 +72,8 @@ interface SignedUser {
     email: string
 }
 
-// Store uploads under the project to avoid root-level permissions.
-const UPLOAD_DIR = process.env.UPLOAD_DIR
-    ? path.resolve(process.env.UPLOAD_DIR)
-    : path.join(process.cwd(), "uploads", "avatars")
-const PUBLIC_UPLOAD_PATH = "uploads/avatars"
+// absolute filepath
+const UPLOAD_DIR = "/uploads/avatars";
 
 // Make sure the folder exists at startup
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
@@ -265,17 +262,11 @@ router.get("/:userId/avatar", async (req: Request, res: Response, next: NextFunc
             select: { path_to_img: true },
         });
 
-        const storedPath = user.path_to_img
-        if (!storedPath) {
+        if (!user?.path_to_img) {
             return res.status(404).json({ error: 'No avatar set for this user.' })
         }
 
-        const normalizedStoredPath = storedPath.startsWith("/")
-            ? storedPath.slice(1)
-            : storedPath
-        const absolutePath = path.isAbsolute(storedPath)
-            ? storedPath
-            : path.join(process.cwd(), normalizedStoredPath)
+        const absolutePath = user.path_to_img;
 
         if (!fs.existsSync(absolutePath)) {
             return res.status(404).json({ error: "Avatar file not found on disk."})
@@ -341,7 +332,7 @@ router.post("/avatar", auth, upload.single("avatar"), async (req: Request & {use
         return;
     }
 
-    const relativePath = `${PUBLIC_UPLOAD_PATH}/${req.file.filename}`
+    const relativePath = `/uploads/avatars/${req.file.filename}`
 
     try {
         await prisma.user.update({
