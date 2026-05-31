@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext.tsx'
 import { useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router'
 import { useQuizData } from '@/hooks/useQuizData.ts'
-import { type SubmitEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import { useUpdateQuiz } from '@/hooks/useUpdateQuiz.ts'
 import { useReplaceQuizFlashcards } from '@/hooks/useReplaceQuizFlashcards.ts'
@@ -130,9 +130,8 @@ export default function QuizEdit() {
         })
     }
 
-    async function handleButtonSave(event: SubmitEvent<HTMLFormElement>) {
-        event.preventDefault()
-        if (!draft) return
+    async function saveQuizData(): Promise<boolean> {
+        if (!draft) return false
 
         const name = draft.quiz.name.trim()
         const frontLanguage = draft.quiz.frontLanguage.trim()
@@ -140,7 +139,7 @@ export default function QuizEdit() {
         if (!name || !frontLanguage || !backLanguage) {
             setSaveError('Uzupelnij nazwe quizu oraz oba jezyki')
             setSaveMessage(null)
-            return
+            return false
         }
 
         setIsSaving(true)
@@ -170,10 +169,25 @@ export default function QuizEdit() {
             })
 
             setSaveMessage('Zapisano zmiany')
+            return true
         } catch {
             setSaveError('Nie udalo sie zapisac zmian')
+            return false
         } finally {
             setIsSaving(false)
+        }
+    }
+
+    async function handleButtonSave(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault()
+        await saveQuizData()
+    }
+
+    async function handlePracticeClick(event: React.MouseEvent<HTMLButtonElement>) {
+        event.preventDefault()
+        const success = await saveQuizData()
+        if (success) {
+            navigate(`/quiz/${id}`)
         }
     }
 
@@ -274,7 +288,9 @@ export default function QuizEdit() {
                         {saveMessage && <div className={styles.SuccessText}>{saveMessage}</div>}
 
                         <div className={styles.FormActions}>
-                            <button onClick={() => navigate(`/quiz/${id}`)}>Ćwicz</button>
+                            <button type="button" onClick={handlePracticeClick} disabled={isSaving}>
+                                Ćwicz
+                            </button>
                             <button type="submit" disabled={isSaving}>
                                 {isSaving ? 'Zapisywanie...' : 'Zapisz'}
                             </button>
