@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import resolvePromise from '@/helpers/resolvePromise'
 import type FullQuiz from '@/types/FullQuiz.ts'
-import { API_BASE_URL } from '@/lib/auth'
+import { API_BASE_URL } from '@/lib/api'
 
 interface QuizLikeCounts {
     likes: number

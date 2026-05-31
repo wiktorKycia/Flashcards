@@ -14,16 +14,16 @@ import {
 import { ThemedText } from '@/components/themed-text'
 import { ThemedView } from '@/components/themed-view'
 import { useAuth } from '@/context/AuthContext'
-import { loginUser } from '@/lib/auth'
+import { useLogin } from '@/hooks/useLogin'
 import { useColorScheme } from '@/hooks/use-color-scheme'
 import { Colors } from '@/constants/theme'
 
 export default function LoginScreen() {
 	const [login, setLogin] = useState('')
 	const [password, setPassword] = useState('')
-	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 	const { login: storeLogin } = useAuth()
+	const loginMutation = useLogin()
 	const colorScheme = useColorScheme() ?? 'light'
 	const palette = Colors[colorScheme]
 
@@ -33,17 +33,19 @@ export default function LoginScreen() {
 			return
 		}
 
-		try {
-			setIsLoading(true)
-			setError(null)
-			const data = await loginUser({ login, password })
-			await storeLogin(data.token, data.user)
-			router.replace('/(tabs)')
-		} catch (err) {
-			setError(err instanceof Error ? err.message : 'Nieznany błąd')
-		} finally {
-			setIsLoading(false)
-		}
+		setError(null)
+		loginMutation.mutate(
+			{ login, password },
+			{
+				onSuccess: async (data) => {
+					await storeLogin(data.token, data.user)
+					router.replace('/(tabs)')
+				},
+				onError: (err) => {
+					setError(err instanceof Error ? err.message : 'Nieznany błąd')
+				}
+			}
+		)
 	}
 
 	return (
@@ -117,11 +119,11 @@ export default function LoginScreen() {
 								styles.button,
 								{ backgroundColor: palette.tint },
 								pressed && styles.buttonPressed,
-								isLoading && styles.buttonDisabled
+								loginMutation.isPending && styles.buttonDisabled
 							]}
-							disabled={isLoading}
+							disabled={loginMutation.isPending}
 						>
-							{isLoading ? (
+							{loginMutation.isPending ? (
 								<ActivityIndicator color={palette.textButtons} />
 							) : (
 								<ThemedText

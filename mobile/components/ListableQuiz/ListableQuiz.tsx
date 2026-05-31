@@ -26,7 +26,7 @@ export default function ListableQuiz({ id, name, description }: ListableQuizProp
         <Pressable
             onPress={() =>
                 router.push({
-                    pathname: '/(tabs)/quiz',
+                    pathname: '/quiz',
                     params: { id: String(id) }
                 })
             }

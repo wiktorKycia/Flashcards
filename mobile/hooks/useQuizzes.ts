@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import type FullQuiz from '@/types/FullQuiz.ts'
-import { API_BASE_URL } from '@/lib/auth'
+import { API_BASE_URL } from '@/lib/api'
 
 const getData = async (): Promise<FullQuiz[]> => {
     const quizResponse = await fetch(`${API_BASE_URL}/api/quizzes`)

@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 
 import { useAuth } from '@/context/AuthContext'
-import { API_BASE_URL } from '@/lib/auth'
+import { API_BASE_URL } from '@/lib/api'
 
 interface ChangePasswordVariables {
     id: number

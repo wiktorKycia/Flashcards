@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 
-import { API_BASE_URL } from '@/lib/auth'
+import { API_BASE_URL } from '@/lib/api'
 
 interface QuizProgress {
     flashcardId: number
@@ -37,7 +37,10 @@ export interface QuizData {
     quizAuthor: QuizAuthor
 }
 
-const getData = async (
+export const getQuizDataQueryKey = (id: number, userId?: number) =>
+    ['quiz', id, userId] as const
+
+export const fetchQuizData = async (
     quizId: number,
     userId?: number,
     signal?: AbortSignal
@@ -66,6 +69,9 @@ const getData = async (
         `${API_BASE_URL}/api/users/${quiz.authorId}`,
         fetchOptions
     )
+    if (!quizAuthorResponse.ok) {
+        throw new Error(`HTTP ${quizAuthorResponse.status}`)
+    }
     const quizAuthor: QuizAuthor = await quizAuthorResponse.json()
 
     let flashcardsWithProgress = flashcards.map((flashcard) => ({
@@ -99,57 +105,11 @@ const getData = async (
 }
 
 export const useQuizData = (id: number, userId?: number) => {
-    const [data, setData] = useState<QuizData | null>(null)
-    const [isLoading, setIsLoading] = useState(true)
-    const [isError, setIsError] = useState(false)
-    const [error, setError] = useState<Error | null>(null)
+    const enabled = Number.isFinite(id) && id > 0
 
-    useEffect(() => {
-        if (!Number.isFinite(id) || id <= 0) {
-            setData(null)
-            setIsLoading(false)
-            setIsError(true)
-            setError(new Error('Invalid quiz id'))
-            return
-        }
-
-        const controller = new AbortController()
-        let isActive = true
-
-        const load = async () => {
-            try {
-                setIsLoading(true)
-                setIsError(false)
-                setError(null)
-
-                const result = await getData(id, userId, controller.signal)
-                if (isActive) {
-                    setData(result)
-                }
-            } catch (err) {
-                if (!isActive) {
-                    return
-                }
-                if (err instanceof Error && err.name === 'AbortError') {
-                    return
-                }
-                setIsError(true)
-                setError(err instanceof Error ? err : new Error('Unknown error'))
-                setData(null)
-            } finally {
-                if (isActive) {
-                    setIsLoading(false)
-                }
-            }
-        }
-
-        load()
-
-        return () => {
-            isActive = false
-            controller.abort()
-        }
-    }, [id, userId])
-
-    return { data, isLoading, isError, error }
+    return useQuery({
+        queryKey: getQuizDataQueryKey(id, userId),
+        queryFn: ({ signal }) => fetchQuizData(id, userId, signal),
+        enabled
+    })
 }
