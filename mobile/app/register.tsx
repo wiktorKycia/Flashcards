@@ -28,7 +28,7 @@ export default function RegisterScreen() {
 
     const handleSubmit = async () => {
         if (!name || !email || !password) {
-            setError('Provide name, email, and password.')
+            setError('Podaj nazwę użytkownika, e-mail oraz hasło.')
             return
         }
 
@@ -38,7 +38,7 @@ export default function RegisterScreen() {
             await registerUser({ name, email, password })
             router.replace('../login')
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Unknown error')
+            setError(err instanceof Error ? err.message : 'Nieznany błąd')
         } finally {
             setIsLoading(false)
         }
@@ -69,7 +69,7 @@ export default function RegisterScreen() {
                         ]}
                     >
                         <ThemedText type="title" style={styles.title}>
-                            Register
+                            Zarejestruj się
                         </ThemedText>
                         <TextInput
                             value={name}
@@ -91,7 +91,7 @@ export default function RegisterScreen() {
                         <TextInput
                             value={email}
                             onChangeText={setEmail}
-                            placeholder="email"
+                            placeholder="e-mail"
                             placeholderTextColor={palette.textSecondary}
                             autoCapitalize="none"
                             autoCorrect={false}
@@ -109,7 +109,7 @@ export default function RegisterScreen() {
                         <TextInput
                             value={password}
                             onChangeText={setPassword}
-                            placeholder="password"
+                            placeholder="hasło"
                             placeholderTextColor={palette.textSecondary}
                             secureTextEntry
                             textContentType="newPassword"
@@ -143,16 +143,16 @@ export default function RegisterScreen() {
                                 <ThemedText
                                     style={[styles.buttonText, { color: palette.textButtons }]}
                                 >
-                                    Create account
+                                    Utwórz konto
                                 </ThemedText>
                             )}
                         </Pressable>
                         <ThemedText
                             style={[styles.linkText, { color: palette.textSecondary }]}
                         >
-                            Already have an account?{' '}
+                            Posiadasz już konto?{' '}
                             <Link href="../login" style={[styles.link, { color: palette.tint }]}>
-                                Login
+                                Zaloguj się
                             </Link>
                         </ThemedText>
                     </View>

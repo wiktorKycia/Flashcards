@@ -28,7 +28,7 @@ export default function CreatedQuizzesList({ userId }: CreatedQuizzesListProps) 
     return (
         <View style={styles.section}>
             <ThemedText type="subtitle" style={styles.heading}>
-                Utworzone quizy
+                Utworzone zestawy
             </ThemedText>
             {isError && <ThemedText style={{ color: palette.error }}>Wystąpił błąd</ThemedText>}
             {isLoading && (
@@ -48,7 +48,7 @@ export default function CreatedQuizzesList({ userId }: CreatedQuizzesListProps) 
                     ))}
                     {data.length === 0 && (
                         <ThemedText style={{ color: palette.textSecondary }}>
-                            Brak utworzonych quizów
+                            Nie masz utworzonych zestawów fiszek
                         </ThemedText>
                     )}
                 </View>

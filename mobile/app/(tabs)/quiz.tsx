@@ -1,5 +1,5 @@
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
-import { useLocalSearchParams } from 'expo-router'
+import { Link, useLocalSearchParams } from 'expo-router'
 
 import ListedFlashcards from '@/components/ListedFlashcards/ListedFlashcards'
 import { ThemedText } from '@/components/themed-text'
@@ -59,6 +59,28 @@ export default function QuizScreen() {
                             back: flashcard.back
                         }))}
                     />
+                    <Link href="../knowledgeTest?id=1" asChild>
+                        <ThemedText
+                            style={{
+                                ...styles.authButtonText,
+                                backgroundColor: palette.tint,
+                                color: palette.textButtons
+                            }}
+                        >
+                            Ucz się
+                        </ThemedText>
+                    </Link>
+                    <Link href="../matchChallenge?id=1" asChild>
+                        <ThemedText
+                            style={{
+                                ...styles.authButtonSecondaryText,
+                                borderColor: palette.tint,
+                                color: palette.tint
+                            }}
+                        >
+                            Register
+                        </ThemedText>
+                    </Link>
                 </ScrollView>
             )}
         </ThemedView>
@@ -86,5 +108,20 @@ const styles = StyleSheet.create({
     },
     status: {
         padding: 24
-    }
+    },
+    authButtonText: {
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+        overflow: 'hidden',
+        fontWeight: '700'
+    },
+    authButtonSecondaryText: {
+        borderWidth: 1,
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+        overflow: 'hidden',
+        fontWeight: '700'
+    },
 })

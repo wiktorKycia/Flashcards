@@ -47,6 +47,8 @@ const RootStack = () => {
                 />
                 <Stack.Screen name="login" options={{ title: 'Login' }} />
                 <Stack.Screen name="register" options={{ title: 'Register' }} />
+                <Stack.Screen name="knowledgeTest" options={{ title: 'Test wiedzy' }} />
+                <Stack.Screen name="matchChallenge" options={{ title: 'Wyzwanie dopasowywania' }} />
             </Stack>
             <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
         </ThemeProvider>

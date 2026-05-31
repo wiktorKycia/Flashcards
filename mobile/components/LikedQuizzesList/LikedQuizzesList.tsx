@@ -2,23 +2,33 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
 import ListableQuiz from '@/components/ListableQuiz/ListableQuiz'
 import { ThemedText } from '@/components/themed-text'
-import { useSavedQuizzes } from '@/hooks/useSavedQuizzes'
+import { useAuth } from '@/context/AuthContext'
+import { useUserLikedQuizzes } from '@/hooks/useQuizLikes'
 import { useColorScheme } from '@/hooks/use-color-scheme'
 import { Colors } from '@/constants/theme'
 
-interface SavedQuizzesListProps {
+interface LikedQuizzesListProps {
     userId: number
 }
 
-export default function SavedQuizzesList({ userId }: SavedQuizzesListProps) {
+export default function LikedQuizzesList({ userId }: LikedQuizzesListProps) {
+    const { user } = useAuth()
     const colorScheme = useColorScheme() ?? 'light'
     const palette = Colors[colorScheme]
-    const { data, isLoading, isError } = useSavedQuizzes(userId)
+    const { data, isLoading, isError } = useUserLikedQuizzes(userId)
+
+    if (!user) {
+        return (
+            <View style={styles.loading}>
+                <ActivityIndicator size="small" color={palette.tint} />
+            </View>
+        )
+    }
 
     return (
         <View style={styles.section}>
             <ThemedText type="subtitle" style={styles.heading}>
-                Zapisane zestawy
+                Polubione zestawy
             </ThemedText>
             {isError && <ThemedText style={{ color: palette.error }}>Wystąpił błąd</ThemedText>}
             {isLoading && (
@@ -38,7 +48,7 @@ export default function SavedQuizzesList({ userId }: SavedQuizzesListProps) {
                     ))}
                     {data.length === 0 && (
                         <ThemedText style={{ color: palette.textSecondary }}>
-                            Nie masz zapisanych zestawów fiszek
+                            Nie masz jeszcze polubionych zestawów fiszek
                         </ThemedText>
                     )}
                 </View>
