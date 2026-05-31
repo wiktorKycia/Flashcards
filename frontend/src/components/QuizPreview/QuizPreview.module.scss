@@ -7,8 +7,8 @@
     grid-template-rows: auto 1fr;
     gap: 8px 16px;
     grid-template-areas:
-    "title button"
-    "description votes";
+        'title button'
+        'description votes';
     padding: 1rem;
     background-color: var(--color-surface);
     width: 100%;
@@ -46,7 +46,8 @@
     font-size: 1.5rem;
 }
 
-.likesWrapper, .dislikesWrapper {
+.likesWrapper,
+.dislikesWrapper {
     display: flex;
     align-items: center;
     margin: 0.5rem;
@@ -67,7 +68,8 @@
     margin: 0 0.5rem;
 }
 
-.activeLike, .activeDislike {
+.activeLike,
+.activeDislike {
     fill: white;
     stroke: currentColor;
     stroke-width: 3px;

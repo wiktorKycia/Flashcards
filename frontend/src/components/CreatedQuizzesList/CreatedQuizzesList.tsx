@@ -21,15 +21,20 @@ export default function CreatedQuizzesList(props: CreatedQuizzesListProps) {
     return (
         <div className={styles.CreatedQuizzesList}>
             <h2>Utworzone zestawy</h2>
-            {isError && (
-                <div className={styles.errorMessage}>Wystąpił błąd</div>
-            )}
+            {isError && <div className={styles.errorMessage}>Wystąpił błąd</div>}
             {isLoading && <LoadingSpinner />}
             {!isError && !isLoading && data && (
                 <Container cssClassName={'quiz-container'}>
-                    {data.length > 0 ? data.map((quiz) => (
-                        <ListableQuiz key={`created-quiz-${quiz.id}`} id={quiz.id} name={quiz.name} description={quiz.description}/>
-                    )) : (
+                    {data.length > 0 ? (
+                        data.map((quiz) => (
+                            <ListableQuiz
+                                key={`created-quiz-${quiz.id}`}
+                                id={quiz.id}
+                                name={quiz.name}
+                                description={quiz.description}
+                            />
+                        ))
+                    ) : (
                         <p className={styles.infoMessage}>Nie utworzyłeś żadnego zestawu</p>
                     )}
                 </Container>

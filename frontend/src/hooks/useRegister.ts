@@ -25,7 +25,7 @@ const register = async ({ password, name, email }: RegisterVariables) => {
             } else if (errorBody?.error) {
                 message = errorBody.error
             }
-        } catch (_err) {
+        } catch {
             // ignore JSON parse errors and fall back to default message
         }
 

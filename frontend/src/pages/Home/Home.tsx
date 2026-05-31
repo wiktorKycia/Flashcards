@@ -26,17 +26,17 @@ export default function Home() {
         const params = new URLSearchParams(urlQuesryString)
         const searchQuery = params.get('search')?.trim() || ''
 
-        if(!searchQuery) return quizzes
+        if (!searchQuery) return quizzes
 
         const fuseOptions = {
             keys: ['name'],
-            threshold: 0.5,
+            threshold: 0.5
         }
 
         const fuse = new Fuse(quizzes, fuseOptions)
         const searchResults = fuse.search(searchQuery)
 
-        return searchResults.map(result => result.item)
+        return searchResults.map((result) => result.item)
     }, [quizzes, urlQuesryString])
 
     const displayedItems = isExpanded ? sortedItems : sortedItems.slice(0, 10)
@@ -45,8 +45,10 @@ export default function Home() {
         <div className={styles.mainWrapper}>
             {isError && <div className={styles.errorMessage}>Wystąpił błąd</div>}
             {isLoading && <LoadingSpinner />}
-            {!isLoading && !isError && quizzes && (
-                sortedItems.length > 0 ? (
+            {!isLoading &&
+                !isError &&
+                quizzes &&
+                (sortedItems.length > 0 ? (
                     <div className={styles.quizzesListWrapper}>
                         <h2 className={styles.quizzesBoxTitle}>Znalezione zestawy fiszek</h2>
                         <div className={styles.quizPreviewsBox}>
@@ -63,25 +65,19 @@ export default function Home() {
                         </div>
 
                         {sortedItems.length > 10 && (
-                            <button
-                                onClick={() => setIsExpanded(!isExpanded)}
-                                className={styles.expandButton}
-                            >
-                                {isExpanded ? "Zwiń" : "Rozwiń"}
+                            <button onClick={() => setIsExpanded(!isExpanded)} className={styles.expandButton}>
+                                {isExpanded ? 'Zwiń' : 'Rozwiń'}
                             </button>
                         )}
                     </div>
+                ) : quizzes.length > 0 ? (
+                    <p className={styles.infoMessage}>Nie ma zestawów pasujących do wyszukiwania</p>
                 ) : (
-                    quizzes.length > 0 ? (
-                        <p className={styles.infoMessage}>Nie ma zestawów pasujących do wyszukiwania</p>
-                    ) : (
-                        <p className={styles.infoMessage}>Nie znaleziono żadnych zestawów w aplikacji</p>
-                    )
-                )
-            )}
+                    <p className={styles.infoMessage}>Nie znaleziono żadnych zestawów w aplikacji</p>
+                ))}
             {isLoggedIn && userId && (
                 <aside>
-                    <LikedQuizzesList userId={userId} isSmallVersion={false}/>
+                    <LikedQuizzesList userId={userId} isSmallVersion={false} />
                 </aside>
             )}
         </div>

@@ -24,10 +24,7 @@ export default function Header() {
     // closing effect needed on phones
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-            if (
-                profileContainerRef.current &&
-                !profileContainerRef.current.contains(event.target as Node)
-            ) {
+            if (profileContainerRef.current && !profileContainerRef.current.contains(event.target as Node)) {
                 setProfileTooltipOpen(false)
             }
         }
@@ -75,8 +72,8 @@ export default function Header() {
                     onMouseEnter={openProfileTooltip}
                     onMouseLeave={scheduleCloseProfileTooltip}
                     onTouchStart={(e) => {
-                        e.stopPropagation();
-                        setProfileTooltipOpen(prev => !prev);
+                        e.stopPropagation()
+                        setProfileTooltipOpen((prev) => !prev)
                     }}
                 >
                     <ProfilePicture userId={user?.id} />

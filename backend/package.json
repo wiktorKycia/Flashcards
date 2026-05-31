@@ -11,7 +11,9 @@
         "inspect": "node --inspect dist/index.js",
         "format": "prettier --write .",
         "lint": "eslint .",
-        "lint:fix": "eslint . --fix"
+        "lint:fix": "eslint . --fix",
+        "test": "vitest run",
+        "test:watch": "vitest"
     },
     "private": true,
     "dependencies": {
@@ -42,7 +44,13 @@
         "globals": "^16.4.0",
         "nodemon": "^3.1.10",
         "prettier": "^3.6.2",
+        "supertest": "^7.2.2",
         "tsx": "^4.21.0",
-        "typescript": "^6.0.2"
+        "typescript": "^6.0.2",
+        "vitest": "^4.0.18",
+        "@types/supertest": "^6.0.3"
+    },
+    "optionalDependencies": {
+        "@rolldown/binding-linux-x64-gnu": "1.0.2"
     }
 }

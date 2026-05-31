@@ -6,7 +6,7 @@ import Container from '@/components/Container'
 import ListableQuiz from '@/components/ListableQuiz'
 
 interface LikedQuizzesListProps {
-    userId: number,
+    userId: number
     isSmallVersion: boolean
 }
 
@@ -21,9 +21,11 @@ export default function LikedQuizzesList(props: LikedQuizzesListProps) {
             {isLoading && <LoadingSpinner />}
             {!isLoading && !isError && quizzes && (
                 <Container cssClassName={`quiz-container ${styles.PreviewBox}`}>
-                    {quizzes.length > 0 ? quizzes.map((quiz: FullQuiz) => (
-                        <ListableQuiz id={quiz.id} name={quiz.name} description={quiz.description}/>
-                    )) : (
+                    {quizzes.length > 0 ? (
+                        quizzes.map((quiz: FullQuiz) => (
+                            <ListableQuiz id={quiz.id} name={quiz.name} description={quiz.description} />
+                        ))
+                    ) : (
                         <p className={styles.infoMessage}>Nie masz jeszcze żadnych polubionych zestawów</p>
                     )}
                 </Container>

@@ -13,7 +13,7 @@ export function useUploadAvatar() {
             const res = await fetch('/api/users/avatar', {
                 method: 'POST',
                 headers: {
-                    'authorization': `Bearer ${token}`
+                    authorization: `Bearer ${token}`
                 },
                 body: formData
             })

@@ -29,6 +29,21 @@ services:
     command: echo "migrations started" && npm ci && npm run db:deploy
     restart: no
 
+  test:
+    image: node:24-bookworm-slim
+    working_dir: /usr/src/app
+    volumes:
+      - ./backend:/usr/src/app
+    env_file:
+      - ./backend/.env.app
+    depends_on:
+      database:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    command: sh -c "npm ci && npx prisma generate && npm test"
+    restart: "no"
+
   app:
     build:
       context: ./backend

@@ -32,13 +32,9 @@ export default function UserProfile() {
                     <h1>Profil użytkownika {data.name}</h1>
                     <CreatedQuizzesList userId={userId} />
 
-                    {isVisitingSelf && (
-                        <SavedQuizzesList userId={userId} />
-                    )}
+                    {isVisitingSelf && <SavedQuizzesList userId={userId} />}
 
-                    {isVisitingSelf && (
-                        <LikedQuizzesList userId={userId} isSmallVersion={true}/>
-                    )}
+                    {isVisitingSelf && <LikedQuizzesList userId={userId} isSmallVersion={true} />}
                 </>
             )}
         </main>

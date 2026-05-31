@@ -16,19 +16,16 @@
     }
 }
 
-.FlashcardPositioner
-{
+.FlashcardPositioner {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 
-.NextTurnButton
-{
+.NextTurnButton {
     margin: 150px 50px;
 }
-
 
 .OptionsContainer {
     display: flex;
