@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { API_BASE_URL } from '@/lib/auth'
 
@@ -151,5 +151,48 @@ export const useQuizData = (id: number, userId?: number) => {
         }
     }, [id, userId])
 
-    return { data, isLoading, isError, error }
+    const refetch = useCallback(() => {
+        if (!Number.isFinite(id) || id <= 0) {
+            return
+        }
+
+        const controller = new AbortController()
+        let isActive = true
+
+        const load = async () => {
+            try {
+                setIsLoading(true)
+                setIsError(false)
+                setError(null)
+
+                const result = await getData(id, userId, controller.signal)
+                if (isActive) {
+                    setData(result)
+                }
+            } catch (err) {
+                if (!isActive) {
+                    return
+                }
+                if (err instanceof Error && err.name === 'AbortError') {
+                    return
+                }
+                setIsError(true)
+                setError(err instanceof Error ? err : new Error('Unknown error'))
+                setData(null)
+            } finally {
+                if (isActive) {
+                    setIsLoading(false)
+                }
+            }
+        }
+
+        load()
+
+        return () => {
+            isActive = false
+            controller.abort()
+        }
+    }, [id, userId])
+
+    return { data, isLoading, isError, error, refetch }
 }
