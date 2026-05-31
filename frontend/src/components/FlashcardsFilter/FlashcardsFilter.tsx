@@ -11,9 +11,7 @@ export default function FlashcardsFilter(props: FlashcardsFilterProps) {
         <div className={styles.FlashcardsFilter}>
             <button
                 onClick={() => props.toggleFn()}
-                className={
-                    props.isSelected ? styles.selected : styles.notSelected
-                }
+                className={props.isSelected ? styles.selected : styles.notSelected}
             >
                 {props.buttonText}
             </button>

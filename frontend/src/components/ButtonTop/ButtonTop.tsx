@@ -9,11 +9,7 @@ export default function ButtonTop() {
     }
 
     return (
-        <button
-            className={styles.ButtonTop}
-            onClick={scrollToTop}
-            aria-label="Scroll to top"
-        >
+        <button className={styles.ButtonTop} onClick={scrollToTop} aria-label="Scroll to top">
             ↑
         </button>
     )

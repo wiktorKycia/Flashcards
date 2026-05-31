@@ -4,14 +4,14 @@ import ButtonAdd from '../ButtonAdd/ButtonAdd.tsx'
 import ProfilePicture from '../ProfilePicture/ProfilePicture.tsx'
 import useTheme from '@/hooks/useTheme.ts'
 import styles from './Header.module.scss'
-import ThemeToggler from "@/components/ThemeToggler";
+import ThemeToggler from '@/components/ThemeToggler'
 import { useCheckIfLoggedIn } from '@/hooks/useCheckIfLoggedIn.ts'
 import { useAuth } from '@/context/AuthContext.tsx'
 import { Link } from 'react-router'
 import { useEffect, useRef, useState } from 'react'
 
 export default function Header() {
-    const {theme, toggleTheme} = useTheme()
+    const { theme, toggleTheme } = useTheme()
 
     const isLoggedIn = useCheckIfLoggedIn()
     const { user, logout } = useAuth()
@@ -67,9 +67,8 @@ export default function Header() {
             </div>
             <SearchBar />
             <div className={styles.HeaderRight}>
-                <ThemeToggler toggleFn={toggleTheme} isLight={theme === "light"}/>
-                {isLoggedIn && (<ButtonAdd />)}
-
+                <ThemeToggler toggleFn={toggleTheme} isLight={theme === 'light'} />
+                {isLoggedIn && <ButtonAdd />}
                 <div
                     ref={profileContainerRef}
                     className={styles.PictureContainer}
@@ -80,7 +79,7 @@ export default function Header() {
                         setProfileTooltipOpen(prev => !prev);
                     }}
                 >
-                    <ProfilePicture />
+                    <ProfilePicture userId={user?.id} />
                     {(isLoggedIn || !isLoggedIn) && (
                         <div
                             className={`tooltip ${profileTooltipOpen ? 'tooltip-open' : ''}`}
@@ -94,21 +93,25 @@ export default function Header() {
                                         Zalogowany jako <span className={styles.Username}>{user.name}</span>
                                     </div>
                                     <div className={'tooltip-links-container'}>
-                                        <Link className={'tooltip-link'} to={`/user/${user.id}`}>Profil</Link>
-                                        <Link className={'tooltip-link'} to={'/user/'}>Ustawienia</Link>
-                                        <button
-                                            type="button"
-                                            className={'tooltip-link'}
-                                            onClick={handleLogoutClick}
-                                        >
+                                        <Link className={'tooltip-link'} to={`/user/${user.id}`}>
+                                            Profil
+                                        </Link>
+                                        <Link className={'tooltip-link'} to={'/user/'}>
+                                            Ustawienia
+                                        </Link>
+                                        <button type="button" className={'tooltip-link'} onClick={handleLogoutClick}>
                                             Wyloguj
                                         </button>
                                     </div>
                                 </>
                             ) : (
                                 <div className={'tooltip-links-container'}>
-                                    <Link className={'tooltip-link'} to={'/login/'}>Zaloguj</Link>
-                                    <Link className={'tooltip-link'} to={'/register/'}>Zarejestruj</Link>
+                                    <Link className={'tooltip-link'} to={'/login/'}>
+                                        Zaloguj
+                                    </Link>
+                                    <Link className={'tooltip-link'} to={'/register/'}>
+                                        Zarejestruj
+                                    </Link>
                                 </div>
                             )}
                         </div>

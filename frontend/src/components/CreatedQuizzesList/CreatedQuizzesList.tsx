@@ -10,7 +10,6 @@ interface CreatedQuizzesListProps {
 }
 
 export default function CreatedQuizzesList(props: CreatedQuizzesListProps) {
-
     const auth = useAuth()
 
     const { data, isLoading, isError } = useCreatedQuizzes(props.userId)
@@ -25,9 +24,7 @@ export default function CreatedQuizzesList(props: CreatedQuizzesListProps) {
             {isError && (
                 <div className={styles.errorMessage}>Wystąpił błąd</div>
             )}
-            {isLoading && (
-                <LoadingSpinner/>
-            )}
+            {isLoading && <LoadingSpinner />}
             {!isError && !isLoading && data && (
                 <Container cssClassName={'quiz-container'}>
                     {data.length > 0 ? data.map((quiz) => (

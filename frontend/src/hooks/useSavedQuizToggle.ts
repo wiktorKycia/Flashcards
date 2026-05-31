@@ -9,10 +9,18 @@ const checkIsSaved = async (userId: number, quizId: number): Promise<boolean> =>
     return data.isSaved
 }
 
-const toggleSaved = async ({ userId, quizId, isCurrentlySaved }: { userId: number, quizId: number, isCurrentlySaved: boolean }) => {
+const toggleSaved = async ({
+    userId,
+    quizId,
+    isCurrentlySaved
+}: {
+    userId: number
+    quizId: number
+    isCurrentlySaved: boolean
+}) => {
     if (isCurrentlySaved) {
         const response = await fetch(`/api/saved-quizzes?userId=${userId}&quizId=${quizId}`, {
-            method: 'DELETE',
+            method: 'DELETE'
         })
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
@@ -35,7 +43,11 @@ export const useSavedQuizToggle = (userId: number | undefined, quizId: number | 
     const queryClient = useQueryClient()
     const queryKey = ['savedQuiz', userId, quizId]
 
-    const { data: isSaved = false, isLoading, isError } = useQuery({
+    const {
+        data: isSaved = false,
+        isLoading,
+        isError
+    } = useQuery({
         queryKey,
         queryFn: () => checkIsSaved(userId!, quizId!),
         enabled: userId !== undefined && quizId !== undefined
@@ -46,10 +58,10 @@ export const useSavedQuizToggle = (userId: number | undefined, quizId: number | 
         onMutate: async () => {
             await queryClient.cancelQueries({ queryKey })
             const previousSavedState = queryClient.getQueryData<boolean>(queryKey)
-            
+
             // Optimistically update to the new value
             queryClient.setQueryData<boolean>(queryKey, (old) => !old)
-            
+
             return { previousSavedState }
         },
         onError: (_err, _newSaved, context) => {
@@ -76,4 +88,3 @@ export const useSavedQuizToggle = (userId: number | undefined, quizId: number | 
         isMutating: mutation.isPending
     }
 }
-

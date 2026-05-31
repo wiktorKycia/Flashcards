@@ -23,7 +23,6 @@ model User {
   createdQuizzes   Quiz[]
   UserQuizProgress UserQuizProgress[]
   SavedQuiz        SavedQuiz[]
-  Folder           Folder[]
   UserQuizLike     UserQuizLike[]
 }
 
@@ -79,23 +78,12 @@ model UserQuizLike {
   @@unique([userId, quizId])
 }
 
-model Folder {
-  id     Int    @id @default(autoincrement())
-  name   String
-  userId Int
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  SavedQuiz SavedQuiz[]
-}
-
 model SavedQuiz {
-  id       Int     @id @default(autoincrement())
-  userId   Int
-  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  quizId   Int
-  quiz     Quiz    @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  folderId Int? // quiz może być w folderze, ale nie musi, może być też po prostu u użytkownika
-  folder   Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  id     Int  @id @default(autoincrement())
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizId Int
+  quiz   Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, quizId, folderId])
+  @@unique([userId, quizId])
 }

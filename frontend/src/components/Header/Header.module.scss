@@ -8,7 +8,8 @@
     box-shadow: var(--shadow-big);
     z-index: 2;
 
-    &Left, &Right {
+    &Left,
+    &Right {
         @media (min-aspect-ratio: 1/1) {
             padding-inline: 1.4rem;
             flex: 1;
@@ -32,16 +33,12 @@
     }
 }
 
-
-.PictureContainer
-{
+.PictureContainer {
     position: relative;
     display: flex;
     align-items: center;
     overflow: visible;
 }
-
-
 
 .Username {
     color: var(--color-accent);

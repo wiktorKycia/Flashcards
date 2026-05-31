@@ -11,6 +11,7 @@ interface AuthContextType {
     token: string | null
     user: LoggedInUser | null
     login: (token: string, user: LoggedInUser) => Promise<void>
+    updateStoredUser: (user: LoggedInUser) => Promise<void>
     logout: () => Promise<void>
     isReady: boolean
 }
@@ -76,6 +77,14 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         })
     }
 
+    const updateStoredUser = async (newUser: LoggedInUser) => {
+        setUser(newUser)
+        await AsyncStorage.setMany({
+            [STORAGE_KEYS.userId]: String(newUser.id),
+            [STORAGE_KEYS.userName]: newUser.name
+        })
+    }
+
     const logout = async () => {
         setToken(null)
         setUser(null)
@@ -87,7 +96,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const value = useMemo(
-        () => ({ token, user, login, logout, isReady }),
+        () => ({ token, user, login, updateStoredUser, logout, isReady }),
         [token, user, isReady]
     )
 

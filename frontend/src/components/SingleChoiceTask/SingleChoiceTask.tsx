@@ -36,7 +36,7 @@ export default function SingleChoiceTask({ task, taskId, selectedValue, onChange
         return ''
     }
 
-    return(
+    return (
         <div className={styles.taskWrapper}>
             <p className={styles.sentence}>
                 {task.sentence.split(/_+/)[0]}_____{task.sentence.split(/_+/)[1]}
@@ -51,9 +51,7 @@ export default function SingleChoiceTask({ task, taskId, selectedValue, onChange
                         value={task.phrase1}
                         disabled={isFinished}
                         checked={selectedValue === task.phrase1}
-                        onChange={(e) =>
-                            onChange(taskId, e.target.value)
-                        }
+                        onChange={(e) => onChange(taskId, e.target.value)}
                     />
                     {task.phrase1}
                 </label>
@@ -66,9 +64,7 @@ export default function SingleChoiceTask({ task, taskId, selectedValue, onChange
                         value={task.phrase2}
                         disabled={isFinished}
                         checked={selectedValue === task.phrase2}
-                        onChange={(e) =>
-                            onChange(taskId, e.target.value)
-                        }
+                        onChange={(e) => onChange(taskId, e.target.value)}
                     />
                     {task.phrase2}
                 </label>
@@ -81,17 +77,13 @@ export default function SingleChoiceTask({ task, taskId, selectedValue, onChange
                         value={task.phrase3}
                         disabled={isFinished}
                         checked={selectedValue === task.phrase3}
-                        onChange={(e) =>
-                            onChange(taskId, e.target.value)
-                        }
+                        onChange={(e) => onChange(taskId, e.target.value)}
                     />
                     {task.phrase3}
                 </label>
             </div>
 
-            {isFinished && !isCorrect && (
-                <p>Poprawna odpowiedź: {task.correctAnswer}</p>
-            )}
+            {isFinished && !isCorrect && <p>Poprawna odpowiedź: {task.correctAnswer}</p>}
         </div>
     )
 }

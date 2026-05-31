@@ -1,1 +1,1 @@
-export {default} from './FieldGroup.tsx'
+export { default } from './FieldGroup.tsx'

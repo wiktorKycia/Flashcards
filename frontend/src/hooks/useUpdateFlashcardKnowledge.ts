@@ -7,7 +7,12 @@ interface UpdateFlashcardKnowledgeVars {
     isKnown: boolean
 }
 
-const updateFlashcardKnowledge = async ({ quizId, userId, flashcardId, isKnown }: UpdateFlashcardKnowledgeVars): Promise<FlashcardKnowledge> => {
+const updateFlashcardKnowledge = async ({
+    quizId,
+    userId,
+    flashcardId,
+    isKnown
+}: UpdateFlashcardKnowledgeVars): Promise<FlashcardKnowledge> => {
     const response = await fetch(`/api/quizzes-progress/user/${userId}/quiz/${quizId}/flashcard/${flashcardId}`, {
         method: 'PATCH',
         body: JSON.stringify({ isKnown: isKnown }),
@@ -22,7 +27,6 @@ const updateFlashcardKnowledge = async ({ quizId, userId, flashcardId, isKnown }
 
     return response.json()
 }
-
 
 export const useUpdateFlashcardKnowledge = () => {
     const queryClient = useQueryClient()

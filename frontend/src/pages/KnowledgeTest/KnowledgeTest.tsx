@@ -14,7 +14,7 @@ export default function KnowledgeTest() {
     const quizId = Number(params.id)
 
     if (Number.isNaN(quizId)) {
-        throw new Error("Invalid quiz id")
+        throw new Error('Invalid quiz id')
     }
 
     const handleStart = (s: KnowledgeTestSettings) => {
@@ -29,42 +29,35 @@ export default function KnowledgeTest() {
         })
     }
 
-    const hasAnyData = !!(data?.fillGap?.data?.length ||
+    const hasAnyData = !!(
+        data?.fillGap?.data?.length ||
         data?.firstLetterGap?.data?.length ||
-        data?.singleChoice?.data?.length)
+        data?.singleChoice?.data?.length
+    )
 
     return (
         <div className={styles.mainWrapper}>
             <div className={styles.buttonWrapper}>
-                <Link
-                    to={`/quiz/${quizId}`}
-                    className="redirectButton"
-                >Wróć do zestawu fiszek</Link>
+                <Link to={`/quiz/${quizId}`} className="redirectButton">
+                    Wróć do zestawu fiszek
+                </Link>
             </div>
             {!settings ? (
                 <KnowledgeTestSetup onSubmitSettings={handleStart} />
             ) : (
                 <div>
-                    {isPending && (
-                        <LoadingSpinner />
-                    )}
+                    {isPending && <LoadingSpinner />}
 
-                    {isError && (
-                        <div className={styles.vitalInfo}>{error.message}</div>
-                    )}
+                    {isError && <div className={styles.vitalInfo}>{error.message}</div>}
 
-                    {data?.errorMessage && (
-                        <div className={styles.vitalInfo}>{data.errorMessage}</div>
-                    )}
+                    {data?.errorMessage && <div className={styles.vitalInfo}>{data.errorMessage}</div>}
 
-                    {data?.warning && (
-                        <div className={styles.vitalInfo}>Uwaga: {data.warning}</div>
-                    )}
+                    {data?.warning && <div className={styles.vitalInfo}>Uwaga: {data.warning}</div>}
 
                     {hasAnyData && !isError ? (
                         <KnowledgeTestView data={data} />
                     ) : (
-                        !isPending && !isError && (<div className={styles.vitalInfo}>Brak zadań</div>)
+                        !isPending && !isError && <div className={styles.vitalInfo}>Brak zadań</div>
                     )}
                 </div>
             )}

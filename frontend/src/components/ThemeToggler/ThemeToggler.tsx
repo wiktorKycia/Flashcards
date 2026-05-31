@@ -1,7 +1,6 @@
 import styles from './ThemeToggler.module.scss'
 
-interface ThemeTogglerProps
-{
+interface ThemeTogglerProps {
     toggleFn: () => void
     isLight: boolean
 }
@@ -16,4 +15,3 @@ export default function ThemeToggler(props: ThemeTogglerProps) {
         </button>
     )
 }
-

@@ -11,6 +11,6 @@ export const useSavedQuizzes = (userId: number) => {
     return useQuery({
         queryKey: ['savedQuizzes', userId],
         queryFn: () => getSavedQuizzes(userId),
-        enabled: !!userId,
+        enabled: !!userId
     })
 }

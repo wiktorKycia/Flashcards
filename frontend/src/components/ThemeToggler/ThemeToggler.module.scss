@@ -20,8 +20,7 @@
     transition: all 0.3s ease;
     background-color: var(--color-accent3);
 
-    &:hover
-    {
+    &:hover {
         background-color: var(--color-accent2);
     }
 }
@@ -53,4 +52,3 @@
 .dotRight {
     transform: translateX(2.4rem); /* 50 - 24 = 26 */
 }
-

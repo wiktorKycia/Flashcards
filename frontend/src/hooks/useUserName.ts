@@ -17,6 +17,6 @@ export const useUserName = (userId: number) => {
     return useQuery({
         queryKey: ['userName', userId],
         queryFn: () => getUserName(userId),
-        enabled: !!userId,
+        enabled: !!userId
     })
 }

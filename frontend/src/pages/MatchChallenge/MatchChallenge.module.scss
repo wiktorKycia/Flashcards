@@ -32,10 +32,10 @@
     width: 100%;
 
     @media (min-aspect-ratio: 1/1) {
-      padding: 2rem;
+        padding: 2rem;
     }
 
     @media (max-aspect-ratio: 1/1) {
-      padding: 0;
+        padding: 0;
     }
 }

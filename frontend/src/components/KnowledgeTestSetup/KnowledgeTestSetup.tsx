@@ -10,7 +10,7 @@ export default function KnowledgeTestSetup({ onSubmitSettings }: Props) {
     const [fillGapCount, setFillGapCount] = useState(5)
     const [firstLetterCount, setFirstLetterCount] = useState(5)
     const [singleChoiceCount, setSingleChoiceCount] = useState(5)
-    const [flashcardsSide, setFlashcardsSide] = useState("FRONT")
+    const [flashcardsSide, setFlashcardsSide] = useState('FRONT')
 
     const handleSubmit = (e: SubmitEvent) => {
         e.preventDefault()
@@ -19,7 +19,7 @@ export default function KnowledgeTestSetup({ onSubmitSettings }: Props) {
             fillGapCount,
             firstLetterCount,
             singleChoiceCount,
-            flashcardsSide,
+            flashcardsSide
         })
     }
 
@@ -33,9 +33,7 @@ export default function KnowledgeTestSetup({ onSubmitSettings }: Props) {
                     value={fillGapCount}
                     min="0"
                     max="5"
-                    onChange={(e) =>
-                        setFillGapCount(Number(e.target.value))
-                    }
+                    onChange={(e) => setFillGapCount(Number(e.target.value))}
                 />
             </label>
 
@@ -47,9 +45,7 @@ export default function KnowledgeTestSetup({ onSubmitSettings }: Props) {
                     value={firstLetterCount}
                     min="0"
                     max="5"
-                    onChange={(e) =>
-                        setFirstLetterCount(Number(e.target.value))
-                    }
+                    onChange={(e) => setFirstLetterCount(Number(e.target.value))}
                 />
             </label>
 
@@ -61,14 +57,14 @@ export default function KnowledgeTestSetup({ onSubmitSettings }: Props) {
                     value={singleChoiceCount}
                     min="0"
                     max="5"
-                    onChange={(e) =>
-                        setSingleChoiceCount(Number(e.target.value))
-                    }
+                    onChange={(e) => setSingleChoiceCount(Number(e.target.value))}
                 />
             </label>
 
             <div className={styles.wrapper}>
-                <label className={styles.setupLabel} htmlFor="flashcards-side">Wybierz stronę fiszek, której mają dotyczyć pytania:</label>
+                <label className={styles.setupLabel} htmlFor="flashcards-side">
+                    Wybierz stronę fiszek, której mają dotyczyć pytania:
+                </label>
 
                 <select
                     className={styles.setupSelect}
@@ -81,9 +77,7 @@ export default function KnowledgeTestSetup({ onSubmitSettings }: Props) {
                 </select>
             </div>
 
-            <button type="submit">
-                Rozpocznij
-            </button>
+            <button type="submit">Rozpocznij</button>
         </form>
     )
 }

@@ -4,7 +4,7 @@ import type Flashcard from '../../types/Flashcard.ts'
 import { useAuth } from '@/context/AuthContext.tsx'
 import styles from './AttachedFlashcardsMode.module.scss'
 import Container from '@/components/Container'
-import ButtonToggle from "@/components/ButtonToggle";
+import ButtonToggle from '@/components/ButtonToggle'
 import { useUpdateFlashcardKnowledge } from '@/hooks/useUpdateFlashcardKnowledge.ts'
 import { useResetQuizProgress } from '@/hooks/useResetQuizProgress.ts'
 
@@ -13,12 +13,12 @@ interface AttachedFlashcardsModeProps {
     flashcards: Flashcard[]
 }
 
-export default function AttachedFlashcardsMode(
-    props: AttachedFlashcardsModeProps
-) {
+export default function AttachedFlashcardsMode(props: AttachedFlashcardsModeProps) {
     const [flashcardsIterator, setFlashcardsIterator] = useState<number>(0)
     const [flashcards, setFlashcards] = useState<Flashcard[]>(props.flashcards)
-    const [unknownFlashcards, setUnknownFlashcards] = useState<Flashcard[]>(props.flashcards.filter(flashcard => !flashcard.isKnown))
+    const [unknownFlashcards, setUnknownFlashcards] = useState<Flashcard[]>(
+        props.flashcards.filter((flashcard) => !flashcard.isKnown)
+    )
 
     const [isTrackingProgress, setIsCheckingProgress] = useState<boolean>(false)
     const [finishedTrackingProgress, setFinishedTrackingProgress] = useState<boolean>(unknownFlashcards.length === 0)
@@ -41,7 +41,7 @@ export default function AttachedFlashcardsMode(
         // Zaktualizuj stan jedynie, jeśli użytkownik wpada na nowe dane wchodząc na stronę
         // lub z tła, ale chroniąc przed przerwaniem jego aktualnej, aktywnej sesji.
         if (!isTrackingProgress) {
-            const newUnknowns = props.flashcards.filter(flashcard => !flashcard.isKnown)
+            const newUnknowns = props.flashcards.filter((flashcard) => !flashcard.isKnown)
 
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setFlashcards(props.flashcards)
@@ -52,8 +52,7 @@ export default function AttachedFlashcardsMode(
 
     function handleShuffle() {
         setIsShuffled((prevState) => !prevState)
-        if(!isShuffled)
-        {
+        if (!isShuffled) {
             const array = [...flashcards]
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1))
@@ -61,9 +60,7 @@ export default function AttachedFlashcardsMode(
             }
             setFlashcards(array)
             setFlashcardsIterator(0)
-        }
-        else
-        {
+        } else {
             setFlashcards(props.flashcards)
             setFlashcardsIterator(0)
         }
@@ -87,28 +84,24 @@ export default function AttachedFlashcardsMode(
     }
 
     function handleKnow(flashcardsIterator: number) {
-        setUnknownFlashcards((prev) => prev.map((flashcard, index) => index === flashcardsIterator ? {...flashcard, isKnown: true} : flashcard))
+        setUnknownFlashcards((prev) =>
+            prev.map((flashcard, index) => (index === flashcardsIterator ? { ...flashcard, isKnown: true } : flashcard))
+        )
         setFlashcardsIterator((prevState) => prevState + 1)
-        if(flashcardsIterator + 1 == unknownFlashcards.length)
-        {
+        if (flashcardsIterator + 1 == unknownFlashcards.length) {
             setRequiresNextTurn(true)
         }
     }
 
     function handleDontKnow(flashcardsIterator: number) {
-        setNextTurn((prev) => [
-            ...prev,
-            unknownFlashcards[flashcardsIterator]
-        ])
+        setNextTurn((prev) => [...prev, unknownFlashcards[flashcardsIterator]])
         setFlashcardsIterator((prevState) => prevState + 1)
-        if(flashcardsIterator + 1 == unknownFlashcards.length)
-        {
+        if (flashcardsIterator + 1 == unknownFlashcards.length) {
             setRequiresNextTurn(true)
         }
     }
 
-    function handleNextTurn()
-    {
+    function handleNextTurn() {
         setRequiresNextTurn(false)
         setFlashcardsIterator(0)
 
@@ -124,8 +117,7 @@ export default function AttachedFlashcardsMode(
         })
 
         setUnknownFlashcards(nextTurn)
-        if (nextTurn.length === 0)
-        {
+        if (nextTurn.length === 0) {
             setFinishedTrackingProgress(true)
         }
         setNextTurn([])
@@ -133,7 +125,7 @@ export default function AttachedFlashcardsMode(
 
     async function handleResetProgress() {
         if (!auth.user) return
-        const confirmed = window.confirm("czy na pewno chcesz zresetować swoją pamięć?")
+        const confirmed = window.confirm('czy na pewno chcesz zresetować swoją pamięć?')
         if (!confirmed) return
 
         await resetQuizProgress.mutateAsync({
@@ -153,15 +145,12 @@ export default function AttachedFlashcardsMode(
         setNextTurn([])
         setFinishedTrackingProgress(false)
         setIsCheckingProgress(false)
-
     }
 
     if (flashcards.length === 0) {
         return (
             <Container cssClassName="container-positioner">
-                <div className={styles.OptionsArrowsContainerIterator}>
-                    Ten quiz jeszcze nie ma fiszek
-                </div>
+                <div className={styles.OptionsArrowsContainerIterator}>Ten quiz jeszcze nie ma fiszek</div>
             </Container>
         )
     }
@@ -171,8 +160,8 @@ export default function AttachedFlashcardsMode(
             {!finishedTrackingProgress && isTrackingProgress ? (
                 <>
                     {requiresNextTurn ? (
-                            <button onClick={handleNextTurn}>Następna tura</button>
-                    ):(
+                        <button onClick={handleNextTurn}>Następna tura</button>
+                    ) : (
                         <>
                             <BigFlashcard
                                 front={unknownFlashcards[flashcardsIterator].front}
@@ -190,7 +179,7 @@ export default function AttachedFlashcardsMode(
                         </>
                     )}
                 </>
-            ):(
+            ) : (
                 <>
                     <BigFlashcard
                         front={flashcards[flashcardsIterator].front}
@@ -236,7 +225,7 @@ export default function AttachedFlashcardsMode(
                     {!finishedTrackingProgress && isTrackingProgress && (
                         <button className={styles.ButtonPrev}>poprzedni</button> //*tylko jak checkbox ze śledzeniem postępów jest zaznaczony*/}
                     )}
-                    <ButtonToggle isOn={isShuffled} setIsOn={handleShuffle} content={'Losowa kolejność'}/>
+                    <ButtonToggle isOn={isShuffled} setIsOn={handleShuffle} content={'Losowa kolejność'} />
                 </div>
             </Container>
         </>

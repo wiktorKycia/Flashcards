@@ -30,7 +30,7 @@ export default function UserProfile() {
             {!isError && !isLoading && data && (
                 <>
                     <h1>Profil użytkownika {data.name}</h1>
-                    <CreatedQuizzesList userId={userId}/>
+                    <CreatedQuizzesList userId={userId} />
 
                     {isVisitingSelf && (
                         <SavedQuizzesList userId={userId} />

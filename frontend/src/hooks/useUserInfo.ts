@@ -9,9 +9,9 @@ const getData = async (userId: number): Promise<UserInfo> => {
 
 export const useUserInfo = (id?: number | null) => {
     return useQuery({
-        queryKey: ["userInfo", id],
+        queryKey: ['userInfo', id],
         queryFn: () => getData(id as number),
-        enabled: typeof id === "number",
+        enabled: typeof id === 'number'
     })
 }
 

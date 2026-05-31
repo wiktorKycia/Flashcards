@@ -9,7 +9,6 @@ interface SavedQuizzesListProps {
 }
 
 export default function SavedQuizzesList(props: SavedQuizzesListProps) {
-
     const { data, isLoading, isError } = useSavedQuizzes(props.userId)
 
     return (
@@ -18,9 +17,7 @@ export default function SavedQuizzesList(props: SavedQuizzesListProps) {
             {isError && (
                 <div className={styles.errorMessage}>Wystąpił błąd</div>
             )}
-            {isLoading && (
-                <LoadingSpinner/>
-            )}
+            {isLoading && <LoadingSpinner />}
             {!isError && !isLoading && data && (
                 <Container cssClassName={'quiz-container'}>
                     {data.length > 0 ? data.map((quiz) => (
