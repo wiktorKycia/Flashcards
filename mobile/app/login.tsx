@@ -29,7 +29,7 @@ export default function LoginScreen() {
 
 	const handleSubmit = async () => {
 		if (!login || !password) {
-			setError('Provide login and password.')
+			setError('Podaj login i hasło.')
 			return
 		}
 
@@ -40,7 +40,7 @@ export default function LoginScreen() {
 			await storeLogin(data.token, data.user)
 			router.replace('/(tabs)')
 		} catch (err) {
-			setError(err instanceof Error ? err.message : 'Unknown error')
+			setError(err instanceof Error ? err.message : 'Nieznany błąd')
 		} finally {
 			setIsLoading(false)
 		}
@@ -76,7 +76,7 @@ export default function LoginScreen() {
 						<TextInput
 							value={login}
 							onChangeText={setLogin}
-							placeholder="login"
+							placeholder="Login"
 							placeholderTextColor={palette.textSecondary}
 							autoCapitalize="none"
 							autoCorrect={false}
@@ -93,7 +93,7 @@ export default function LoginScreen() {
 						<TextInput
 							value={password}
 							onChangeText={setPassword}
-							placeholder="password"
+							placeholder="Hasło"
 							placeholderTextColor={palette.textSecondary}
 							secureTextEntry
 							textContentType="password"
@@ -127,16 +127,16 @@ export default function LoginScreen() {
 								<ThemedText
 									style={[styles.buttonText, { color: palette.textButtons }]}
 								>
-									Login
+									Zaloguj się
 								</ThemedText>
 							)}
 						</Pressable>
 						<ThemedText
 							style={[styles.linkText, { color: palette.textSecondary }]}
 						>
-							No account yet?{' '}
+							Nie masz konta?{' '}
 							<Link href="../register" style={[styles.link, { color: palette.tint }]}>
-								Register
+								Zarejestruj się
 							</Link>
 						</ThemedText>
 					</View>
