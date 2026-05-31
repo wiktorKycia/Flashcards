@@ -8,7 +8,7 @@ import styles from './Home.module.scss'
 import LikedQuizzesList from '@/components/LikedQuizzesList/LikedQuizzesList.tsx'
 import { useAuth } from '@/context/AuthContext.tsx'
 import { useCheckIfLoggedIn } from '@/hooks/useCheckIfLoggedIn.ts'
-import ListableQuiz from '@/components/ListableQuiz'
+import QuizPreview from '@/components/QuizPreview'
 
 export default function Home() {
     const { data: quizzes = [], isLoading, isError } = useQuizzes()
@@ -51,7 +51,14 @@ export default function Home() {
                         <h2 className={styles.quizzesBoxTitle}>Znalezione zestawy fiszek</h2>
                         <div className={styles.quizPreviewsBox}>
                             {displayedItems.map((quiz: FullQuiz) => (
-                                <ListableQuiz id={quiz.id} name={quiz.name} description={quiz.description}/>
+                                <QuizPreview
+                                    key={`quiz-preview-${quiz.id}`}
+                                    quizId={quiz.id}
+                                    quizName={quiz.name}
+                                    quizDescription={quiz.description}
+                                    likes={quiz.likes}
+                                    dislikes={quiz.dislikes}
+                                />
                             ))}
                         </div>
 
