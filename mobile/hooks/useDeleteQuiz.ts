@@ -1,8 +1,8 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Alert } from 'react-native'
 
-import { API_BASE_URL } from '@/lib/auth'
+import { API_BASE_URL } from '@/lib/api'
 
 interface DeleteQuizVariables {
     id: number
@@ -19,11 +19,14 @@ const deleteQuiz = async ({ id }: DeleteQuizVariables): Promise<void> => {
 }
 
 export const useDeleteQuiz = () => {
-    const [isDeleting, setIsDeleting] = useState(false)
+    const queryClient = useQueryClient()
     const [deleteError, setDeleteError] = useState<string | null>(null)
 
     const mutation = useMutation({
-        mutationFn: deleteQuiz
+        mutationFn: deleteQuiz,
+        onSuccess: () => {
+            void queryClient.invalidateQueries({ queryKey: ['quizzes'] })
+        }
     })
 
     const handleDeleteQuiz = ({
@@ -44,25 +47,22 @@ export const useDeleteQuiz = () => {
             {
                 text: 'Usuń',
                 style: 'destructive',
-                onPress: async () => {
-                    setIsDeleting(true)
+                onPress: () => {
                     setDeleteError(null)
-
-                    try {
-                        await mutation.mutateAsync({ id })
-                        onSuccess?.()
-                    } catch {
-                        setDeleteError('Nie udało się usunąć quizu')
-                    } finally {
-                        setIsDeleting(false)
-                    }
+                    mutation.mutate(
+                        { id },
+                        {
+                            onSuccess: () => onSuccess?.(),
+                            onError: () => setDeleteError('Nie udało się usunąć quizu')
+                        }
+                    )
                 }
             }
         ])
     }
 
     return {
-        isDeleting,
+        isDeleting: mutation.isPending,
         deleteError,
         handleDeleteQuiz
     }

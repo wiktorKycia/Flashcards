@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { type TasksData } from '@/types/TasksData'
-import { API_BASE_URL } from '@/lib/auth'
+import { API_BASE_URL } from '@/lib/api'
 
 type GenerateTasksProps = {
     fillGapCount: number

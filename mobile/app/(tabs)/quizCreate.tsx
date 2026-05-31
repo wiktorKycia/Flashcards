@@ -1,6 +1,5 @@
 import { router } from 'expo-router'
 import { useState } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
 import {
     ActivityIndicator,
     KeyboardAvoidingView,
@@ -67,7 +66,6 @@ export default function QuizCreateScreen() {
     const [draft, setDraft] = useState<QuizDraft>(createEmptyDraft)
     const [isSaving, setIsSaving] = useState(false)
     const [saveError, setSaveError] = useState<string | null>(null)
-    const queryClient = useQueryClient()
     const createQuiz = useCreateQuiz()
     const replaceQuizFlashcards = useReplaceQuizFlashcards()
 
@@ -149,11 +147,6 @@ export default function QuizCreateScreen() {
                     front: flashcard.front,
                     back: flashcard.back
                 }))
-            })
-
-            await queryClient.invalidateQueries({ queryKey: ['quizzes'] })
-            await queryClient.invalidateQueries({
-                queryKey: ['createdQuizzes', user.id]
             })
 
             setDraft(createEmptyDraft())

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { API_BASE_URL } from '@/lib/auth'
+import { API_BASE_URL } from '@/lib/api'
 import resolvePromise from '@/lib/resolvePromise'
 import type { Quiz } from '@/types/Quiz'
 

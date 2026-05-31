@@ -1,6 +1,7 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { API_BASE_URL } from '@/lib/auth'
+import { API_BASE_URL } from '@/lib/api'
+import { getQuizDataQueryKey } from '@/hooks/useQuizData'
 
 interface UpdateFlashcardKnowledgeVars {
     quizId: number
@@ -34,7 +35,14 @@ const updateFlashcardKnowledge = async ({
 }
 
 export const useUpdateFlashcardKnowledge = () => {
+    const queryClient = useQueryClient()
+
     return useMutation({
-        mutationFn: updateFlashcardKnowledge
+        mutationFn: updateFlashcardKnowledge,
+        onSuccess: (_data, variables) => {
+            void queryClient.invalidateQueries({
+                queryKey: getQuizDataQueryKey(variables.quizId, variables.userId)
+            })
+        }
     })
 }

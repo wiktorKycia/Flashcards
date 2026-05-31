@@ -1,6 +1,7 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { API_BASE_URL } from '@/lib/auth'
+import { API_BASE_URL } from '@/lib/api'
+import { getQuizDataQueryKey } from '@/hooks/useQuizData'
 
 interface ResetQuizProgressVars {
     quizId: number
@@ -21,7 +22,14 @@ const resetQuizProgress = async ({ quizId, userId }: ResetQuizProgressVars) => {
 }
 
 export const useResetQuizProgress = () => {
+    const queryClient = useQueryClient()
+
     return useMutation({
-        mutationFn: resetQuizProgress
+        mutationFn: resetQuizProgress,
+        onSuccess: (_data, variables) => {
+            void queryClient.invalidateQueries({
+                queryKey: getQuizDataQueryKey(variables.quizId, variables.userId)
+            })
+        }
     })
 }

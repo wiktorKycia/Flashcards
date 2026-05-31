@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { API_BASE_URL } from '@/lib/auth'
+import { API_BASE_URL } from '@/lib/api'
 
 const checkIsSaved = async (userId: number, quizId: number): Promise<boolean> => {
     const response = await fetch(

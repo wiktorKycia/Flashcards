@@ -13,7 +13,7 @@ import {
 
 import { ThemedText } from '@/components/themed-text'
 import { ThemedView } from '@/components/themed-view'
-import { registerUser } from '@/lib/auth'
+import { useRegister } from '@/hooks/useRegister'
 import { useColorScheme } from '@/hooks/use-color-scheme'
 import { Colors } from '@/constants/theme'
 
@@ -21,8 +21,8 @@ export default function RegisterScreen() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const registerMutation = useRegister()
     const colorScheme = useColorScheme() ?? 'light'
     const palette = Colors[colorScheme]
 
@@ -32,16 +32,16 @@ export default function RegisterScreen() {
             return
         }
 
-        try {
-            setIsLoading(true)
-            setError(null)
-            await registerUser({ name, email, password })
-            router.replace('../login')
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Nieznany błąd')
-        } finally {
-            setIsLoading(false)
-        }
+        setError(null)
+        registerMutation.mutate(
+            { name, email, password },
+            {
+                onSuccess: () => router.replace('../login'),
+                onError: (err) => {
+                    setError(err instanceof Error ? err.message : 'Nieznany błąd')
+                }
+            }
+        )
     }
 
     return (
@@ -133,11 +133,11 @@ export default function RegisterScreen() {
                                 styles.button,
                                 { backgroundColor: palette.tint },
                                 pressed && styles.buttonPressed,
-                                isLoading && styles.buttonDisabled
+                                registerMutation.isPending && styles.buttonDisabled
                             ]}
-                            disabled={isLoading}
+                            disabled={registerMutation.isPending}
                         >
-                            {isLoading ? (
+                            {registerMutation.isPending ? (
                                 <ActivityIndicator color={palette.textButtons} />
                             ) : (
                                 <ThemedText

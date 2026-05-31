@@ -1,6 +1,6 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { API_BASE_URL } from '@/lib/auth'
+import { API_BASE_URL } from '@/lib/api'
 
 export interface CreateQuizPayload {
     name: string
@@ -36,7 +36,15 @@ const createQuiz = async (payload: CreateQuizPayload): Promise<CreatedQuiz> => {
 }
 
 export const useCreateQuiz = () => {
+    const queryClient = useQueryClient()
+
     return useMutation({
-        mutationFn: createQuiz
+        mutationFn: createQuiz,
+        onSuccess: (_data, variables) => {
+            void queryClient.invalidateQueries({ queryKey: ['quizzes'] })
+            void queryClient.invalidateQueries({
+                queryKey: ['createdQuizzes', variables.authorId]
+            })
+        }
     })
 }
