@@ -1,8 +1,8 @@
 import styles from './ButtonAdd.module.scss'
 import useCreateQuiz from '@/hooks/useCreateQuiz.ts'
-import {useAuth} from "@/context/AuthContext.tsx";
-import {useNavigate} from "react-router-dom";
-import { useEffect, useRef, useState } from 'react';
+import { useAuth } from '@/context/AuthContext.tsx'
+import { useNavigate } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
 
 export default function ButtonAdd() {
     const navigate = useNavigate()
@@ -30,32 +30,24 @@ export default function ButtonAdd() {
         closeTimerRef.current = setTimeout(() => setTooltipOpen(false), 150)
     }
 
-    async function handleButtonOnClick(){
-        if(!auth.user)
-        {
+    async function handleButtonOnClick() {
+        if (!auth.user) {
             navigate('/login')
             return
         }
 
         const authorId = auth.user.id
 
-        createQuiz.mutate(
-            authorId,
-            {
-                onSuccess: (createdQuiz) => {
-                    console.log(createdQuiz)
-                    navigate(`/quiz/${createdQuiz.id}/edit`)
-                }
+        createQuiz.mutate(authorId, {
+            onSuccess: (createdQuiz) => {
+                console.log(createdQuiz)
+                navigate(`/quiz/${createdQuiz.id}/edit`)
             }
-        )
+        })
     }
 
     return (
-        <div
-            className={styles.ButtonAddContainer}
-            onMouseEnter={openTooltip}
-            onMouseLeave={scheduleCloseTooltip}
-        >
+        <div className={styles.ButtonAddContainer} onMouseEnter={openTooltip} onMouseLeave={scheduleCloseTooltip}>
             <button onClick={handleButtonOnClick} className={styles.ButtonAdd}>
                 +
             </button>

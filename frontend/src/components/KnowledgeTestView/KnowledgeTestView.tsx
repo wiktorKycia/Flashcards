@@ -2,7 +2,7 @@ import { useState, type MouseEvent } from 'react'
 import GapTask from '@/components/GapTask'
 import SingleChoiceTask from '@/components/SingleChoiceTask'
 import styles from './KnowledgeTestView.module.scss'
-import {type Tasks} from '@/types/TasksData'
+import { type Tasks } from '@/types/TasksData'
 
 export default function KnowledgeTestView({ data }: Tasks) {
     const [answers, setAnswers] = useState<Record<string, string>>({})
@@ -12,7 +12,7 @@ export default function KnowledgeTestView({ data }: Tasks) {
     const handleAnswerChange = (taskID: string, value: string) => {
         if (isFinished) return
 
-        setAnswers(prev => ({
+        setAnswers((prev) => ({
             ...prev,
             [taskID]: value
         }))
@@ -24,7 +24,10 @@ export default function KnowledgeTestView({ data }: Tasks) {
         data.fillGap?.data.forEach((task, i) => {
             const id = `fill-gap${i}`
 
-            if (answers[id]?.trim().slice(1) === task.phrase.trim().slice(1) && answers[id]?.trim()[0]?.toLowerCase() === task.phrase.trim()[0]?.toLowerCase()) {
+            if (
+                answers[id]?.trim().slice(1) === task.phrase.trim().slice(1) &&
+                answers[id]?.trim()[0]?.toLowerCase() === task.phrase.trim()[0]?.toLowerCase()
+            ) {
                 points++
             }
         })
@@ -62,7 +65,7 @@ export default function KnowledgeTestView({ data }: Tasks) {
         (data.firstLetterGap?.data.length || 0) +
         (data.singleChoice?.data.length || 0)
 
-    const percentage: number = totalQuestions > 0 ? Math.round(score / totalQuestions * 100) : 0
+    const percentage: number = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0
 
     return (
         <form
@@ -128,21 +131,18 @@ export default function KnowledgeTestView({ data }: Tasks) {
             {isFinished && (
                 <div className={styles.resultWrapper}>
                     <h2>Wynik</h2>
-                    <p>{score} / {totalQuestions}</p>
+                    <p>
+                        {score} / {totalQuestions}
+                    </p>
                     <p>{percentage}%</p>
                 </div>
             )}
 
             <div>
                 {!isFinished ? (
-                    <button type="submit">
-                        Sprawdź
-                    </button>
+                    <button type="submit">Sprawdź</button>
                 ) : (
-                    <button
-                        type="button"
-                        onClick={handleReset}
-                    >
+                    <button type="button" onClick={handleReset}>
                         Resetuj test
                     </button>
                 )}

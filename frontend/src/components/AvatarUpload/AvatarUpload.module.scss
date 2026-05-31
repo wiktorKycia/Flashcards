@@ -1,0 +1,92 @@
+
+.AvatarUpload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: 1rem;
+    max-width: 300px;
+    width: 100%;
+    transition: var(--transition);
+
+    &:hover {
+        box-shadow: var(--shadow);
+    }
+
+    h3 {
+        color: var(--color-text-primary);
+        font-size: 2rem;
+        margin: 0;
+    }
+
+    .AvatarWrapper {
+        position: relative;
+        width: 15rem;
+        height: 15rem;
+        border-radius: 50%;
+        overflow: hidden;
+        cursor: pointer;
+        border: var(--border-thick);
+        transition: var(--transition);
+
+        &:hover {
+            box-shadow: var(--shadow);
+            .AvatarOverlay {
+                opacity: 1;
+            }
+        }
+    }
+
+    .Avatar {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .AvatarOverlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: var(--transition);
+
+        span {
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+    }
+
+    .Filename {
+        font-size: 1.4rem;
+        color: var(--color-text-secondary);
+        text-align: center;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .SecondaryButton {
+        background-color: transparent;
+        color: var(--color-accent);
+        border: var(--border-thick);
+        border-color: var(--color-accent);
+
+        &:hover {
+            background-color: var(--color-surface);
+            color: var(--color-accent2);
+            border-color: var(--color-accent2);
+        }
+    }
+}

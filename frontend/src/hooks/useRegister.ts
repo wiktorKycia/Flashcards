@@ -19,15 +19,13 @@ const register = async ({ password, name, email }: RegisterVariables) => {
         let message = `HTTP ${response.status}`
 
         try {
-            const errorBody = await response.json() as { message?: string; error?: string }
+            const errorBody = (await response.json()) as { message?: string; error?: string }
             if (errorBody?.message) {
                 message = errorBody.message
-            }
-            else if (errorBody?.error) {
+            } else if (errorBody?.error) {
                 message = errorBody.error
             }
-        }
-        catch (_err) {
+        } catch (_err) {
             // ignore JSON parse errors and fall back to default message
         }
 

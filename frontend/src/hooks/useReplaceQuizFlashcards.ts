@@ -48,4 +48,3 @@ interface QuizFlashcard {
     back: string
     quizId: number
 }
-

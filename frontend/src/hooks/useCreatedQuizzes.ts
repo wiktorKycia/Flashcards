@@ -11,6 +11,6 @@ export const useCreatedQuizzes = (userId: number) => {
     return useQuery({
         queryKey: ['createdQuizzes', userId],
         queryFn: () => getCreatedQuizzes(userId),
-        enabled: !!userId,
+        enabled: !!userId
     })
 }

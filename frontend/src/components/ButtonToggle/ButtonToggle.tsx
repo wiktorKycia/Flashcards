@@ -14,4 +14,3 @@ export default function ButtonToggle(props: ButtonToggleProps) {
         </button>
     )
 }
-

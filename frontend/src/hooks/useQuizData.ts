@@ -23,7 +23,7 @@ const getData = async (quizId: number, userId?: number): Promise<QuizData> => {
 
     let flashcardsWithProgress = flashcards.map((flashcard) => ({
         ...flashcard,
-        isKnown: false,
+        isKnown: false
     }))
 
     if (userId != null) {
@@ -37,7 +37,7 @@ const getData = async (quizId: number, userId?: number): Promise<QuizData> => {
 
             flashcardsWithProgress = flashcards.map((flashcard) => ({
                 ...flashcard,
-                isKnown: progressByFlashcardId.get(flashcard.id) ?? false,
+                isKnown: progressByFlashcardId.get(flashcard.id) ?? false
             }))
         }
     }

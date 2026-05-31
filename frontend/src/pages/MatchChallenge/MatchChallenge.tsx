@@ -14,7 +14,7 @@ type CardItem = {
     status: CardStatus
 }
 
-export default function MatchChallenge(){
+export default function MatchChallenge() {
     const id: number = parseInt(useParams().id as string)
     const { data, isLoading, isError } = useQuizData(id)
 
@@ -61,11 +61,7 @@ export default function MatchChallenge(){
 
         setSelectedCards(updatedSelected)
 
-        setCards((prev) =>
-            prev.map((card) =>
-                card.id === id ? { ...card, status: 'selected'} : card
-            )
-        )
+        setCards((prev) => prev.map((card) => (card.id === id ? { ...card, status: 'selected' } : card)))
 
         if (updatedSelected.length !== 2) return
 
@@ -92,17 +88,11 @@ export default function MatchChallenge(){
         }
 
         setCards((prev) =>
-            prev.map((card) =>
-                card.id === first.id || card.id === second.id ? { ...card, status: 'wrong'} : card
-            )
+            prev.map((card) => (card.id === first.id || card.id === second.id ? { ...card, status: 'wrong' } : card))
         )
 
         setTimeout(() => {
-            setCards((prev) =>
-                prev.map((card) =>
-                    card.status === "wrong" ? { ...card, status: 'idle'} : card
-                )
-            )
+            setCards((prev) => prev.map((card) => (card.status === 'wrong' ? { ...card, status: 'idle' } : card)))
 
             setSelectedCards([])
         }, 700)
@@ -115,20 +105,15 @@ export default function MatchChallenge(){
         <>
             <div className={styles.MatchChallenge}>
                 <div className={styles.buttonWrapper}>
-                    <Link
-                        to={`/quiz/${id}`}
-                        className="redirectButton"
-                    >Wróć do zestawu fiszek</Link>
+                    <Link to={`/quiz/${id}`} className="redirectButton">
+                        Wróć do zestawu fiszek
+                    </Link>
                 </div>
                 <h2>Wyzwanie dopasowywania</h2>
                 {isError && <div>Wystąpił błąd</div>}
                 {isLoading && <LoadingSpinner />}
                 {hasNoData && <div>Brak dostępnych fiszek w tym zestawie</div>}
-                {isFinished && (
-                    <div className={styles.Finished}>
-                        Ukończono!
-                    </div>
-                )}
+                {isFinished && <div className={styles.Finished}>Ukończono!</div>}
 
                 {!hasNoData && (
                     <div className={styles.Grid}>
@@ -149,8 +134,8 @@ export default function MatchChallenge(){
 
 function shuffle<T>(array: T[]) {
     const copied = [...array]
-    for (let i = copied.length - 1; i > 0; i--){
-        const j = Math.floor((Math.random() * (i + 1)))
+    for (let i = copied.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
         ;[copied[i], copied[j]] = [copied[j], copied[i]]
     }
 

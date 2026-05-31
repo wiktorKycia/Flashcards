@@ -17,16 +17,13 @@ const getUserName = async (userId: number): Promise<User> => {
 }
 
 const getData = async (userId: number, isVisitingSelf: boolean): Promise<UserInfo> => {
-    if(isVisitingSelf)
-    {
+    if (isVisitingSelf) {
         return {
             name: (await getUserName(userId)).name,
             savedQuizzes: await getSavedQuizzes(userId),
             createdQuizzes: await getCreatedQuizzes(userId)
         }
-    }
-    else
-    {
+    } else {
         return {
             name: (await getUserName(userId)).name,
             createdQuizzes: await getCreatedQuizzes(userId)
@@ -55,8 +52,8 @@ interface Quiz {
 }
 
 interface User {
-    id: number,
-    name: string,
-    email: string,
+    id: number
+    name: string
+    email: string
     path_to_img?: string
 }

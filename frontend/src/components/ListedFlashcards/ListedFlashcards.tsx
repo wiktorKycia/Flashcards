@@ -12,12 +12,8 @@ export default function ListedFlashcards(props: ListedFlashcardsProps) {
         <div className={styles.ListedFlashcards}>
             <h2 className={styles.ListedFlashcardsHeading}>Fiszki</h2>
             <Container cssClassName={'container-vertical-borderless ' + styles.ListedFlashcardsFlashcardsContainer}>
-                {props.flashcards.map((flashcard) =>(
-                    <ListableFlashcard
-                        key={flashcard.database_id}
-                        front={flashcard.front}
-                        back={flashcard.back}
-                    />
+                {props.flashcards.map((flashcard) => (
+                    <ListableFlashcard key={flashcard.database_id} front={flashcard.front} back={flashcard.back} />
                 ))}
             </Container>
         </div>

@@ -5,10 +5,7 @@ interface LoginVariables {
     login: string
 }
 
-const login = async ({
-    login,
-    password
-}: LoginVariables): Promise<LoginReturn> => {
+const login = async ({ login, password }: LoginVariables): Promise<LoginReturn> => {
     const response = await fetch('/api/auth/login', {
         method: 'POST',
         body: JSON.stringify({ login: login, password: password }),
@@ -21,15 +18,13 @@ const login = async ({
         let message = `HTTP ${response.status}`
 
         try {
-            const errorBody = await response.json() as { message?: string; error?: string }
+            const errorBody = (await response.json()) as { message?: string; error?: string }
             if (errorBody?.message) {
                 message = errorBody.message
-            }
-            else if (errorBody?.error) {
+            } else if (errorBody?.error) {
                 message = errorBody.error
             }
-        }
-        catch (_err) {
+        } catch (_err) {
             // ignore JSON parse errors and fall back to default message
         }
 

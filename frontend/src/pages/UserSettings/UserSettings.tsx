@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router'
 import { useUserInfo } from '@/hooks/useUserInfo.ts'
 import { useUpdateUser } from '@/hooks/useUpdateUser.ts'
 import { useChangePassword } from '@/hooks/useChangePassword'
-
+import AvatarUpload from '@/components/AvatarUpload'
 
 interface UserDraft {
     name: string
@@ -46,8 +46,7 @@ export default function UserSettings() {
         if (isLoading || isError) return
         if (!data) return
 
-        if (auth.user?.id !== data.id)
-        {
+        if (auth.user?.id !== data.id) {
             navigate(-1) // go back by one page
             return
         }
@@ -59,9 +58,8 @@ export default function UserSettings() {
             email: data.email
         })
     }, [auth.user?.id, data, draft, isError, isLoading, navigate])
-    
-    function handleFieldChange(field: 'name' | 'email', value: string)
-    {
+
+    function handleFieldChange(field: 'name' | 'email', value: string) {
         setDraft((prev) => {
             if (!prev) return prev
             return {
@@ -70,9 +68,8 @@ export default function UserSettings() {
             }
         })
     }
-    
-    async function handleButtonSave(event: SubmitEvent<HTMLFormElement>)
-    {
+
+    async function handleButtonSave(event: SubmitEvent<HTMLFormElement>) {
         event.preventDefault()
         if (!draft || !user) return
 
@@ -102,17 +99,14 @@ export default function UserSettings() {
             })
 
             setSaveMessage('Zapisano zmiany')
-        }
-        catch {
+        } catch {
             setSaveError('Nie udało się zapisać zmian')
-        }
-        finally {
+        } finally {
             setIsSaving(false)
         }
     }
 
-    async function handlePasswordSave(event: SubmitEvent<HTMLFormElement>)
-    {
+    async function handlePasswordSave(event: SubmitEvent<HTMLFormElement>) {
         event.preventDefault()
         if (!user) return
 
@@ -149,18 +143,15 @@ export default function UserSettings() {
                 confirmPassword: ''
             })
             setPasswordMessage(result.message)
-        }
-        catch {
+        } catch {
             setPasswordError('Nie udało się zmienić hasła')
-        }
-        finally {
+        } finally {
             setIsChangingPassword(false)
         }
     }
 
-    if (!user)
-    {
-        return <LoadingSpinner/>
+    if (!user) {
+        return <LoadingSpinner />
     }
 
     return (
@@ -170,9 +161,7 @@ export default function UserSettings() {
                 <Container>
                     <h2>Dane</h2>
 
-                    <form
-                        onSubmit={handleButtonSave}
-                    >
+                    <form onSubmit={handleButtonSave}>
                         <FieldGroup
                             labelText="Nazwa użytkownika"
                             inputHTMLId="input_username"
@@ -261,11 +250,10 @@ export default function UserSettings() {
                 <Container>
                     <h2>Akcje</h2>
                     <button onClick={auth.logout}>Wyloguj</button>
-                    {user.id && (
-                        <button onClick={() => navigate(`/user/${user.id}`)}>Zobacz profil</button>
-                    )}
+                    {user.id && <button onClick={() => navigate(`/user/${user.id}`)}>Zobacz profil</button>}
                 </Container>
             </section>
+            <AvatarUpload userId={user.id}/>
         </main>
     )
 }

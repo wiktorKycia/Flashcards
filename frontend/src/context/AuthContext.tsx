@@ -14,10 +14,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     const [token, setToken] = useState(localStorage.getItem('token'))
 
     let u: LoggedInUser | null = null
-    if (
-        localStorage.getItem('userId') != null &&
-        localStorage.getItem('userName') != null
-    ) {
+    if (localStorage.getItem('userId') != null && localStorage.getItem('userName') != null) {
         u = {
             id: parseInt(localStorage.getItem('userId') as string),
             name: localStorage.getItem('userName') as string
@@ -41,11 +38,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         setUser(null)
     }
 
-    return (
-        <AuthContext.Provider value={{ token, login, logout, user }}>
-            {children}
-        </AuthContext.Provider>
-    )
+    return <AuthContext.Provider value={{ token, login, logout, user }}>{children}</AuthContext.Provider>
 }
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = (): AuthContextType => {

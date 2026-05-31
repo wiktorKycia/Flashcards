@@ -9,23 +9,19 @@ interface SavedQuizzesListProps {
 }
 
 export default function SavedQuizzesList(props: SavedQuizzesListProps) {
-
     const { data, isLoading, isError } = useSavedQuizzes(props.userId)
 
     return (
         <div className={styles.SavedQuizzesList}>
             <h2>Zapisane quizy</h2>
-            {isError && (
-                <div>Wystąpił błąd</div>
-            )}
-            {isLoading && (
-                <LoadingSpinner/>
-            )}
+            {isError && <div>Wystąpił błąd</div>}
+            {isLoading && <LoadingSpinner />}
             {!isError && !isLoading && data && (
                 <Container cssClassName={'quiz-container'}>
-                    {data && data.map((quiz) => (
-                        <ListableQuiz id={quiz.id} name={quiz.name} description={quiz.description}/>
-                    ))}
+                    {data &&
+                        data.map((quiz) => (
+                            <ListableQuiz id={quiz.id} name={quiz.name} description={quiz.description} />
+                        ))}
                 </Container>
             )}
         </div>
