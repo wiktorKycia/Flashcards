@@ -37,7 +37,7 @@ export default function Register() {
         <>
             <main className={styles.Main}>
                 <form onSubmit={handleSubmit} className={styles.FormContainer}>
-                    <h1>Register</h1>
+                    <h1>Zarejestruj się</h1>
                     {registerMutation.isError && (
                         <div style={{ color: 'red', marginBottom: '0.5rem' }}>
                             {(registerMutation.error as Error).message}

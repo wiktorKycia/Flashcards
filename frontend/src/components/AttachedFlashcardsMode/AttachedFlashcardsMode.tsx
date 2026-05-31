@@ -222,9 +222,6 @@ export default function AttachedFlashcardsMode(props: AttachedFlashcardsModeProp
                     </div>
                 )}
                 <div className={styles.Options}>
-                    {!finishedTrackingProgress && isTrackingProgress && (
-                        <button className={styles.ButtonPrev}>poprzedni</button> //*tylko jak checkbox ze śledzeniem postępów jest zaznaczony*/}
-                    )}
                     <ButtonToggle isOn={isShuffled} setIsOn={handleShuffle} content={'Losowa kolejność'} />
                 </div>
             </Container>
