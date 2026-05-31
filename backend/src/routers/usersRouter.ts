@@ -39,6 +39,18 @@ interface UserQuizLike {
     isLiked: boolean
 }
 
+interface SavedQuizData {
+    quiz: {
+        id: number
+        name: string
+        description: string | null
+        authorId: number
+    }
+    id: number
+    userId: number
+    quizId: number
+}
+
 interface QuizData {
     quiz: {
         id: number
@@ -144,7 +156,7 @@ router.get("/:id(\\d+)/saved-quizzes", async (req: Request<UserParams>, res: Res
         const user = await prisma.user.findUnique({
             where: { id: userId },
             include: {
-                UserQuizLike: {
+                SavedQuiz: {
                     include: {
                         quiz: true,
                     }
@@ -153,7 +165,7 @@ router.get("/:id(\\d+)/saved-quizzes", async (req: Request<UserParams>, res: Res
         })
 
         if (user) {
-            return res.json(user.UserQuizLike.map((savedQuiz: QuizData) => savedQuiz.quiz))
+            return res.json(user.SavedQuiz.map((savedQuiz: SavedQuizData) => savedQuiz.quiz))
         }
         else {
             return res.sendStatus(404)
