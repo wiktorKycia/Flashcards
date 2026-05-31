@@ -67,7 +67,7 @@ export default function QuizScreen() {
                                 color: palette.textButtons
                             }}
                         >
-                            Login
+                            Ucz się
                         </ThemedText>
                     </Link>
                     <Link href="../matchChallenge?id=1" asChild>
