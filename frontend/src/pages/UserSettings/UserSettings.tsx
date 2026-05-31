@@ -53,6 +53,7 @@ export default function UserSettings() {
 
         if (draft) return
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setDraft({
             name: data.name,
             email: data.email
@@ -252,8 +253,10 @@ export default function UserSettings() {
                     <button onClick={auth.logout}>Wyloguj</button>
                     {user.id && <button onClick={() => navigate(`/user/${user.id}`)}>Zobacz profil</button>}
                 </Container>
+
+                <AvatarUpload userId={user.id}/>
             </section>
-            <AvatarUpload userId={user.id}/>
+
         </main>
     )
 }
