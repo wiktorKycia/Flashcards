@@ -1,6 +1,5 @@
 import LoadingSpinner from '@/components/LoadingSpinner'
 import { useQuizzes } from '@/hooks/useQuizzes'
-import QuizPreview from '@/components/QuizPreview'
 import type FullQuiz from '@/types/FullQuiz'
 import { useLocation } from 'react-router'
 import Fuse from 'fuse.js'
@@ -9,6 +8,7 @@ import styles from './Home.module.scss'
 import LikedQuizzesList from '@/components/LikedQuizzesList/LikedQuizzesList.tsx'
 import { useAuth } from '@/context/AuthContext.tsx'
 import { useCheckIfLoggedIn } from '@/hooks/useCheckIfLoggedIn.ts'
+import ListableQuiz from '@/components/ListableQuiz'
 
 export default function Home() {
     const { data: quizzes = [], isLoading, isError } = useQuizzes()
@@ -51,14 +51,7 @@ export default function Home() {
                         <h2 className={styles.quizzesBoxTitle}>Znalezione zestawy fiszek</h2>
                         <div className={styles.quizPreviewsBox}>
                             {displayedItems.map((quiz: FullQuiz) => (
-                                <QuizPreview
-                                    key={`quiz-preview-${quiz.id}`}
-                                    quizId={quiz.id}
-                                    quizName={quiz.name}
-                                    quizDescription={quiz.description}
-                                    likes={quiz.likes}
-                                    dislikes={quiz.dislikes}
-                                />
+                                <ListableQuiz id={quiz.id} name={quiz.name} description={quiz.description}/>
                             ))}
                         </div>
 

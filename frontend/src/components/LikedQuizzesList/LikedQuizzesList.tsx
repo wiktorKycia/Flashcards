@@ -1,9 +1,9 @@
 import styles from './LikedQuizzesList.module.scss'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import type FullQuiz from '@/types/FullQuiz.ts'
-import QuizPreview from '@/components/QuizPreview'
 import { useUserLikedQuizzes } from '@/hooks/useQuizLikes.ts'
 import Container from '@/components/Container'
+import ListableQuiz from '@/components/ListableQuiz'
 
 interface LikedQuizzesListProps {
     userId: number,
@@ -20,17 +20,9 @@ export default function LikedQuizzesList(props: LikedQuizzesListProps) {
             {isError && <div className={styles.errorMessage}>Wystąpił błąd</div>}
             {isLoading && <LoadingSpinner />}
             {!isLoading && !isError && quizzes && (
-                <Container cssClassName={`quiz-container ${styles.previewBox}`}>
+                <Container cssClassName={`quiz-container ${styles.PreviewBox}`}>
                     {quizzes.length > 0 ? quizzes.map((quiz: FullQuiz) => (
-                        <QuizPreview
-                            className={props.isSmallVersion ? styles.smallPreview : ""}
-                            key={`liked-quiz-${quiz.id}`}
-                            quizId={quiz.id}
-                            quizName={quiz.name}
-                            quizDescription={quiz.description}
-                            likes={quiz.likes}
-                            dislikes={quiz.dislikes}
-                        />
+                        <ListableQuiz id={quiz.id} name={quiz.name} description={quiz.description}/>
                     )) : (
                         <p className={styles.infoMessage}>Nie masz jeszcze żadnych polubionych zestawów</p>
                     )}
