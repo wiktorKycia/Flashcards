@@ -5,7 +5,10 @@ import {
     ScrollView,
     StyleSheet,
     TextInput,
-    View
+    View,
+    Platform,
+    StatusBar,
+    Image
 } from 'react-native'
 import { Link } from 'expo-router'
 import Fuse from 'fuse.js'
@@ -18,6 +21,7 @@ import { useQuizzes } from '@/hooks/useQuizzes'
 import QuizPreview from '@/components/QuizPreview/QuizPreview'
 import type FullQuiz from '@/types/FullQuiz'
 import LikedQuizzesList from '@/components/LikedQuizzesList/LikedQuizzesList'
+import AppLogo from '@/assets/images/lingoSpark-logo.png'
 
 export default function HomeScreen() {
     const colorScheme = useColorScheme() ?? 'light'
@@ -49,46 +53,49 @@ export default function HomeScreen() {
 
     return (
         <ThemedView style={[styles.screen, { backgroundColor: palette.background }]}>
+            <View style={[styles.header, {backgroundColor: palette.accent2}]}>
+                <Image
+                    source={AppLogo}
+                    style={styles.headerLogo}
+                    resizeMode="contain"
+                />
+
+                {!isLoggedIn && (
+                    <View style={styles.authButtons}>
+                        <Link href="../login" asChild>
+                            <Pressable
+                                style={({ pressed }) => [
+                                    styles.authButton,
+                                    { backgroundColor: palette.tint },
+                                    pressed && styles.buttonPressed
+                                ]}
+                            >
+                                <ThemedText style={[styles.authButtonText, { color: palette.textButtons }]}>
+                                    Zaloguj się
+                                </ThemedText>
+                            </Pressable>
+                        </Link>
+                        <Link href="../register" asChild>
+                            <Pressable
+                                style={({ pressed }) => [
+                                    styles.authButtonOutline,
+                                    { borderColor: palette.tint },
+                                    pressed && styles.buttonPressed
+                                ]}
+                            >
+                                <ThemedText style={[styles.authButtonText, { color: palette.accent5 }]}>
+                                    Zarejestruj się
+                                </ThemedText>
+                            </Pressable>
+                        </Link>
+                    </View>
+                )}
+            </View>
             <ScrollView
                 contentContainerStyle={styles.scrollContent}
                 keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={false}
             >
-                <View style={[styles.header, {backgroundColor: palette.accent4}]}>
-                    <ThemedText type="title">Fiszki</ThemedText>
-
-                    {!isLoggedIn && (
-                        <View style={styles.authButtons}>
-                            <Link href="../login" asChild>
-                                <Pressable
-                                    style={({ pressed }) => [
-                                        styles.authButton,
-                                        { backgroundColor: palette.tint },
-                                        pressed && styles.buttonPressed
-                                    ]}
-                                >
-                                    <ThemedText style={[styles.authButtonText, { color: palette.textButtons }]}>
-                                        Zaloguj się
-                                    </ThemedText>
-                                </Pressable>
-                            </Link>
-                            <Link href="../register" asChild>
-                                <Pressable
-                                    style={({ pressed }) => [
-                                        styles.authButtonOutline,
-                                        { borderColor: palette.tint },
-                                        pressed && styles.buttonPressed
-                                    ]}
-                                >
-                                    <ThemedText style={[styles.authButtonText, { color: palette.tint }]}>
-                                        Zarejestruj się
-                                    </ThemedText>
-                                </Pressable>
-                            </Link>
-                        </View>
-                    )}
-                </View>
-
                 <TextInput
                     value={searchQuery}
                     onChangeText={(text) => {
@@ -187,14 +194,30 @@ const styles = StyleSheet.create({
         gap: 16
     },
     header: {
-        gap: 12
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) + 16 : 60,
+        paddingHorizontal: 20,
+        paddingBottom: 20,
+        borderBottomLeftRadius: 16,
+        borderBottomRightRadius: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 3,
+    },
+    headerLogo: {
+        width: 90,
+        height: 90,
     },
     authButtons: {
         flexDirection: 'row',
-        gap: 12
+        gap: 8
     },
     authButton: {
-        borderRadius: 8,
+        borderRadius: 20,
         paddingVertical: 10,
         paddingHorizontal: 16
     },
@@ -206,14 +229,14 @@ const styles = StyleSheet.create({
     },
     authButtonText: {
         fontWeight: '700',
-        fontSize: 14
+        fontSize: 16
     },
     buttonPressed: {
         opacity: 0.85
     },
     searchInput: {
         borderWidth: 1,
-        borderRadius: 20,
+        borderRadius: 12,
         paddingHorizontal: 16,
         paddingVertical: 10,
         fontSize: 16

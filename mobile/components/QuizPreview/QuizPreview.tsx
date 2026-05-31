@@ -82,12 +82,12 @@ export default function QuizPreview({
                 ) : (
                     <>
                         <View style={styles.likesWrapper}>
-                            <ThemedText style={{ color: isLiked ? palette.tint : palette.accent2, fontWeight: 'bold' }}>
+                            <ThemedText style={{ color: 'green', fontSize: isLiked ? 24 : 18, fontWeight: 'bold' }}>
                                 {likes}👍
                             </ThemedText>
                         </View>
                         <View style={styles.dislikesWrapper}>
-                            <ThemedText style={{ color: isDisliked ? palette.danger : palette.error, fontWeight: 'bold' }}>
+                            <ThemedText style={{ color: 'red', fontSize: isDisliked ? 24 : 18, fontWeight: 'bold' }}>
                                 {dislikes}👎
                             </ThemedText>
                         </View>
@@ -141,11 +141,9 @@ const styles = StyleSheet.create({
     likesWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-        fontSize: 18
     },
     dislikesWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-        fontSize: 18
     }
 })
