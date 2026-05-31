@@ -29,7 +29,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="quiz"
                 options={{
-                    title: 'Zestaw',
+                    title: 'Quiz',
                     tabBarIcon: ({ color }) => (
                         <IconSymbol size={28} name="list.bullet" color={color} />
                     )
