@@ -16,6 +16,20 @@
     }
 }
 
+.FlashcardPositioner
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.NextTurnButton
+{
+    margin: 150px 50px;
+}
+
+
 .OptionsContainer {
     display: flex;
     justify-content: space-between;
