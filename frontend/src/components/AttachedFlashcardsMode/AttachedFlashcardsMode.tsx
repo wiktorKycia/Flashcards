@@ -158,9 +158,9 @@ export default function AttachedFlashcardsMode(props: AttachedFlashcardsModeProp
     return (
         <>
             {!finishedTrackingProgress && isTrackingProgress ? (
-                <>
+                <div className={styles.FlashcardPositioner}>
                     {requiresNextTurn ? (
-                        <button onClick={handleNextTurn}>Następna tura</button>
+                        <button onClick={handleNextTurn} className={styles.NextTurnButton}>Następna tura</button>
                     ) : (
                         <>
                             <BigFlashcard
@@ -178,9 +178,9 @@ export default function AttachedFlashcardsMode(props: AttachedFlashcardsModeProp
                             </Container>
                         </>
                     )}
-                </>
+                </div>
             ) : (
-                <>
+                <div className={styles.FlashcardPositioner}>
                     <BigFlashcard
                         front={flashcards[flashcardsIterator].front}
                         back={flashcards[flashcardsIterator].back}
@@ -195,7 +195,7 @@ export default function AttachedFlashcardsMode(props: AttachedFlashcardsModeProp
                         </div>
                         <button onClick={handleIncrement}>→</button>
                     </Container>
-                </>
+                </div>
             )}
 
             <Container cssClassName={'container-positioner ' + styles.OptionsContainer}>
@@ -222,9 +222,6 @@ export default function AttachedFlashcardsMode(props: AttachedFlashcardsModeProp
                     </div>
                 )}
                 <div className={styles.Options}>
-                    {!finishedTrackingProgress && isTrackingProgress && (
-                        <button className={styles.ButtonPrev}>poprzedni</button> //*tylko jak checkbox ze śledzeniem postępów jest zaznaczony*/}
-                    )}
                     <ButtonToggle isOn={isShuffled} setIsOn={handleShuffle} content={'Losowa kolejność'} />
                 </div>
             </Container>

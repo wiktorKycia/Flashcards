@@ -17,9 +17,16 @@
 
     &Section {
         display: flex;
-        flex-direction: row;
+        @media (min-aspect-ratio: 1/1) {
+            flex-direction: row;
+            width: 60%;
+        }
+        @media (max-aspect-ratio: 1/1) {
+            flex-direction: column;
+            width: 90%;
+        }
         justify-content: center;
-        width: 60%;
+
         gap: 2rem;
     }
     .ButtonGroup {

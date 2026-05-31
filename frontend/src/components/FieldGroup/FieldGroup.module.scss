@@ -12,7 +12,12 @@
 
 .FieldGroupHorizontal {
     @include fieldGroup;
-    flex-direction: row;
+    @media (min-aspect-ratio: 1/1) {
+        flex-direction: row;
+    }
+    @media (max-aspect-ratio: 1/1) {
+        flex-direction: column;
+    }
     align-items: center;
     justify-content: space-between;
 }

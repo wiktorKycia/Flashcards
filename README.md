@@ -102,6 +102,12 @@ After the compose is fully built, you can access various components of our app t
 | http://localhost:5555/ | Lightweight browser Prisma DBMS                           |
 | http://localhost:3000/ | Backend API                                               |
 
+> [!IMPORTANT]
+> Mobile app preview
+> 
+> In order to preview mobile app correctly, once you enter the mobile url, please open dev tools and toggle the device design mode  
+
+
 ## Status
 
 Status of this project is: _in progress_

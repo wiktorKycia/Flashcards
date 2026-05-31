@@ -180,7 +180,7 @@ export default function Quiz() {
                                         </button>
                                     </>
                                 )}
-                                {isUserAuthor && (
+                                {isLoggedIn && isUserAuthor && (
                                     <>
                                         <button onClick={() => navigate(`/quiz/${id}/edit`)}>
                                             <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>

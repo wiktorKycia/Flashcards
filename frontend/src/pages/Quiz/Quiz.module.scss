@@ -3,7 +3,12 @@
     justify-content: center;
 
     &Wrapper {
-        width: 60%;
+        @media (min-aspect-ratio: 1/1) {
+            width: 60%;
+        }
+        @media (max-aspect-ratio: 1/1) {
+            width: 95%;
+        }
     }
 
     &TitleContainer {
@@ -19,24 +24,46 @@
 
     &OptionsContaier {
         display: flex;
-        flex-direction: row-reverse;
-        justify-content: space-between;
+        @media (min-aspect-ratio: 1/1) {
+            flex-direction: row-reverse;
+            justify-content: space-between;
+        }
+        @media (max-aspect-ratio: 1/1) {
+            flex-direction: column-reverse;
+            gap: 1rem;
+        }
     }
 
     &Options,
     &LearnOptions {
-        width: 50%;
+        @media (min-aspect-ratio: 1/1) {
+            width: 50%;
+        }
+        @media (max-aspect-ratio: 1/1) {
+            width: 100%;
+        }
+
         display: flex;
         flex-direction: row;
         gap: 1rem;
     }
 
     &Options {
-        justify-content: flex-end;
+        @media (min-aspect-ratio: 1/1) {
+            justify-content: flex-end;
+        }
+        @media (max-aspect-ratio: 1/1) {
+            justify-content: center;
+        }
     }
 
     &LearnOptions {
-        justify-content: flex-start;
+        @media (min-aspect-ratio: 1/1) {
+            justify-content: flex-start;
+        }
+        @media (max-aspect-ratio: 1/1) {
+            justify-content: center;
+        }
     }
 
     &Author {

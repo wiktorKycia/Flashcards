@@ -40,7 +40,7 @@ export default function Login() {
         <>
             <main className={styles.Main}>
                 <form onSubmit={handleSubmit} className={styles.FormContainer}>
-                    <h1>Login</h1>
+                    <h1>Zaloguj się</h1>
                     {loginMutation.isError && (
                         <div style={{ color: 'red', marginBottom: '0.5rem' }}>
                             {(loginMutation.error as Error).message}

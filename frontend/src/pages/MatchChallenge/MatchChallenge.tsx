@@ -47,6 +47,7 @@ export default function MatchChallenge() {
     const [selectedCards, setSelectedCards] = useState<CardItem[]>([])
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCards(initialCards)
     }, [initialCards])
 

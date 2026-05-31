@@ -2,7 +2,12 @@
     border: var(--border-thick);
     padding: 2rem;
     border-radius: 2rem;
-    width: 80%;
+    @media (min-aspect-ratio: 1/1) {
+        width: 80%;
+    }
+    @media (max-aspect-ratio: 1/1) {
+        width: 100%;
+    }
     display: grid;
     grid-template-columns: 1fr 1fr;
 
