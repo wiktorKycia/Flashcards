@@ -16,7 +16,7 @@ import { MongoClient, type Collection } from "mongodb"
 const myenv = dotenv.config({ path: '.env.app' })
 dotenvExpand.expand(myenv)
 
-const app = express()
+export const app = express()
 
 app.use(cors())
 app.use(express.json())

@@ -8,7 +8,7 @@ const tsRecommendedRules = tsPlugin.configs.recommended.rules ?? {}
 
 export default defineConfig([
     {
-        ignores: ['generated/**', 'dist/**', 'prisma.config.ts']
+        ignores: ['generated/**', 'dist/**', 'prisma.config.ts', 'tests/**', 'vitest.config.ts']
     },
     {
         files: ['eslint.config.mjs'],
