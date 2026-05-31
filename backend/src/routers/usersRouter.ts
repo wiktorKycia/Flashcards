@@ -32,12 +32,34 @@ interface UserUpdate {
     email: string
 }
 
+interface UserQuizLike {
+    id: number
+    quizId: number
+    userId: number
+    isLiked: boolean
+}
+
 interface SavedQuizData {
     quiz: {
         id: number
         name: string
         description: string | null
         authorId: number
+    }
+    id: number
+    userId: number
+    quizId: number
+}
+
+interface QuizData {
+    quiz: {
+        id: number
+        name: string
+        description: string | null
+        authorId: number
+        frontLanguage: string
+        backLanguage: string
+        UserQuizLike?: UserQuizLike[]
     }
     id: number
     userId: number
@@ -154,7 +176,56 @@ router.get("/:id(\\d+)/saved-quizzes", async (req: Request<UserParams>, res: Res
     }
 })
 
-router.get("/:userId(\\d+)/quizzes/:quizId(\\d+)", async (req: Request<UserQuizLikeParams>, res: Response, next: NextFunction) => {
+router.get("/:id(\\d+)/liked-quizzes", async (req: Request<UserParams>, res: Response, next: NextFunction) => {
+    try {
+        const userId: number = parseInt(req.params.id)
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                UserQuizLike: {
+                    include: {
+                        quiz: {
+                            include: {
+                                UserQuizLike: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        if (user) {
+            const result = user.UserQuizLike.map((likedQuiz: QuizData) => {
+                if (likedQuiz.quiz.UserQuizLike) {
+                    const likes: number = likedQuiz.quiz.UserQuizLike.filter(
+                        (x: UserQuizLike) => x.isLiked
+                    ).length
+                    const dislikes: number = likedQuiz.quiz.UserQuizLike.filter(
+                        (x: UserQuizLike) => !x.isLiked
+                    ).length
+
+                    return {
+                        ...likedQuiz.quiz,
+                        likes,
+                        dislikes
+                    }
+                }
+                else {
+                    return likedQuiz.quiz
+                }
+            }).sort((a: any, b: any) => b.likes - a.likes)
+
+            return res.json(result)
+        } else {
+            return res.sendStatus(404)
+        }
+    }
+    catch(error) {
+        next(error)
+    }
+})
+
+router.get("/:userId(\\d+)/quiz/:quizId(\\d+)", async (req: Request<UserQuizLikeParams>, res: Response, next: NextFunction) => {
     try {
         const quizId = parseInt(req.params.quizId)
         const userId = parseInt(req.params.userId)

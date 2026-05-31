@@ -1,0 +1,77 @@
+.previewWrapper {
+    border: 2px solid var(--color-accent3);
+    border-radius: 10px;
+    color: var(--color-text-primary);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr;
+    gap: 8px 16px;
+    grid-template-areas:
+    "title button"
+    "description votes";
+    padding: 1rem;
+    background-color: var(--color-surface);
+    width: 100%;
+}
+
+.previewWrapper h3 {
+    grid-area: title;
+    font-size: 2.5rem;
+}
+
+.description {
+    grid-area: description;
+    align-self: start;
+    font-size: 1.5rem;
+    overflow-wrap: anywhere;
+}
+
+.previewWrapper button {
+    @media (max-aspect-ratio: 1/1) {
+        font-size: 1.3rem;
+    }
+
+    grid-area: button;
+    justify-self: end;
+    align-self: start;
+}
+
+.votesWrapper {
+    grid-area: votes;
+    justify-self: end;
+    align-self: end;
+    display: flex;
+    gap: 8px;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.likesWrapper, .dislikesWrapper {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem;
+}
+
+.likesWrapper {
+    color: forestgreen;
+}
+
+.dislikesWrapper {
+    color: #ee3333;
+}
+
+.Icon {
+    width: 2rem;
+    height: 2rem;
+    fill: currentColor;
+    margin: 0 0.5rem;
+}
+
+.activeLike, .activeDislike {
+    fill: white;
+    stroke: currentColor;
+    stroke-width: 3px;
+    width: 3rem;
+    height: 3rem;
+    margin: 0;
+}

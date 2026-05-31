@@ -19,9 +19,26 @@ export default function Header() {
     const [profileTooltipOpen, setProfileTooltipOpen] = useState(false)
     const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+    const profileContainerRef = useRef<HTMLDivElement>(null)
+
+    // closing effect needed on phones
     useEffect(() => {
+        const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+            if (
+                profileContainerRef.current &&
+                !profileContainerRef.current.contains(event.target as Node)
+            ) {
+                setProfileTooltipOpen(false)
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside)
+        document.addEventListener('touchstart', handleClickOutside)
+
         return () => {
             if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+            document.removeEventListener('mousedown', handleClickOutside)
+            document.removeEventListener('touchstart', handleClickOutside)
         }
     }, [])
 
@@ -53,9 +70,14 @@ export default function Header() {
                 <ThemeToggler toggleFn={toggleTheme} isLight={theme === 'light'} />
                 {isLoggedIn && <ButtonAdd />}
                 <div
+                    ref={profileContainerRef}
                     className={styles.PictureContainer}
                     onMouseEnter={openProfileTooltip}
                     onMouseLeave={scheduleCloseProfileTooltip}
+                    onTouchStart={(e) => {
+                        e.stopPropagation();
+                        setProfileTooltipOpen(prev => !prev);
+                    }}
                 >
                     <ProfilePicture userId={user?.id} />
                     {(isLoggedIn || !isLoggedIn) && (
@@ -63,6 +85,7 @@ export default function Header() {
                             className={`tooltip ${profileTooltipOpen ? 'tooltip-open' : ''}`}
                             onMouseEnter={openProfileTooltip}
                             onMouseLeave={scheduleCloseProfileTooltip}
+                            onTouchStart={(e) => e.stopPropagation()}
                         >
                             {isLoggedIn && user ? (
                                 <>

@@ -10,11 +10,26 @@
 
     &Left,
     &Right {
+        @media (min-aspect-ratio: 1/1) {
+            padding-inline: 1.4rem;
+            flex: 1;
+        }
+
+        @media (max-aspect-ratio: 1/1) {
+            padding-inline: 0.5rem;
+        }
+
         display: flex;
-        justify-content: center;
         align-items: center;
-        padding-inline: 1.4rem;
         gap: 1.2rem;
+    }
+
+    &Left {
+        justify-content: flex-start;
+    }
+
+    &Right {
+        justify-content: flex-end;
     }
 }
 
