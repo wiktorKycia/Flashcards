@@ -14,7 +14,7 @@ type Props = {
     dislikes: number
 }
 
-export default function QuizPreview({className, quizId, quizName, quizDescription, likes, dislikes}: Props) {
+export default function QuizPreview({ className, quizId, quizName, quizDescription, likes, dislikes }: Props) {
     const navigate = useNavigate()
     const isLoggedIn = useCheckIfLoggedIn()
     const { user } = useAuth()
@@ -26,19 +26,13 @@ export default function QuizPreview({className, quizId, quizName, quizDescriptio
 
     const { data, isLoading, error } = useUserQuizLike(quizId, userId)
 
-    const likeWrapperClass = `${styles.Icon} ${
-        isLoggedIn && !error && data?.isLiked === true
-            ? styles.activeLike
-            : ""
-    }`
+    const likeWrapperClass = `${styles.Icon} ${isLoggedIn && !error && data?.isLiked === true ? styles.activeLike : ''}`
 
     const dislikeWrapperClass = `${styles.Icon} ${
-        isLoggedIn && !error && data?.isLiked === false
-            ? styles.activeDislike
-            : ""
+        isLoggedIn && !error && data?.isLiked === false ? styles.activeDislike : ''
     }`
 
-    const combinedClasses = [styles.previewWrapper, className].filter(Boolean).join(' ');
+    const combinedClasses = [styles.previewWrapper, className].filter(Boolean).join(' ')
 
     return (
         <div className={combinedClasses}>
@@ -55,23 +49,13 @@ export default function QuizPreview({className, quizId, quizName, quizDescriptio
                     <>
                         <div className={styles.likesWrapper}>
                             <p>{likes}</p>
-                            <svg
-                                className={likeWrapperClass}
-                                viewBox="0 0 24 24"
-                                role="img"
-                                aria-label="like"
-                            >
+                            <svg className={likeWrapperClass} viewBox="0 0 24 24" role="img" aria-label="like">
                                 <path d="M9 11V5.5c0-1.38 1.12-2.5 2.5-2.5.66 0 1.29.26 1.76.73L16 6h4c1.1 0 2 .9 2 2v4c0 .35-.09.69-.26 1l-3.1 6.2c-.34.68-1.03 1.1-1.79 1.1H8c-1.1 0-2-.9-2-2v-7c0-1.1.9-2 2-2h1zM2 11h3v9H2z" />
                             </svg>
                         </div>
                         <div className={styles.dislikesWrapper}>
                             <p>{dislikes}</p>
-                            <svg
-                                className={dislikeWrapperClass}
-                                viewBox="0 0 24 24"
-                                role="img"
-                                aria-label="dislike"
-                            >
+                            <svg className={dislikeWrapperClass} viewBox="0 0 24 24" role="img" aria-label="dislike">
                                 <path d="M15 13v5.5c0 1.38-1.12 2.5-2.5 2.5-.66 0-1.29-.26-1.76-.73L8 18H4c-1.1 0-2-.9-2-2v-4c0-.35.09-.69.26-1l3.1-6.2C5.7 4.42 6.39 4 7.15 4H16c1.1 0 2 .9 2 2v7c0 1.1-.9 2-2 2h-1zM22 13h-3V4h3z" />
                             </svg>
                         </div>

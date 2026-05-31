@@ -24,7 +24,7 @@ const login = async ({ login, password }: LoginVariables): Promise<LoginReturn> 
             } else if (errorBody?.error) {
                 message = errorBody.error
             }
-        } catch (_err) {
+        } catch {
             // ignore JSON parse errors and fall back to default message
         }
 

@@ -1,6 +1,6 @@
 import { afterAll, describe, expect, it } from 'vitest'
 import request from 'supertest'
-import { app } from '../src/index'
+import { app } from '../index'
 import { testPrisma } from './helpers'
 
 describe('GET /', () => {

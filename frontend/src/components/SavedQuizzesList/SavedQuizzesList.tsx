@@ -14,15 +14,20 @@ export default function SavedQuizzesList(props: SavedQuizzesListProps) {
     return (
         <div className={styles.SavedQuizzesList}>
             <h2>Zapisane zestawy</h2>
-            {isError && (
-                <div className={styles.errorMessage}>Wystąpił błąd</div>
-            )}
+            {isError && <div className={styles.errorMessage}>Wystąpił błąd</div>}
             {isLoading && <LoadingSpinner />}
             {!isError && !isLoading && data && (
                 <Container cssClassName={'quiz-container'}>
-                    {data.length > 0 ? data.map((quiz) => (
-                        <ListableQuiz key={`saved-quiz-${quiz.id}`} id={quiz.id} name={quiz.name} description={quiz.description}/>
-                    )) : (
+                    {data.length > 0 ? (
+                        data.map((quiz) => (
+                            <ListableQuiz
+                                key={`saved-quiz-${quiz.id}`}
+                                id={quiz.id}
+                                name={quiz.name}
+                                description={quiz.description}
+                            />
+                        ))
+                    ) : (
                         <p className={styles.infoMessage}>Nie masz jeszcze zapisanych zestawów</p>
                     )}
                 </Container>

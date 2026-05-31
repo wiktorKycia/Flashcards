@@ -160,7 +160,9 @@ export default function AttachedFlashcardsMode(props: AttachedFlashcardsModeProp
             {!finishedTrackingProgress && isTrackingProgress ? (
                 <div className={styles.FlashcardPositioner}>
                     {requiresNextTurn ? (
-                        <button onClick={handleNextTurn} className={styles.NextTurnButton}>Następna tura</button>
+                        <button onClick={handleNextTurn} className={styles.NextTurnButton}>
+                            Następna tura
+                        </button>
                     ) : (
                         <>
                             <BigFlashcard

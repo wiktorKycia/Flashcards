@@ -1,7 +1,7 @@
 import { afterAll, afterEach, describe, expect, it
 } from 'vitest'
 import request from 'supertest'
-import { app } from '../src/index'
+import { app } from '../index'
 import { deleteTestUsers, testPrisma } from './helpers'
 
 describe('GET /api/quizzes', () => {

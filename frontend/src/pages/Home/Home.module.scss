@@ -28,7 +28,9 @@
     align-items: center;
 }
 
-.quizzesBoxTitle, .errorMessage, .infoMessage {
+.quizzesBoxTitle,
+.errorMessage,
+.infoMessage {
     font-size: 3rem;
     font-weight: bold;
     margin: 2rem 0;
@@ -36,7 +38,8 @@
     text-align: center;
 }
 
-.infoMessage, .errorMessage {
+.infoMessage,
+.errorMessage {
     width: 80%;
     margin: 2rem;
 }

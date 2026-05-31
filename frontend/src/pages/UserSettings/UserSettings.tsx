@@ -254,9 +254,8 @@ export default function UserSettings() {
                     {user.id && <button onClick={() => navigate(`/user/${user.id}`)}>Zobacz profil</button>}
                 </Container>
 
-                <AvatarUpload userId={user.id}/>
+                <AvatarUpload userId={user.id} />
             </section>
-
         </main>
     )
 }

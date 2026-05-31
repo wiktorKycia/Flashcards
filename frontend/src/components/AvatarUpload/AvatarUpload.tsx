@@ -2,7 +2,7 @@ import { useState, useRef, type ChangeEvent, useEffect } from 'react'
 import styles from './AvatarUpload.module.scss'
 import { useUploadAvatar } from '@/hooks/useUploadAvatar'
 import { useUserProfilePicture } from '@/hooks/useUserProfilePicture'
-import Container from "@/components/Container";
+import Container from '@/components/Container'
 import profileLogo from '@/assets/placeholder-profile-picture-1.png'
 
 interface AvatarUploadProps {
@@ -62,11 +62,7 @@ export default function AvatarUpload({ userId, onUploadSuccess }: AvatarUploadPr
             <h3>Zdjęcie profilowe</h3>
 
             <div className={styles.AvatarWrapper}>
-                <img
-                    src={previewSrc || profileLogo}
-                    alt="Profile avatar"
-                    className={styles.Avatar}
-                />
+                <img src={previewSrc || profileLogo} alt="Profile avatar" className={styles.Avatar} />
 
                 <div
                     className={styles.AvatarOverlay}
@@ -86,17 +82,18 @@ export default function AvatarUpload({ userId, onUploadSuccess }: AvatarUploadPr
                 onChange={handleFileChange}
             />
 
-            <button className={styles.SecondaryButton} onClick={() => inputRef.current?.click()} disabled={uploadAvatarMutation.isPending}>
+            <button
+                className={styles.SecondaryButton}
+                onClick={() => inputRef.current?.click()}
+                disabled={uploadAvatarMutation.isPending}
+            >
                 Wybierz plik
             </button>
 
             {selectedFile && <p className={styles.Filename}>Wybrano: {selectedFile.name}</p>}
 
             {selectedFile && (
-                <button
-                    onClick={handleUpload}
-                    disabled={uploadAvatarMutation.isPending}
-                >
+                <button onClick={handleUpload} disabled={uploadAvatarMutation.isPending}>
                     {uploadAvatarMutation.isPending ? 'Wysyłanie…' : 'Zapisz zdjęcie'}
                 </button>
             )}

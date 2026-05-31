@@ -23,7 +23,7 @@ interface SetUserQuizLikeVars extends UserQuizLikeVars {
     isLiked: boolean
 }
 
-const getUserLikedQuizzes = async(userId: number): Promise<FullQuiz[]> => {
+const getUserLikedQuizzes = async (userId: number): Promise<FullQuiz[]> => {
     const response = await fetch(`/api/users/${userId}/liked-quizzes`)
     return resolvePromise<FullQuiz[]>(response)
 }
@@ -82,7 +82,7 @@ export const useUserLikedQuizzes = (userId: number) => {
     return useQuery({
         queryKey: ['likedQuizzes', userId],
         queryFn: () => getUserLikedQuizzes(userId),
-        enabled: !!userId,
+        enabled: !!userId
     })
 }
 

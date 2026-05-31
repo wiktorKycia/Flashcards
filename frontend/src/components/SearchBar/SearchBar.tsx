@@ -3,7 +3,7 @@ import { useState, type SubmitEvent } from 'react'
 import { useNavigate } from 'react-router'
 
 export default function SearchBar() {
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState('')
     const navigate = useNavigate()
 
     const handleSearchSubmit = (event: SubmitEvent<HTMLFormElement>) => {
@@ -11,16 +11,13 @@ export default function SearchBar() {
 
         if (searchQuery.trim() !== '') {
             navigate(`/?search=${encodeURIComponent(searchQuery.trim())}`)
-        }
-        else {
+        } else {
             navigate('/')
         }
     }
 
     return (
-        <form
-            className={styles.SearchBar}
-            onSubmit={handleSearchSubmit}>
+        <form className={styles.SearchBar} onSubmit={handleSearchSubmit}>
             <input
                 id="search-bar"
                 type="search"
