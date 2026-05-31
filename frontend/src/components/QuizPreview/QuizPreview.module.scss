@@ -11,6 +11,7 @@
     "description votes";
     padding: 1rem;
     background-color: var(--color-surface);
+    width: 100%;
 }
 
 .previewWrapper h3 {
@@ -22,6 +23,7 @@
     grid-area: description;
     align-self: start;
     font-size: 1.5rem;
+    overflow-wrap: anywhere;
 }
 
 .previewWrapper button {

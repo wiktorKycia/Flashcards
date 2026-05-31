@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext.tsx'
 import LoadingSpinner from '@/components/LoadingSpinner'
 
 type Props = {
+    className?: string
     quizId: number
     quizName: string
     quizDescription: string
@@ -13,7 +14,7 @@ type Props = {
     dislikes: number
 }
 
-export default function QuizPreview({quizId, quizName, quizDescription, likes, dislikes}: Props) {
+export default function QuizPreview({className, quizId, quizName, quizDescription, likes, dislikes}: Props) {
     const navigate = useNavigate()
     const isLoggedIn = useCheckIfLoggedIn()
     const { user } = useAuth()
@@ -37,17 +38,10 @@ export default function QuizPreview({quizId, quizName, quizDescription, likes, d
             : ""
     }`
 
-    console.log({
-        userId,
-        isLoggedIn,
-        error,
-        data,
-        likeWrapperClass,
-        dislikeWrapperClass
-    });
+    const combinedClasses = [styles.previewWrapper, className].filter(Boolean).join(' ');
 
     return (
-        <div className={styles.previewWrapper}>
+        <div className={combinedClasses}>
             <h3>{quizName}</h3>
             <p className={styles.description}>
                 {quizDescription && quizDescription.slice(0, 50).trim()}

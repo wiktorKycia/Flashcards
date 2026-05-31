@@ -6,11 +6,21 @@ import { useLocation } from 'react-router'
 import Fuse from 'fuse.js'
 import { useMemo, useState } from 'react'
 import styles from './Home.module.scss'
+import LikedQuizzesList from '@/components/LikedQuizzesList/LikedQuizzesList.tsx'
+import { useAuth } from '@/context/AuthContext.tsx'
+import { useCheckIfLoggedIn } from '@/hooks/useCheckIfLoggedIn.ts'
 
 export default function Home() {
     const { data: quizzes = [], isLoading, isError } = useQuizzes()
     const [isExpanded, setIsExpanded] = useState(false)
     const { search: urlQuesryString } = useLocation()
+    const isLoggedIn = useCheckIfLoggedIn()
+    const { user } = useAuth()
+
+    let userId = undefined
+    if (isLoggedIn && user) {
+        userId = user.id
+    }
 
     const sortedItems = useMemo(() => {
         const params = new URLSearchParams(urlQuesryString)
@@ -29,16 +39,16 @@ export default function Home() {
         return searchResults.map(result => result.item)
     }, [quizzes, urlQuesryString])
 
-    const displayedItems = isExpanded ? sortedItems : sortedItems.slice(0, 16)
+    const displayedItems = isExpanded ? sortedItems : sortedItems.slice(0, 10)
 
     return (
-        <>
+        <div className={styles.mainWrapper}>
             {isError && <div className={styles.errorMessage}>Wystąpił błąd</div>}
             {isLoading && <LoadingSpinner />}
             {!isLoading && !isError && quizzes && (
                 sortedItems.length > 0 ? (
                     <div className={styles.quizzesListWrapper}>
-                        <p className={styles.quizzesBoxTitle}>Znalezione zestawy fiszek</p>
+                        <h2 className={styles.quizzesBoxTitle}>Znalezione zestawy fiszek</h2>
                         <div className={styles.quizPreviewsBox}>
                             {displayedItems.map((quiz: FullQuiz) => (
                                 <QuizPreview
@@ -52,7 +62,7 @@ export default function Home() {
                             ))}
                         </div>
 
-                        {sortedItems.length > 16 && (
+                        {sortedItems.length > 10 && (
                             <button
                                 onClick={() => setIsExpanded(!isExpanded)}
                                 className={styles.expandButton}
@@ -63,12 +73,17 @@ export default function Home() {
                     </div>
                 ) : (
                     quizzes.length > 0 ? (
-                        <p className={styles.infoMessage}>Nie znaleziono odpowiednich quizów</p>
+                        <p className={styles.infoMessage}>Nie ma zestawów pasujących do wyszukiwania</p>
                     ) : (
-                        <p className={styles.infoMessage}>Nie znaleziono żadnych quizów</p>
+                        <p className={styles.infoMessage}>Nie znaleziono żadnych zestawów w aplikacji</p>
                     )
                 )
             )}
-        </>
+            {isLoggedIn && userId && (
+                <aside>
+                    <LikedQuizzesList userId={userId} isSmallVersion={false}/>
+                </aside>
+            )}
+        </div>
     )
 }

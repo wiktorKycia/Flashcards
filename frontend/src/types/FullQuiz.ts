@@ -12,7 +12,7 @@ export default interface FullQuiz {
     authorId: number
     frontLanguage: string
     backLanguage: string
-    UserQuizLike: UserQuizLike[]
+    UserQuizLike?: UserQuizLike[]
     likes: number
     dislikes: number
 }

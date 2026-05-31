@@ -31,17 +31,26 @@ interface UserUpdate {
     email: string
 }
 
-interface SavedQuizData {
+interface UserQuizLike {
+    id: number
+    quizId: number
+    userId: number
+    isLiked: boolean
+}
+
+interface QuizData {
     quiz: {
         id: number
         name: string
         description: string | null
         authorId: number
+        frontLanguage: string
+        backLanguage: string
+        UserQuizLike?: UserQuizLike[]
     }
     id: number
     userId: number
     quizId: number
-    folderId: number | null
 }
 
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
@@ -134,7 +143,7 @@ router.get("/:id(\\d+)/saved-quizzes", async (req: Request<UserParams>, res: Res
         const user = await prisma.user.findUnique({
             where: { id: userId },
             include: {
-                SavedQuiz: {
+                UserQuizLike: {
                     include: {
                         quiz: true,
                     }
@@ -143,7 +152,7 @@ router.get("/:id(\\d+)/saved-quizzes", async (req: Request<UserParams>, res: Res
         })
 
         if (user) {
-            return res.json(user.SavedQuiz.map((savedQuiz: SavedQuizData) => savedQuiz.quiz))
+            return res.json(user.UserQuizLike.map((savedQuiz: QuizData) => savedQuiz.quiz))
         }
         else {
             return res.sendStatus(404)
@@ -172,6 +181,55 @@ router.get("/:id(\\d+)/folders", async (req: Request<UserParams>, res: Response,
             return res.json(user.Folder)
         }
         else {
+            return res.sendStatus(404)
+        }
+    }
+    catch(error) {
+        next(error)
+    }
+})
+
+router.get("/:id(\\d+)/liked-quizzes", async (req: Request<UserParams>, res: Response, next: NextFunction) => {
+    try {
+        const userId: number = parseInt(req.params.id)
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                UserQuizLike: {
+                    include: {
+                        quiz: {
+                            include: {
+                                UserQuizLike: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        if (user) {
+            const result = user.UserQuizLike.map((likedQuiz: QuizData) => {
+                if (likedQuiz.quiz.UserQuizLike) {
+                    const likes: number = likedQuiz.quiz.UserQuizLike.filter(
+                        (x: UserQuizLike) => x.isLiked
+                    ).length
+                    const dislikes: number = likedQuiz.quiz.UserQuizLike.filter(
+                        (x: UserQuizLike) => !x.isLiked
+                    ).length
+
+                    return {
+                        ...likedQuiz.quiz,
+                        likes,
+                        dislikes
+                    }
+                }
+                else {
+                    return likedQuiz.quiz
+                }
+            }).sort((a: any, b: any) => b.likes - a.likes)
+
+            return res.json(result)
+        } else {
             return res.sendStatus(404)
         }
     }

@@ -1,4 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import resolvePromise from '@/helpers/resolvePromise.ts'
+import type FullQuiz from '@/types/FullQuiz.ts'
 
 interface QuizLikeCounts {
     likes: number
@@ -19,6 +21,11 @@ interface UserQuizLikeVars {
 
 interface SetUserQuizLikeVars extends UserQuizLikeVars {
     isLiked: boolean
+}
+
+const getUserLikedQuizzes = async(userId: number): Promise<FullQuiz[]> => {
+    const response = await fetch(`/api/users/${userId}/liked-quizzes`)
+    return resolvePromise<FullQuiz[]>(response)
 }
 
 const fetchQuizLikeCounts = async (quizId: number): Promise<QuizLikeCounts> => {
@@ -69,6 +76,14 @@ const clearUserQuizLike = async ({ quizId, userId }: UserQuizLikeVars): Promise<
     if (!response.ok) {
         throw new Error(`HTTP ${response.status}`)
     }
+}
+
+export const useUserLikedQuizzes = (userId: number) => {
+    return useQuery({
+        queryKey: ['likedQuizzes', userId],
+        queryFn: () => getUserLikedQuizzes(userId),
+        enabled: !!userId,
+    })
 }
 
 export const useQuizLikeCounts = (quizId: number) => {
