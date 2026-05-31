@@ -67,7 +67,8 @@
 aside {
     @media (min-aspect-ratio: 1/1) {
         border-left: 2px solid var(--color-accent);
-        width: 20%;
+        min-width: 20%;
+        max-width: 30%;
     }
 
     @media (max-aspect-ratio: 1/1) {
